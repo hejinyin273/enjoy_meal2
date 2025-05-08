@@ -141,7 +141,7 @@ class ShoppingCartController extends CustomBaseController  {
         if ("buffet.time.overdue" == baseResp.message) {
 
         }
-        showApiErrToast(baseResp.message);
+        showApiErrToast(baseResp.status, baseResp.message);
       }
     }, onError:(err) {
       handleException(err);

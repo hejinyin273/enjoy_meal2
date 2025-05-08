@@ -112,7 +112,7 @@ class MainDishController extends CustomBaseController  {
         }
         updateDishInfoList(dataList);
       } else {
-        showApiErrToast(baseResp.message);
+        showApiErrToast(baseResp.status, baseResp.message);
       }
     }, onError:(err) {
       handleException(err);

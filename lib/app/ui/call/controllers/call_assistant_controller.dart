@@ -34,7 +34,7 @@ class CallAssistantController extends BaseController{
                     autoCloseJustTipDialog();
                 });
             } else {
-                showApiErrToast(baseResp.message);
+                showApiErrToast(baseResp.status, baseResp.message);
             }
         }, onError:(err) {
             handleException(err);
@@ -42,7 +42,7 @@ class CallAssistantController extends BaseController{
     }
 
     void showJustTipDialog() {
-        Get.dialog(JustTipDialog(), barrierColor: Colors.transparent, useSafeArea: false);
+        Get.dialog(const JustTipDialog(), barrierColor: Colors.transparent, useSafeArea: false);
     }
 
     void autoCloseJustTipDialog(){

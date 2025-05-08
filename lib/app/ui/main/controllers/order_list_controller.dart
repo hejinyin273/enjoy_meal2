@@ -88,7 +88,7 @@ class OrderListController extends CustomBaseController  {
           },));
         }
       } else {
-        showApiErrToast(baseResp.message);
+        showApiErrToast(baseResp.status, baseResp.message);
       }
     }, onError:(err) {
       handleException(err);
@@ -104,7 +104,7 @@ class OrderListController extends CustomBaseController  {
         }
         _loadOrderDetailStateObs(LoadState.success);
       } else {
-        showApiErrToast(baseResp.message);
+        showApiErrToast(baseResp.status, baseResp.message);
         _loadOrderDetailStateObs(LoadState.failed);
       }
     }, onError:(err) {

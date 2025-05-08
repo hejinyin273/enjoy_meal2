@@ -148,7 +148,7 @@ class MainController extends CustomBaseController  {
           handleResCache(globalController.restaurantData);
         }
       } else {
-        showApiErrToast(baseResp.message);
+        showApiErrToast(baseResp.status, baseResp.message);
         _loadInitStateObs(LoadState.failed);
       }
     }, onError:(err) {
@@ -174,7 +174,7 @@ class MainController extends CustomBaseController  {
         handleResCache(globalController.restaurantData);
         _loadOrderDetailState = LoadState.success;
       } else {
-        showApiErrToast(baseResp.message);
+        showApiErrToast(baseResp.status, baseResp.message);
         _loadInitStateObs(LoadState.failed);
       }
     }, onError:(err) {
@@ -204,7 +204,7 @@ class MainController extends CustomBaseController  {
         }
         _isOnLoadingOrderDetail = false;
       } else {
-        showApiErrToast(baseResp.message);
+        showApiErrToast(baseResp.status, baseResp.message);
         _isOnLoadingOrderDetail = false;
       }
     }, onError:(err) {
@@ -308,7 +308,7 @@ class MainController extends CustomBaseController  {
         reqRestaurantInfo();
 
       } else {
-        showApiErrToast(baseResp.message);
+        showApiErrToast(baseResp.status, baseResp.message);
         _loadInitStateObs(LoadState.failed);
       }
     }, onError:(err) {

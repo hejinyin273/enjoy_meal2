@@ -156,7 +156,7 @@ class BuffetConfirmController extends CustomBaseController  {
       if(baseResp.isSuccess()) {
         Get.back(result: true);
       } else {
-        showApiErrToast(baseResp.message);
+        showApiErrToast(baseResp.status, baseResp.message);
       }
     }, onError:(err) {
       handleException(err);

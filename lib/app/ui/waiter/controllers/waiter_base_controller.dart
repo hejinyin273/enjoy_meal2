@@ -183,7 +183,7 @@ abstract class WaiterBaseController extends BaseController{
 
         loadTableInfoListStateObs(LoadState.success);
       } else {
-        showApiErrToast(baseResp.message);
+        showApiErrToast(baseResp.status, baseResp.message);
         loadTableInfoListStateObs(LoadState.failed);
       }
     }, onError:(err) {
@@ -198,7 +198,7 @@ abstract class WaiterBaseController extends BaseController{
         isOnOrderListMode(false);
         reqTableInfoList();
       } else {
-        showApiErrToast(baseResp.message);
+        showApiErrToast(baseResp.status, baseResp.message);
       }
     }, onError:(err) {
       handleException(err);
@@ -214,7 +214,7 @@ abstract class WaiterBaseController extends BaseController{
         }
         _loadOrderDetailStateObs(LoadState.success);
       } else {
-        showApiErrToast(baseResp.message);
+        showApiErrToast(baseResp.status, baseResp.message);
         _loadOrderDetailStateObs(LoadState.failed);
       }
     }, onError:(err) {
@@ -237,7 +237,7 @@ abstract class WaiterBaseController extends BaseController{
         loadCallRecordStateObs(LoadState.success);
       } else {
         loadCallRecordStateObs(LoadState.failed);
-        showApiErrToast(baseResp.message);
+        showApiErrToast(baseResp.status, baseResp.message);
       }
     }, onError:(err) {
       loadCallRecordStateObs(LoadState.failed);
@@ -257,7 +257,7 @@ abstract class WaiterBaseController extends BaseController{
           }
         }
       } else {
-        showApiErrToast(baseResp.message);
+        showApiErrToast(baseResp.status, baseResp.message);
       }
     }, onError:(err) {
       handleException(err);
@@ -275,7 +275,7 @@ abstract class WaiterBaseController extends BaseController{
 
         loadStatisticsStateObs(LoadState.success);
       } else {
-        showApiErrToast(baseResp.message);
+        showApiErrToast(baseResp.status, baseResp.message);
         loadStatisticsStateObs(LoadState.failed);
       }
     }, onError:(err) {
@@ -294,7 +294,7 @@ abstract class WaiterBaseController extends BaseController{
         }
       } else {
         if (quite) {
-          showApiErrToast(baseResp.message);
+          showApiErrToast(baseResp.status, baseResp.message);
         }
       }
     }, onError:(err) {
@@ -370,7 +370,7 @@ abstract class WaiterBaseController extends BaseController{
       if(baseResp.isSuccess()) {
 
       } else {
-        showApiErrToast(baseResp.message);
+        showApiErrToast(baseResp.status, baseResp.message);
       }
     }, onError:(err) {
       handleException(err);

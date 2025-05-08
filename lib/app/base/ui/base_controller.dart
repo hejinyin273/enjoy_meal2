@@ -62,11 +62,15 @@ abstract class BaseController extends GetxController {
     );
   }
 
-  void showApiErrToast(String? message) {
+  void showApiErrToast(int status, String? message) {
     if (message != null && message.isNotEmpty) {
       showToast(message);
     } else {
       showToast(CustomLocalizations.text("api_err"));
+    }
+    if (status == 401) {
+      BaseConf.token = "";
+      Get.offAllNamed(Routes.loginPage);
     }
   }
 

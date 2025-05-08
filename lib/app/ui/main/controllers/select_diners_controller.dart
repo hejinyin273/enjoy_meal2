@@ -116,7 +116,7 @@ class SelectDinersController extends CustomBaseController  {
         Get.offAndToNamed(Routes.mainDishPage);
         _loadingPrepareOrderObs(false);
       } else {
-        showApiErrToast(baseResp.message);
+        showApiErrToast(baseResp.status, baseResp.message);
         _loadingPrepareOrderObs(false);
       }
     }, onError:(err) {

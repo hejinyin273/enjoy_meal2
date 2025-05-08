@@ -350,7 +350,7 @@ class CookingManagerController extends WaiterBaseController  {
         updatePageDataList();
         loadDishMakeListStateObs(LoadState.success);
       } else {
-        showApiErrToast(baseResp.message);
+        showApiErrToast(baseResp.status, baseResp.message);
         loadDishMakeListStateObs(LoadState.failed);
       }
     }, onError:(err) {
@@ -387,7 +387,7 @@ class CookingManagerController extends WaiterBaseController  {
         updatePageDataList();
         updatePageData();
       } else {
-        showApiErrToast(baseResp.message);
+        showApiErrToast(baseResp.status, baseResp.message);
         reqFoodMakeListQuite();
       }
     }, onError:(err) {
@@ -402,7 +402,7 @@ class CookingManagerController extends WaiterBaseController  {
         model.status = DishMakeInfoConf.statusWaitToServe;
         updatePageData();
       } else {
-        showApiErrToast(baseResp.message);
+        showApiErrToast(baseResp.status, baseResp.message);
         reqFoodMakeListQuite();
       }
     }, onError:(err) {
@@ -416,7 +416,7 @@ class CookingManagerController extends WaiterBaseController  {
       if(baseResp.isSuccess()) {
         reqFoodMakeListQuite();
       } else {
-        showApiErrToast(baseResp.message);
+        showApiErrToast(baseResp.status, baseResp.message);
       }
     }, onError:(err) {
       handleException(err);
@@ -463,7 +463,7 @@ class CookingManagerController extends WaiterBaseController  {
           });
         }
       } else {
-        showApiErrToast(baseResp.message);
+        showApiErrToast(baseResp.status, baseResp.message);
       }
     }, onError:(err) {
       handleException(err);

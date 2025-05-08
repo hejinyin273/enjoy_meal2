@@ -9,7 +9,7 @@ class Constants{
 }
 
 class Conf{
-  static Language selectedLanguage = Language.zh;
+  static Language selectedLanguage = Language.jp;
   static String fcmToken = "badToken";
 }
 

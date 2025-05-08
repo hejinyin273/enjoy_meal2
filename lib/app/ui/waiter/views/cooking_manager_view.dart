@@ -617,7 +617,7 @@ class CookingManagerView extends WaiterBaseView<CookingManagerController> {
           width: 156.w,
           color: useColor ?? (isSelected ? const Color(0xFFD9D9D9) : Colors.white),
           alignment: Alignment.center,
-          child: Text(title, style: TextStyle(color: Colors.black, fontSize: 26.sp, fontWeight: FontWeightConf.medium),),
+          child: Text(title, style: TextStyle(color: Colors.black, fontSize: 26.sp, fontWeight: FontWeightConf.medium), textAlign: TextAlign.center,),
         ));
   }
 
@@ -631,7 +631,7 @@ class CookingManagerView extends WaiterBaseView<CookingManagerController> {
             children: [
               Container(
                 alignment: Alignment.center,
-                child: Text(title, style: TextStyle(color: Colors.black, fontSize: 26.sp, fontWeight: FontWeightConf.medium),),
+                child: Text(title, style: TextStyle(color: Colors.black, fontSize: 26.sp, fontWeight: FontWeightConf.medium), textAlign: TextAlign.center,),
               ),
 
               Positioned(
