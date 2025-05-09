@@ -91,7 +91,8 @@ class CookingManagerController extends WaiterBaseController  {
             dishMakeInfoClassMap[classId]!.add(dishMakeInfoItem);
           } else {
             if (classId == RestaurantConf.categoryBuffetId) {
-              dishMakeInfoItem.categoryName = "自助";
+
+              dishMakeInfoItem.categoryName = globalController.restaurantData.restaurantBaseInfo.buffetSimpleName ?? "自助";
             } else {
               dishMakeInfoItem.categoryName = globalController.getMainCategoryNameById(dishMakeInfoItem.categoryId);
             }
@@ -104,7 +105,7 @@ class CookingManagerController extends WaiterBaseController  {
             dishMakeInfoClassMap[classId]!.add(dishMakeInfoItem);
           } else {
             if (classId == RestaurantConf.categoryBuffetId) {
-              dishMakeInfoItem.categoryName = "自助";
+              dishMakeInfoItem.categoryName = globalController.restaurantData.restaurantBaseInfo.buffetSimpleName ?? "自助";
             } else {
               dishMakeInfoItem.categoryName = globalController.getMainCategoryNameById(dishMakeInfoItem.categoryId);
             }
@@ -118,7 +119,7 @@ class CookingManagerController extends WaiterBaseController  {
           dishMakeInfoClassMap[classId]!.add(dishMakeInfoItem);
         } else {
           if (classId == RestaurantConf.categoryBuffetId) {
-            dishMakeInfoItem.categoryName = "自助";
+            dishMakeInfoItem.categoryName = globalController.restaurantData.restaurantBaseInfo.buffetSimpleName ?? "自助";
           } else {
             dishMakeInfoItem.categoryName = globalController.getMainCategoryNameById(dishMakeInfoItem.categoryId);
           }

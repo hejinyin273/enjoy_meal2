@@ -124,6 +124,7 @@ class RestaurantBaseInfo{
   String? buffetCategoryDescriptionJa;
   String? buffetCategoryDescriptionZh;
   String? buffetCategoryDescriptionEn;
+  String? buffetSimpleName;
 
   RestaurantBaseInfo.fromJson(Map<String, dynamic> json)
       : id = json["id"],
@@ -153,7 +154,8 @@ class RestaurantBaseInfo{
         buffetLastReminderTime = json["buffetLastReminderTime"],
         buffetCategoryDescriptionJa = json["buffetCategoryDescriptionJa"],
         buffetCategoryDescriptionZh = json["buffetCategoryDescriptionZh"],
-        buffetCategoryDescriptionEn = json["buffetCategoryDescriptionEn"];
+        buffetCategoryDescriptionEn = json["buffetCategoryDescriptionEn"],
+        buffetSimpleName = json["buffetSimpleName"];
 
   String getRestaurantName() {
     if (Language.zh == Conf.selectedLanguage) {

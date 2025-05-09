@@ -145,7 +145,7 @@ abstract class CustomBaseController extends BaseController{
     if (dishInfo.dishAttributeCategoryInfos.length <= 1) {
       dishInfo.flyToCartAnim = flyToCartAnim;
       showDishDetailDialog(dishInfo);
-    } else if (dishInfo.dishAttributeCategoryInfos.length == 2) {
+    } else /*if (dishInfo.dishAttributeCategoryInfos.length == 2)*/ {
       _showSelectType1Dialog(dishInfo);
     }
   }
@@ -159,9 +159,19 @@ abstract class CustomBaseController extends BaseController{
   }
 
   void _showSelectType1Dialog(DishInfo dishInfo) {
-    Get.dialog(SelectType1Dialog(dishInfo:dishInfo, onCancel: (){
+    Get.dialog(SelectType1Dialog(dishInfo:dishInfo, selectedDishAttrCategoryIndex: 0, onCancel: (){
       Get.back();
     },), barrierColor: Colors.transparent, useSafeArea: false);
+  }
+
+  void _showSelectType2Dialog(DishInfo dishInfo) {
+    Get.dialog(SelectType2Dialog(dishInfo: dishInfo,
+      selectedDishAttrCategoryIndex: 0,
+      onCancel: (){
+        Get.back();
+      }, onConfirm: (){
+        Get.back();
+      },), barrierColor: Colors.transparent, useSafeArea: false);
   }
 
   /*void showSelectType2Dialog(DishInfo dishInfo) {

@@ -9,6 +9,7 @@ class DishMakeDto {
   late String orderNumber;
   late String tableNumber;
   late String orderTime;
+  int? buffetDinerCount;
 
   List<DishMakeInfo> dishMakeInfos = [];
 
@@ -21,6 +22,7 @@ class DishMakeDto {
     orderNumber = json["orderNumber"];
     tableNumber = json["tableNumber"];
     orderTime = json["orderTime"];
+    buffetDinerCount = json["buffetDinerCount"];
 
     if (json['dishMakeInfos'] != null) {
       dishMakeInfos = [];

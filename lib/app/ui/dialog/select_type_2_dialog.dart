@@ -11,15 +11,20 @@ import 'controller/dish_detail_dialog_controller.dart';
 // ignore_for_file: must_be_immutable
 class SelectType2Dialog extends StatelessWidget{
 
-  DishInfo dishInfo;
+  late DishInfo dishInfo;
+  late int selectedDishAttrCategoryIndex;
+  late DishAttributeCategoryInfo selectedDishAttributeCategoryInfo;
+
   Function() onCancel;
   Function() onConfirm;
   final controller = Get.put(DishDetailDialogController());
-  late DishAttributeCategoryInfo selectedDishAttributeCategoryInfo;
 
-  SelectType2Dialog({super.key, required this.dishInfo, required this.onCancel, required this.onConfirm}){
+  SelectType2Dialog({super.key, required this.dishInfo, required this.selectedDishAttrCategoryIndex, required this.onCancel, required this.onConfirm}){
     controller.selectedNumObs(1);
-    selectedDishAttributeCategoryInfo = dishInfo.dishAttributeCategoryInfos[1];
+    selectedDishAttributeCategoryInfo = dishInfo.dishAttributeCategoryInfos[selectedDishAttrCategoryIndex];
+    if (selectedDishAttrCategoryIndex == 0) {
+      controller.selectedAttributeInfoMap.clear();
+    }
   }
 
   @override
