@@ -188,7 +188,8 @@ class SubDishView extends CustomBaseView<SubDishController> {
           alignment: Alignment.center,
           color: isEnable ? (isSelected ? const Color(0xFFF39800) : const Color(0xFFF7F0E1)) : const Color(0xFF969292),
           child: AutoSizeText(item.getCategoryName(),
-            style: TextStyle(color: Colors.black, fontSize: 20.sp, fontWeight: FontWeightConf.medium), textAlign: TextAlign.center,),
+            style: TextStyle(color: Colors.black, fontSize: 20.sp, fontWeight: FontWeightConf.medium),
+            textAlign: TextAlign.center,),
         ));
   }
 

@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../main.dart';
+import '../base/config/base_conf.dart';
 import '../config/constants.dart';
 import '../data/model/event_bus.dart';
 import '../data/model/restaurant_data.dart';
+import '../routes/app_pages.dart';
 import 'global_controller.dart';
 
 class LifecycleService extends GetxService with WidgetsBindingObserver {
@@ -72,6 +74,9 @@ class LifecycleService extends GetxService with WidgetsBindingObserver {
           if (globalController.userType != RestaurantConf.userTypeUser) {
             eventBus.fire(PushMsgEvent(jsonMap));
           }
+        } else if ("USER_LOGIN_EXPIRED" == jsonMap["action"]) {
+          BaseConf.token = "";
+          Get.offAllNamed(Routes.loginPage);
         } else {
           eventBus.fire(PushMsgEvent(jsonMap));
         }

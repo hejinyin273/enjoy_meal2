@@ -1,4 +1,5 @@
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:enjoy_meal/app/base/config/font_weight_conf.dart';
 import 'package:enjoy_meal/app/data/model/restaurant_data.dart';
 import 'package:enjoy_meal/app/local/custom_localizations.dart';
@@ -141,7 +142,7 @@ class SelectType1Dialog extends StatelessWidget{
         itemBuilder: (context, index){
           if (index <= dishAttributeInfos.length -1) {
             final model = dishAttributeInfos[index];
-            return TapDownZoomOutView(child: _buildGridItem(model, shouldShowPrice, itemCount == 4 ? 30.sp : 26.sp), onClicked: (){
+            return TapDownZoomOutView(child: _buildGridItem(model, shouldShowPrice, itemCount == 4 ? 28.sp : 26.sp), onClicked: (){
               controller.onDishAttributeItemClicked(selectedDishAttributeCategoryInfo, model);
             });
           } else {
@@ -175,10 +176,18 @@ class SelectType1Dialog extends StatelessWidget{
                   ],
                 ),
               ),
-              Text(item.getAttributeName(), style: TextStyle(color: const Color(0xFF000000), fontSize: fontSize??26.sp, fontWeight: FontWeightConf.medium),),
+              SizedBox(
+                width: 304.w,
+                height: 60.w,
+                child: AutoSizeText(item.getAttributeName(), textAlign: TextAlign.center,
+                  style: TextStyle(color: const Color(0xFF000000), fontSize: fontSize??26.sp,
+                      fontWeight: FontWeightConf.medium),),
+              )
             ],
           )
-          : Text(item.getAttributeName(), style: TextStyle(color: const Color(0xFF000000), fontSize: fontSize??26.sp, fontWeight: FontWeightConf.medium),),
+          : AutoSizeText(item.getAttributeName(), textAlign: TextAlign.center,
+        style: TextStyle(color: const Color(0xFF000000), fontSize: fontSize??26.sp,
+            fontWeight: FontWeightConf.medium),),
     );
   }
 

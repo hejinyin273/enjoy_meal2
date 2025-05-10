@@ -485,6 +485,16 @@ class CookingManagerView extends WaiterBaseView<CookingManagerController> {
             alignment: Alignment.centerLeft,
             child: Text(model.categoryName??"", style: TextStyle(color: Colors.black, fontSize: 15.sp, fontWeight: FontWeightConf.bold)),
           ),
+
+          Positioned(
+            right: 10.w,
+            top: 0,
+            bottom: 0,
+            child: Container(
+                alignment: Alignment.centerRight,
+                child: Text(item.buffetDinerCount != null ? "${item.buffetDinerCount}${CustomLocalizations.text("people")}" : "", textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.black, fontSize: 15.sp, fontWeight: FontWeightConf.bold))),
+          ),
         ],
       ),
     );
