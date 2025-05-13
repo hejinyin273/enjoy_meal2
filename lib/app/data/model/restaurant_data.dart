@@ -595,7 +595,7 @@ class BuffetPriceInfo {
         dinerTypeNameEn = json["dinerTypeNameEn"],
         price = json["price"],
         overtimeExtraFee = json["overtimeExtraFee"],
-        minDinerCount = json["minDinerCount"];
+        minDinerCount = json["minDinerCount"]??0;
 
   String getDinerTypeName() {
     if (Language.zh == Conf.selectedLanguage) {

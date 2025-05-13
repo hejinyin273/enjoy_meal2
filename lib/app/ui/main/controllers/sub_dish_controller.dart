@@ -72,15 +72,36 @@ class SubDishController extends CustomBaseController  {
   final isShowNextBtnObs = true.obs;
 
   void _initBasePageDishDataList() {
+    final isOnBuffetMode = globalController.isOnBuffetMode;
     for(var mainItem in mainCategoryInfoList) {
+      if (isOnBuffetMode) {
+        if (!globalController.isBuffetSupportCategoryId(mainItem.id)) {
+          continue;
+        }
+      }
       if (mainItem.categoryType == RestaurantConf.categoryTypeDish) {///一级分类下直接是菜品
         final subItemCount = mainItem.displayMode == RestaurantConf.displayMode_4 ? 4 : 6;
         if (mainItem.dishList.isNotEmpty) {
-          for (int i = 0; i < mainItem.dishList.length; i += subItemCount) {
-            final subDishList = mainItem.dishList.sublist(i, i + subItemCount < mainItem.dishList.length ? i + subItemCount : mainItem.dishList.length);
-            final pageDishList = PageDishList(mainItem.id, mainItem.id, mainItem.displayMode, subDishList);
-            pageDishList.bgUrl = mainItem.bgImage;
-            _basePageDishDataList.add(pageDishList);
+          if (globalController.isOnBuffetMode) {
+            List<DishInfo> dataList = [];
+            for (int i = 0; i < mainItem.dishList.length; i ++) {
+              if (globalController.isBuffetSupportDishId(mainItem.dishList[i].id)) {
+                dataList.add(mainItem.dishList[i]);
+              }
+              if (dataList.length == subItemCount || i == mainItem.dishList.length -1) {
+                final pageDishList = PageDishList(mainItem.id, mainItem.id, mainItem.displayMode, dataList);
+                pageDishList.bgUrl = mainItem.bgImage;
+                _basePageDishDataList.add(pageDishList);
+                dataList = [];
+              }
+            }
+          } else {
+            for (int i = 0; i < mainItem.dishList.length; i += subItemCount) {
+              final subDishList = mainItem.dishList.sublist(i, i + subItemCount < mainItem.dishList.length ? i + subItemCount : mainItem.dishList.length);
+              final pageDishList = PageDishList(mainItem.id, mainItem.id, mainItem.displayMode, subDishList);
+              pageDishList.bgUrl = mainItem.bgImage;
+              _basePageDishDataList.add(pageDishList);
+            }
           }
         } else {
           final pageDishList = PageDishList(mainItem.id, mainItem.id, mainItem.displayMode, []);
@@ -103,16 +124,40 @@ class SubDishController extends CustomBaseController  {
         for(var subItem in mainItem.children) {
           final subItemCount = subItem.displayMode == RestaurantConf.displayMode_4 ? 4 : 6;
           if (subItem.categoryType == RestaurantConf.categoryTypeDish) {///二级分类下是菜品
+            if (isOnBuffetMode) {
+              if (!globalController.isBuffetSupportCategoryId(subItem.id)) {
+                continue;
+              }
+            }
             if (subItem.dishList.isNotEmpty) {
-              for (int i = 0; i < subItem.dishList.length; i += subItemCount) {
-                final subDishList = subItem.dishList.sublist(i, i + subItemCount < subItem.dishList.length ? i + subItemCount : subItem.dishList.length);
-                final pageDishList = PageDishList(mainItem.id, subItem.id, subItem.displayMode, subDishList);
-                if (subItem.bgImage != null && subItem.bgImage!.isNotEmpty){
-                  pageDishList.bgUrl = subItem.bgImage;
-                } else {
-                  pageDishList.bgUrl = mainItem.bgImage;
+              if (isOnBuffetMode) {
+                List<DishInfo> dataList = [];
+                for (int i = 0; i < subItem.dishList.length; i++) {
+                  if (globalController.isBuffetSupportDishId(subItem.dishList[i].id)) {
+                    dataList.add(subItem.dishList[i]);
+                  }
+                  if (dataList.length == subItemCount || i == subItem.dishList.length -1) {
+                    final pageDishList = PageDishList(mainItem.id, subItem.id, subItem.displayMode, dataList);
+                    if (subItem.bgImage != null && subItem.bgImage!.isNotEmpty) {
+                      pageDishList.bgUrl = subItem.bgImage;
+                    } else {
+                      pageDishList.bgUrl = mainItem.bgImage;
+                    }
+                    _basePageDishDataList.add(pageDishList);
+                    dataList = [];
+                  }
                 }
-                _basePageDishDataList.add(pageDishList);
+              } else {
+                for (int i = 0; i < subItem.dishList.length; i += subItemCount) {
+                  final subDishList = subItem.dishList.sublist(i, i + subItemCount < subItem.dishList.length ? i + subItemCount : subItem.dishList.length);
+                  final pageDishList = PageDishList(mainItem.id, subItem.id, subItem.displayMode, subDishList);
+                  if (subItem.bgImage != null && subItem.bgImage!.isNotEmpty){
+                    pageDishList.bgUrl = subItem.bgImage;
+                  } else {
+                    pageDishList.bgUrl = mainItem.bgImage;
+                  }
+                  _basePageDishDataList.add(pageDishList);
+                }
               }
             } else {
               final pageDishList = PageDishList(mainItem.id, subItem.id, subItem.displayMode, []);
@@ -124,7 +169,11 @@ class SubDishController extends CustomBaseController  {
               _basePageDishDataList.add(pageDishList);
             }
           } else if (subItem.categoryType == RestaurantConf.categoryTypePackage){///二级分类下是套餐
-
+            if (isOnBuffetMode) {
+              if (!globalController.isBuffetSupportCategoryId(subItem.id)) {
+                continue;
+              }
+            }
             final pageDishList = PageDishList(mainItem.id, subItem.id, subItem.displayMode, [], packageInfo: subItem.packageInfo);
             if (subItem.packageInfo !=null && subItem.packageInfo!.bgImage != null && subItem.packageInfo!.bgImage!.isNotEmpty) {
               pageDishList.bgUrl = subItem.packageInfo!.bgImage;
@@ -176,6 +225,15 @@ class SubDishController extends CustomBaseController  {
   @override
   void onInit() {
     mainCategoryInfoList = globalController.restaurantData.categoryInfos;
+    if (globalController.isOnBuffetMode) {
+      mainCategoryInfoList = [];
+      for (int i=0; i<globalController.restaurantData.categoryInfos.length; i++) {
+        final item = globalController.restaurantData.categoryInfos[i];
+        if (globalController.isBuffetSupportCategoryId(item.id)) {
+          mainCategoryInfoList.add(globalController.restaurantData.categoryInfos[i]);
+        }
+      }
+    }
 
     _initBasePageDishDataList();
 
@@ -227,6 +285,16 @@ class SubDishController extends CustomBaseController  {
       return;
     }
     mainCategoryInfoList = globalController.restaurantData.categoryInfos;
+    if (globalController.isOnBuffetMode) {
+      mainCategoryInfoList = [];
+      for (int i=0; i<globalController.restaurantData.categoryInfos.length; i++) {
+        final item = globalController.restaurantData.categoryInfos[i];
+        if (globalController.isBuffetSupportCategoryId(item.id)) {
+          mainCategoryInfoList.add(globalController.restaurantData.categoryInfos[i]);
+        }
+      }
+    }
+
     _basePageDishDataList.clear();
     invalidCategoryMap.clear();
     _initBasePageDishDataList();
@@ -308,7 +376,16 @@ class SubDishController extends CustomBaseController  {
 
     updateSelectedMainCategoryId(foundCategoryInfo!.id);
     if (foundCategoryInfo.categoryType == RestaurantConf.categoryTypeCategory) {
-      subCategoryInfoList = foundCategoryInfo.children;
+      if (globalController.isOnBuffetMode) {
+        subCategoryInfoList = [];
+        for(int i=0; i<foundCategoryInfo.children.length; i++) {
+          if (globalController.isBuffetSupportCategoryId(foundCategoryInfo.children[i].id)) {
+            subCategoryInfoList.add(foundCategoryInfo.children[i]);
+          }
+        }
+      } else {
+        subCategoryInfoList = foundCategoryInfo.children;
+      }
       updateSelectedSubCategoryId(subCategoryInfoList.first.id);
     } else {
       subCategoryInfoList = [];
@@ -351,6 +428,12 @@ class SubDishController extends CustomBaseController  {
         if (item.categoryType == RestaurantConf.categoryTypeCategory) {///有二级分类
           subCategoryInfoList = item.children;
           if (globalController.isOnBuffetMode) {///如果是套餐模式，需要找到有效的二级分类
+            subCategoryInfoList = [];
+            for(int i=0; i<item.children.length; i++) {
+              if (globalController.isBuffetSupportCategoryId(item.children[i].id)) {
+                subCategoryInfoList.add(item.children[i]);
+              }
+            }
             for(var subItem in subCategoryInfoList) {
               if (globalController.isBuffetSupportCategoryId(subItem.id)) {
                 updateSelectedSubCategoryId(subItem.id);
@@ -420,7 +503,17 @@ class SubDishController extends CustomBaseController  {
     } else {
       for(var mainItem in mainCategoryInfoList) {
         if (mainItem.id == pageDishList.mainCategoryId) {
-          subCategoryInfoList = mainItem.children;
+          if (globalController.isOnBuffetMode) {
+            subCategoryInfoList = [];
+            for(int i=0; i<mainItem.children.length; i++) {
+              if (globalController.isBuffetSupportCategoryId(mainItem.children[i].id)) {
+                subCategoryInfoList.add(mainItem.children[i]);
+              }
+            }
+          } else {
+            subCategoryInfoList = mainItem.children;
+          }
+
           updateSelectedMainCategoryId(pageDishList.mainCategoryId);
           updateSelectedSubCategoryId(pageDishList.subCategoryId);
         }
@@ -524,6 +617,23 @@ class SubDishController extends CustomBaseController  {
         globalController.isOnBuffetMode = true;
         globalController.buffetCategoryInfo = item;
         globalController.reqOrderDetail();
+
+        if (globalController.isOnBuffetMode) {
+          mainCategoryInfoList = [];
+          for (int i=0; i<globalController.restaurantData.categoryInfos.length; i++) {
+            final item = globalController.restaurantData.categoryInfos[i];
+            if (globalController.isBuffetSupportCategoryId(item.id)) {
+              mainCategoryInfoList.add(globalController.restaurantData.categoryInfos[i]);
+            }
+          }
+        }
+
+        _basePageDishDataList.clear();
+        invalidCategoryMap.clear();
+        _initBasePageDishDataList();
+
+        handleTimerCheckShouldUpdate();
+
         handlePageDishDataListUpdate(null);
       }
     });
@@ -561,6 +671,13 @@ class SubDishController extends CustomBaseController  {
         if (item.categoryType == RestaurantConf.categoryTypeCategory) {///是分类-才有子项children-即二级分类表
           subCategoryInfoList = item.children;
           if (globalController.isOnBuffetMode) {
+            subCategoryInfoList = [];
+            for(int i=0; i<item.children.length; i++) {
+              if (globalController.isBuffetSupportCategoryId(item.children[i].id)) {
+                subCategoryInfoList.add(item.children[i]);
+              }
+            }
+
             for(var subItem in subCategoryInfoList) {
               if (globalController.isBuffetSupportCategoryId(subItem.id)) {
                 updateSelectedSubCategoryId(subItem.id);

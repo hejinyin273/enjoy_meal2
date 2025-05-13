@@ -43,8 +43,8 @@ class LoginController extends BaseController{
   void onReady() {
     ///=====todo for test=====
     //accountController.text = "flfwy02";
-    accountController.text = "fuwuyuan1";
-    pwdController.text = "fuwuyuan1";
+    accountController.text = "fl02";
+    pwdController.text = "Aa123456";
     isLoginEnableObs(true);
     ///=====todo for test=====
     super.onReady();
