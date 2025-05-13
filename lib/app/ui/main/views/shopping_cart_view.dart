@@ -322,9 +322,11 @@ class ShoppingCartView extends CustomBaseView<ShoppingCartController> {
                 )
               ],
             ),
-            Container(
-              height: totalHeight,
-              color: dishOrderModel.dishInfo.available ? Colors.transparent : const Color(0x99333333),
+            IgnorePointer(
+              child: Container(
+                height: totalHeight,
+                color: dishOrderModel.dishInfo.available ? Colors.transparent : const Color(0x99333333),
+              ),
             ),
           ],
         ),

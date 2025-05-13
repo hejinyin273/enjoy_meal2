@@ -154,6 +154,7 @@ class BuffetConfirmController extends CustomBaseController  {
 
     dataRepository.reqSubmitOrder(submitOrderReq).then((BaseResp baseResp) async{
       if(baseResp.isSuccess()) {
+        globalController.clearShoppingCart();
         Get.back(result: true);
       } else {
         showApiErrToast(baseResp.status, baseResp.message);

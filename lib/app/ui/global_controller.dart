@@ -123,13 +123,13 @@ class GlobalController extends BaseController{
         final startTimeList = mainItem.validStartTime!.split(":");
         if (startTimeList.length == 2) {
           mainItem.startHour = int.tryParse(startTimeList[0]);
-          mainItem.startMinute = int.tryParse(startTimeList[0]);
+          mainItem.startMinute = int.tryParse(startTimeList[1]);
         }
 
         final endTimeList = mainItem.validEndTime!.split(":");
         if (endTimeList.length == 2) {
           mainItem.endHour = int.tryParse(endTimeList[0]);
-          mainItem.endMinute = int.tryParse(endTimeList[0]);
+          mainItem.endMinute = int.tryParse(endTimeList[1]);
         }
       } else {
         mainItem.startHour = null;

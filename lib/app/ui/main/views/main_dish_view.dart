@@ -270,11 +270,13 @@ class MainDishView extends CustomBaseView<MainDishController> {
             },
             child: Container(
               height: 57.h,
+              width: 235.w,
               margin: EdgeInsets.only(bottom: 6.h),
-              padding: EdgeInsets.only(left: 11.w),
+              padding: EdgeInsets.only(left: 6.w, right: 5.w),
               color: Colors.white,
               alignment: Alignment.centerLeft,
-              child: Text(model.getDishName(), style: TextStyle(color: Colors.black, fontSize: 28.sp, fontWeight: FontWeightConf.bold),),
+              child: AutoSizeText(model.getDishName(), minFontSize: 8,
+                style: TextStyle(color: Colors.black, fontSize: 28.sp, fontWeight: FontWeightConf.bold),),
             ));
       },));
   }

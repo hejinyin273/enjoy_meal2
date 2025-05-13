@@ -47,6 +47,13 @@ class OrderDetailResp{
     }
     return false;
   }
+
+  bool isCommonOrder() {
+    if (orderDetailPackages.isNotEmpty || orderDetailDishes.isNotEmpty) {
+      return true;
+    }
+    return false;
+  }
 }
 
 /*class OrderItem{

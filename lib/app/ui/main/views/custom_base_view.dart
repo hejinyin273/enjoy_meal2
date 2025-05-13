@@ -116,7 +116,7 @@ abstract class CustomBaseView<BaseController extends CustomBaseController> exten
         child: Obx(()=>Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(title, style: TextStyle(color: Colors.black, fontSize: 25.sp, fontWeight: FontWeightConf.bold), textAlign: TextAlign.center,),
+            Text(title, style: TextStyle(color: Colors.black, fontSize: 22.sp, fontWeight: FontWeightConf.bold), textAlign: TextAlign.center,),
             Offstage(
               offstage: controller.globalController.shoppingCartOrderNumObs.value <= 0,
               child: Container(
