@@ -116,6 +116,11 @@ class BuffetConfirmController extends CustomBaseController  {
       }
     }
 
+    if (globalController.orderDetailResp != null && globalController.orderDetailResp!.isOrderExist()) {
+      isConfirmBtnEnableObs(false);
+      return;
+    }
+
     isConfirmBtnEnableObs(isAllOk);
   }
 

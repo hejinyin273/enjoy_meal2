@@ -17,6 +17,7 @@ import '../data/model/restaurant_data.dart';
 import '../data/protocol/response/order_detail_resp.dart';
 import '../data/repository/data_repository.dart';
 import '../local/custom_localizations.dart';
+import '../routes/app_pages.dart';
 import 'dialog/buffet_time_tip_dialog.dart';
 
 class GlobalController extends BaseController{
@@ -368,8 +369,8 @@ class GlobalController extends BaseController{
 
   int getBuffetMaxQuantity(DishInfo dishInfo) {
     int usedCount = 0;
-    if (orderDetailResp != null && orderDetailResp!.orderDetailDishes.isNotEmpty) {
-      for (var orderDetailDish in orderDetailResp!.orderDetailDishes) {
+    if (orderDetailResp != null && orderDetailResp!.buffetOrderDetailDishes.isNotEmpty) {
+      for (var orderDetailDish in orderDetailResp!.buffetOrderDetailDishes) {
         if (orderDetailDish.orderMode == 2 && orderDetailDish.id == dishInfo.id) {///自助餐模式
           usedCount += orderDetailDish.dishQuantity;
         }
@@ -451,6 +452,7 @@ class GlobalController extends BaseController{
   void handleOrderCompleteMsg(int tableId) {
     if (currentTableId == tableId) {
       reqOrderDetail();
+      Get.offAllNamed(Routes.mainPage);
     }
   }
 

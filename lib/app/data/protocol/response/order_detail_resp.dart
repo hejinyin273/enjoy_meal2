@@ -12,6 +12,7 @@ class OrderDetailResp{
   List<OrderDetailPackage> orderDetailPackages = [];
   List<OrderDetailBuffet> orderDetailBuffets = [];
   List<OrderDetailDish> orderDetailDishes = [];
+  List<OrderDetailDish> buffetOrderDetailDishes = [];
 
   OrderDetailResp.fromJson(Map<String, dynamic> json) {
     orderNumber = json["orderNumber"];
@@ -37,6 +38,13 @@ class OrderDetailResp{
       orderDetailDishes = [];
       json['orderDetailDishes'].forEach((v) {
         orderDetailDishes.add(OrderDetailDish.fromJson(v));
+      });
+    }
+
+    if (json['buffetOrderDetailDishes'] != null) {
+      buffetOrderDetailDishes = [];
+      json['buffetOrderDetailDishes'].forEach((v) {
+        buffetOrderDetailDishes.add(OrderDetailDish.fromJson(v));
       });
     }
   }

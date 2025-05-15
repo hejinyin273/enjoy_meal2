@@ -43,6 +43,9 @@ class ShoppingCartController extends CustomBaseController  {
 
   void onAddBtnClicked(dynamic model, int index) {
     if (model is DishOrderModel) {
+      if (!globalController.checkDishCanDoNext(model.dishInfo)) {
+        return;
+      }
       model.quantity++;
       updateShoppingCartListUpdate();
     } else if (model is PackageOrderModel) {

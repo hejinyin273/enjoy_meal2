@@ -41,7 +41,10 @@ object ApkTools {
         try {
             val packageManager = context.packageManager
             val packageInfo = packageManager.getPackageInfo(context.packageName, 0)
-            return packageInfo.versionName
+            if (packageInfo != null) {
+                return packageInfo.versionName!!
+            }
+            return "1.0.0"
         } catch (e: Exception) {
             e.printStackTrace()
             return "1.0.0"
@@ -77,7 +80,7 @@ object ApkTools {
         try {
             val packageInfo = manager.getPackageInfo(packageName, PackageManager.GET_CONFIGURATIONS)
             if (packageInfo != null) {
-                versionName = packageInfo.versionName
+                versionName = packageInfo.versionName!!
             }
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()
