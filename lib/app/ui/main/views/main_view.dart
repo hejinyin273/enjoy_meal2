@@ -4,6 +4,7 @@ import 'package:enjoy_meal/app/base/utils/view_util.dart';
 import 'package:enjoy_meal/app/data/model/language.dart';
 import 'package:enjoy_meal/app/data/model/load_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:gif_view/gif_view.dart';
@@ -153,15 +154,17 @@ class MainView extends CustomBaseView<MainController> {
   _buildInitDoneView() {
     return Stack(
       children: [
-        Positioned.fill(child: ViewUtil.cachedImage(
-          controller.bgImgUrl,
-          fit: BoxFit.fill,
-        )),
+        Positioned.fill(
+            child: controller.bgImgUrl != null ? ViewUtil.cachedImage(
+              controller.bgImgUrl!,
+              fit: BoxFit.fill,
+            ) : Container()
+        ),
 
         Container(
           padding: EdgeInsets.only(top: 285.h),
           alignment: Alignment.center,
-          child: _buildCenterPanel(),
+          child: Obx(()=>_buildCenterPanel()),
         ),
 
         Positioned(
@@ -213,12 +216,20 @@ class MainView extends CustomBaseView<MainController> {
   }
 
   _buildCenterPanel() {
+    controller.selectedLanguage;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text("いらっしゃいませ、（店名）へようこそ", style: TextStyle(fontSize: 40.sp,
+        /*Text("いらっしゃいませ、（店名）へようこそ", style: TextStyle(fontSize: 40.sp,
             color: Colors.black,
-            fontWeight: FontWeightConf.black),),
+            fontWeight: FontWeightConf.black),),*/
+
+        Container(
+          width: 665.w,
+          height: 80.h,
+          color: const Color(0xFFE5E5E5),
+          child: Html(data: controller.globalController.restaurantData.restaurantBaseInfo.getRestaurantWelcomeMsg()),
+        ),
 
         SizedBox(height: 21.h,),
         _buildStartBtn(),
@@ -227,16 +238,24 @@ class MainView extends CustomBaseView<MainController> {
           width: 665.w,
           height: 106.h,
           margin: EdgeInsets.only(top: 28.h, bottom: 28.h),
-          color: const Color(0xFFE5E5E5 ),
+          color: const Color(0xFFE5E5E5),
           alignment: Alignment.center,
-          child: Text("従業員によるオーダーをご希望の方は、\n店員呼出ボタンを押してください", style: TextStyle(fontSize: 25.sp,
+          child: Html(data: controller.globalController.restaurantData.restaurantBaseInfo.getRestaurantTips(),),
+          /*child: Text("従業員によるオーダーをご希望の方は、\n店員呼出ボタンを押してください", style: TextStyle(fontSize: 25.sp,
               color: Colors.black,
-              fontWeight: FontWeightConf.bold),),
+              fontWeight: FontWeightConf.bold),),*/
         ),
 
-        Text("営業時間ランチ；11：00～15：00　デイナー17：00～23：00（LO22：30）", style: TextStyle(fontSize: 20.sp,
+        Container(
+          width: 665.w,
+          height: 90.h,
+          color: const Color(0xFFE5E5E5),
+          child: Html(data: controller.globalController.restaurantData.restaurantBaseInfo.getRestaurantBusinessTime()),
+        ),
+
+       /* Text("営業時間ランチ；11：00～15：00　デイナー17：00～23：00（LO22：30）", style: TextStyle(fontSize: 20.sp,
             color: Colors.black,
-            fontWeight: FontWeightConf.bold),),
+            fontWeight: FontWeightConf.bold),),*/
 
       ],
     );

@@ -2,11 +2,17 @@ package com.kinjos.meal.enjoy_meal.utils
 
 import android.content.Context
 import android.content.Intent
+import android.content.IntentSender
+import android.content.pm.PackageInfo
+import android.content.pm.PackageInstaller
+import android.content.pm.PackageInstaller.SessionParams
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import androidx.core.content.FileProvider
 import java.io.File
+import java.io.FileInputStream
+import java.io.IOException
 
 object ApkTools {
     /**
@@ -30,6 +36,60 @@ object ApkTools {
         }
         intent.setDataAndType(uri, "application/vnd.android.package-archive")
         context.startActivity(intent)
+    }
+
+    fun installApkSession(
+        context: Context,
+        apkFilePath: String,
+        statusReceiver: IntentSender?
+    ): Boolean {
+        var session: PackageInstaller.Session? = null
+        try {
+            val file = File(apkFilePath)
+            if (!file.exists()) return false
+            val packageInstaller = context.packageManager.packageInstaller
+            val params = SessionParams(
+                SessionParams.MODE_FULL_INSTALL
+            )
+            params.setSize(file.length())
+            params.setInstallLocation(PackageInfo.INSTALL_LOCATION_PREFER_EXTERNAL)
+
+            val sessionId = packageInstaller.createSession(params)
+            session = packageInstaller.openSession(sessionId)
+
+            addApkToInstallSession(apkFilePath, session, file.length())
+
+            // Commit the session (this will start the installation workflow).
+            session.commit(statusReceiver!!)
+            return true
+        } catch (e: IOException) {
+            throw RuntimeException("Couldn't install package", e)
+        } catch (e: RuntimeException) {
+            session?.abandon()
+            return false
+        } finally {
+            session?.close()
+        }
+    }
+
+    @Throws(IOException::class)
+    private fun addApkToInstallSession(
+        assetName: String,
+        session: PackageInstaller.Session,
+        lengthBytes: Long
+    ) {
+        // It's recommended to pass the file size to openWrite(). Otherwise installation may fail
+        // if the disk is almost full.
+        session.openWrite("package", 0, lengthBytes).use { packageInSession ->
+            FileInputStream(assetName).use { `is` ->
+                val buffer = ByteArray(16384)
+                var n: Int
+                while ((`is`.read(buffer).also { n = it }) >= 0) {
+                    packageInSession.write(buffer, 0, n)
+                }
+                session.fsync(packageInSession)
+            }
+        }
     }
 
     /**

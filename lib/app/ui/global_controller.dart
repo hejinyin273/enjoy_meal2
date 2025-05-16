@@ -29,21 +29,27 @@ class GlobalController extends BaseController{
 
   String get currentTableNumber  {
     if (userType != RestaurantConf.userTypeUser) {
-      return waiterSelectedTableInfo!.tableNumber??"";
+      if (waiterSelectedTableInfo != null) {
+        return waiterSelectedTableInfo!.tableNumber ?? "";
+      }
+      return "";
     }
     return restaurantData.currentTable.tableNumber??"";
   }
 
   int get currentTableId {
     if (userType != RestaurantConf.userTypeUser) {
-      return waiterSelectedTableInfo!.id??0;
+      if (waiterSelectedTableInfo != null) {
+        return waiterSelectedTableInfo!.id??0;
+      }
+      return 0;
     }
     return restaurantData.currentTable.id??0;
   }
 
-  int get userId => restaurantData.currentTable.boundUserId??0;
+  int get userId => restaurantData.currentTable.boundUserId??-1;
 
-  int get userType => restaurantData.currentTable.boundUserType??0;
+  int get userType => restaurantData.currentTable.boundUserType??0;///0表示服务员，1表示厨房，2表示餐桌
 
   String get callStaffBgImage => restaurantData.restaurantBaseInfo.callStaffBgImage;
 
@@ -358,7 +364,7 @@ class GlobalController extends BaseController{
     }
 
     if (isOnBuffetMode) {
-      if (getBuffetMaxQuantity(dishInfo) <= 0) {
+      if (dishInfo.buffetMaxQuantity != null && getBuffetMaxQuantity(dishInfo) <= 0) {
         showToast("已达到上限了，已经选${dishInfo.buffetMaxQuantity}个了");
         return false;
       }
@@ -452,7 +458,9 @@ class GlobalController extends BaseController{
   void handleOrderCompleteMsg(int tableId) {
     if (currentTableId == tableId) {
       reqOrderDetail();
-      Get.offAllNamed(Routes.mainPage);
+      if (userType == RestaurantConf.userTypeUser) {
+        Get.until((route) => Get.currentRoute.startsWith(Routes.mainPage));
+      }
     }
   }
 

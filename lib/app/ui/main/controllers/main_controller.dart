@@ -8,6 +8,7 @@ import 'package:enjoy_meal/app/local/custom_localizations.dart';
 import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart' as pkg;
 import 'package:path_provider/path_provider.dart';
+import '../../../base/config/base_conf.dart';
 import '../../../base/data/protocol/response/base_resp.dart';
 import '../../../base/utils/default_cache_manager.dart';
 import '../../../base/utils/md5_util.dart';
@@ -41,7 +42,7 @@ class MainController extends CustomBaseController  {
 
   bool _isOnLoadingOrderDetail = false;
 
-  late String bgImgUrl;
+  late String? bgImgUrl;
 
   CancelToken? downloadCancelToken;
   AppVersionResp? newAppVersionResp;
@@ -119,7 +120,7 @@ class MainController extends CustomBaseController  {
   }
 
   void onResCacheDone(RestaurantData restaurantData) async{
-    bgImgUrl = restaurantData.restaurantBaseInfo.selectionBgImage;
+    bgImgUrl = restaurantData.restaurantBaseInfo.homeBgImage;
     _loadInitStateObs(LoadState.success);
 
     if (globalController.userType == RestaurantConf.userTypeUser) {
@@ -141,6 +142,7 @@ class MainController extends CustomBaseController  {
       if(baseResp.isSuccessWithData()) {
         final restaurantData = RestaurantData.fromJson(baseResp.data);
         globalController.initData(restaurantData);
+        BaseConf.isInitDone = true;
         _loadRestaurantInfoState = LoadState.success;
         if (globalController.userType == RestaurantConf.userTypeUser) {
           reqOrderDetail();

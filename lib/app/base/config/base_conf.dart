@@ -8,4 +8,5 @@ class BaseConf{
 
   static String token = "";
   static String devBrand = "";
+  static bool isInitDone = false;
 }

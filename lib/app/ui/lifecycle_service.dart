@@ -82,7 +82,8 @@ class LifecycleService extends GetxService with WidgetsBindingObserver {
         }
       }
 
-      //showFlutterNotification(message);
+      ///todo for check push
+      showFlutterNotification(message);
     });
   }
 
@@ -98,6 +99,12 @@ class LifecycleService extends GetxService with WidgetsBindingObserver {
       print("======>>>>>App is in background");
     } else if (state == AppLifecycleState.resumed) {
       print("======>>>>>App is in foreground");
+      if (BaseConf.isInitDone) {
+        globalController.reqRestaurantInfo();
+        if (globalController.currentTableId > 0) {
+          globalController.reqOrderDetail();
+        }
+      }
     } else if (state == AppLifecycleState.inactive) {
       print("======>>>>>App is inactive");
     }

@@ -74,9 +74,7 @@ class SubDishView extends CustomBaseView<SubDishController> {
             return SizedBox(
               width: 833.w,
               height: 300.h,
-              child: Html(
-                data: controller.mainCategoryInfoList.first.getCategoryDesc()??"",
-              ),
+              child: Html(data: mainCategoryDesc,),
             );
           }),
         ),

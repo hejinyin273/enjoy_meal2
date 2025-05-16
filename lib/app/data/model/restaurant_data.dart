@@ -100,15 +100,24 @@ class RestaurantBaseInfo{
   String restaurantNameZh;
   String restaurantNameJa;
   String restaurantNameEn;
+  String? restaurantWelcomeMsgZh;
+  String? restaurantWelcomeMsgJa;
+  String? restaurantWelcomeMsgEn;
+  String? restaurantTipsZh;
+  String? restaurantTipsJa;
+  String? restaurantTipsEn;
+  String? restaurantBusinessTimeZh;
+  String? restaurantBusinessTimeJa;
+  String? restaurantBusinessTimeEn;
+
   String addressZh;
   String addressJa;
   String addressEn;
   String contactName;
   String contactPhone;
   int topLayoutMode; ///0为6宮格，1为9宮格，2为12宮格
-  String? homeBgImageZh;
-  String? homeBgImageJa;
-  String? homeBgImageEn;
+  String? homeBgImage;
+
   String selectionBgImage;
   String callStaffBgImage;
 
@@ -131,14 +140,21 @@ class RestaurantBaseInfo{
         restaurantNameZh = json["restaurantNameZh"],
         restaurantNameJa = json["restaurantNameJa"],
         restaurantNameEn = json["restaurantNameEn"],
+        restaurantWelcomeMsgZh = json["restaurantWelcomeMsgZh"],
+        restaurantWelcomeMsgJa = json["restaurantWelcomeMsgJa"],
+        restaurantWelcomeMsgEn = json["restaurantWelcomeMsgEn"],
+        restaurantTipsZh = json["restaurantTipsZh"],
+        restaurantTipsJa = json["restaurantTipsJa"],
+        restaurantTipsEn = json["restaurantTipsEn"],
+        restaurantBusinessTimeZh = json["restaurantBusinessTimeZh"],
+        restaurantBusinessTimeJa = json["restaurantBusinessTimeJa"],
+        restaurantBusinessTimeEn = json["restaurantBusinessTimeEn"],
         addressZh = json["addressZh"],
         addressJa = json["addressJa"],
         addressEn = json["addressEn"],
         contactName = json["contactName"],
         contactPhone = json["contactPhone"],
-        homeBgImageZh = json["homeBgImageZh"],
-        homeBgImageJa = json["homeBgImageJa"],
-        homeBgImageEn = json["homeBgImageEn"],
+        homeBgImage = json["homeBgImage"],
         topLayoutMode = json["topLayoutMode"],
         selectionBgImage = json["selectionBgImage"],
         callStaffBgImage = json["callStaffBgImage"],
@@ -164,6 +180,36 @@ class RestaurantBaseInfo{
       return restaurantNameJa;
     } else {
       return restaurantNameEn;
+    }
+  }
+
+  String getRestaurantWelcomeMsg() {
+    if (Language.zh == Conf.selectedLanguage) {
+      return restaurantWelcomeMsgZh??"";
+    } else if (Language.jp == Conf.selectedLanguage) {
+      return restaurantWelcomeMsgJa??"";
+    } else {
+      return restaurantWelcomeMsgEn??"";
+    }
+  }
+
+  String getRestaurantTips() {
+    if (Language.zh == Conf.selectedLanguage) {
+      return restaurantTipsZh??"";
+    } else if (Language.jp == Conf.selectedLanguage) {
+      return restaurantTipsJa??"";
+    } else {
+      return restaurantTipsEn??"";
+    }
+  }
+
+  String getRestaurantBusinessTime() {
+    if (Language.zh == Conf.selectedLanguage) {
+      return restaurantBusinessTimeZh??"";
+    } else if (Language.jp == Conf.selectedLanguage) {
+      return restaurantBusinessTimeJa??"";
+    } else {
+      return restaurantBusinessTimeEn??"";
     }
   }
 
