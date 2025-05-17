@@ -60,4 +60,14 @@ class AndroidHelper {
     }
     return Future.value(false);
   }
+
+  static Future<bool> startPrinterMainActivity() async {
+    try {
+      final bool success = await _helperChannel.invokeMethod('startPrinterMainActivity');
+      return Future.value(success);
+    } on PlatformException catch (e) {
+      print(e.toString());
+    }
+    return Future.value(false);
+  }
 }

@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.core.content.FileProvider
+import com.gainscha.sdk.demo.ui.PrinterMainActivity
 import com.kinjos.meal.enjoy_meal.utils.ApkTools
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
@@ -17,6 +18,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStreamReader
+
 
 class MainActivity: FlutterActivity() {
     companion object{
@@ -44,6 +46,9 @@ class MainActivity: FlutterActivity() {
                 result.success(handleAppInstall(filePath))
             } else if(call.method == "checkAndInstallHelper"){
                 checkAndInstallHelper(result)
+            } else if(call.method == "startPrinterMainActivity"){
+                startActivity(Intent(this, PrinterMainActivity::class.java))
+                result.success(true)
             }
         }
     }
@@ -144,7 +149,7 @@ class MainActivity: FlutterActivity() {
     }
 
     @Throws(IOException::class)
-    fun copyAssetFileTo(filename: String, filePathName: String,): Boolean {
+    fun copyAssetFileTo(filename: String, filePathName: String): Boolean {
         val of = File(filePathName)
         if (of.exists()) {
             of.delete()
