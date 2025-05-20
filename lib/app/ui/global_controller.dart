@@ -364,16 +364,23 @@ class GlobalController extends BaseController{
     }
 
     if (isOnBuffetMode) {
-      if (dishInfo.buffetMaxQuantity != null && getBuffetMaxQuantity(dishInfo) <= 0) {
+      if (dishInfo.buffetMaxQuantity != null && getBuffetRemainingQuantity(dishInfo) <= 0) {
         showToast("已达到上限了，已经选${dishInfo.buffetMaxQuantity}个了");
         return false;
+      }
+    } else {
+      if (dishInfo.inventoryQuantity != null && dishInfo.inventoryQuantity! > 0) {
+        if (dishInfo.inventoryQuantity! - wantCount < 0) {
+          showToast("库存不够了！剩余${dishInfo.inventoryQuantity}份！");
+          return false;
+        }
       }
     }
 
     return true;
   }
 
-  int getBuffetMaxQuantity(DishInfo dishInfo) {
+  int getBuffetRemainingQuantity(DishInfo dishInfo) {
     int usedCount = 0;
     if (orderDetailResp != null && orderDetailResp!.buffetOrderDetailDishes.isNotEmpty) {
       for (var orderDetailDish in orderDetailResp!.buffetOrderDetailDishes) {

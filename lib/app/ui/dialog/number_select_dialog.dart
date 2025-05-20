@@ -22,7 +22,7 @@ class NumberSelectDialog extends StatelessWidget{
   final controller = Get.put(NumberSelectDialogController());
 
   NumberSelectDialog({super.key, required this.mainId, required this.packageInfo, required this.onCancel, required this.onConfirm,}){
-    controller.selectedNumObs(1);
+    controller.selectedNumObs(packageInfo.minSalesQuantity!);
   }
 
   @override
@@ -151,9 +151,11 @@ class NumberSelectDialog extends StatelessWidget{
         children: [
           SizedBox(width: 30.w,),
 
-          TapDownZoomOutView(child: AssetImageView(fileName: "ic_subtract.png", width: 57.w, height: 57.w,), onClicked: (){
+          Obx(()=>controller.selectedNumObs.value <= packageInfo.minSalesQuantity!
+              ? SizedBox(width: 57.w, height: 57.w,)
+              : TapDownZoomOutView(child: AssetImageView(fileName: "ic_subtract.png", width: 57.w, height: 57.w,), onClicked: (){
             controller.onSubtractClicked();
-          },),
+          },)),
 
           Container(
             width: 75.w,

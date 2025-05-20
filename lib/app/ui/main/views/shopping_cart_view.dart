@@ -340,8 +340,15 @@ class ShoppingCartView extends CustomBaseView<ShoppingCartController> {
       padding: EdgeInsets.only(left: 13.w),
       color: dishAttributeInfo == null ? const Color(0xFFEBE9E9) : const Color(0xFFF6E7BD),
       alignment: Alignment.centerLeft,
-      child: Text(dishAttributeInfo == null ? "" : dishAttributeInfo.getAttributeName(),
-        style: TextStyle(color: Colors.black, fontSize: fontSize??12.sp, fontWeight: FontWeightConf.medium),),
+      child: dishAttributeInfo == null ? const SizedBox() : Row(
+        children: [
+          Text(dishAttributeInfo.getAttributeName(),
+            style: TextStyle(color: Colors.black, fontSize: fontSize??12.sp, fontWeight: FontWeightConf.medium),),
+          SizedBox(width: 10.w,),
+          Text("+${dishAttributeInfo.priceAdjustment.toInt()}",
+            style: TextStyle(color: const Color(0xFFFF0303), fontSize: fontSize??12.sp, fontWeight: FontWeightConf.medium),),
+        ],
+      ),
     );
   }
 
@@ -457,7 +464,15 @@ class ShoppingCartView extends CustomBaseView<ShoppingCartController> {
       padding: EdgeInsets.only(left: 13.w),
       color: const Color(0xFFF6E7BD),
       alignment: Alignment.centerLeft,
-      child: Text(dishAttributeInfo.getAttributeName(), style: TextStyle(color: Colors.black, fontSize: 12.sp, fontWeight: FontWeightConf.medium),),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(dishAttributeInfo.getAttributeName(), style: TextStyle(color: Colors.black, fontSize: 12.sp, fontWeight: FontWeightConf.medium),),
+          SizedBox(width: 10.w,),
+          Text("+${dishAttributeInfo.priceAdjustment.toInt()}",
+            style: TextStyle(color: const Color(0xFFFF0303), fontSize: 12.sp, fontWeight: FontWeightConf.medium),),
+        ],
+      ),
     );
   }
 
@@ -466,12 +481,23 @@ class ShoppingCartView extends CustomBaseView<ShoppingCartController> {
   }
 
   _buildAddSubView(dynamic model, int quantity, int index) {
+    bool isShowSubBtn = true;
+    if (model is PackageOrderModel) {
+      if (model.packageInfo.minSalesQuantity != null) {
+        if (quantity <= model.packageInfo.minSalesQuantity!) {
+          isShowSubBtn = false;
+        }
+      }
+    }
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
+
+        isShowSubBtn ?
         TapDownZoomOutView(child: AssetImageView(fileName: "ic_subtract.png", width: 39.w, height: 41.h,), onClicked: (){
           controller.onSubtractClicked(model, index);
-        },),
+        },) : SizedBox(width: 39.w, height: 41.h,),
 
         SizedBox(width: 11.5.w,),
 
