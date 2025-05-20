@@ -276,10 +276,11 @@ class SubDishView extends CustomBaseView<SubDishController> {
             ),
           ),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               AssetImageView(fileName: "ic_menu_pre_arrow.png", width: 42.w, height: 42.h,),
               SizedBox(height: 35.h,),
-              Text(previousPage, style: TextStyle(color: Colors.black, fontSize: 22.sp, fontWeight: FontWeightConf.bold)),
+              Text(previousPage, style: TextStyle(color: Colors.black, fontSize: 22.sp, fontWeight: FontWeightConf.bold), textAlign: TextAlign.center,),
             ],
           ),
         ), onClicked: (){
@@ -304,10 +305,11 @@ class SubDishView extends CustomBaseView<SubDishController> {
             ),
           ),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               AssetImageView(fileName: "ic_menu_next_arrow.png", width: 42.w, height: 41.h,),
               SizedBox(height: 35.h,),
-              Text(nextPage, style: TextStyle(color: Colors.black, fontSize: 22.sp, fontWeight: FontWeightConf.bold)),
+              Text(nextPage, style: TextStyle(color: Colors.black, fontSize: 22.sp, fontWeight: FontWeightConf.bold), textAlign: TextAlign.center,),
             ],
           ),
         ), onClicked: (){
