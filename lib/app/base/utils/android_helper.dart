@@ -61,9 +61,25 @@ class AndroidHelper {
     return Future.value(false);
   }
 
-  static Future<bool> startPrinterMainActivity() async {
+  static Future<void> startPrinterMainActivity() async {
     try {
-      final bool success = await _helperChannel.invokeMethod('startPrinterMainActivity');
+      await _helperChannel.invokeMethod('startPrinterMainActivity');
+    } on PlatformException catch (e) {
+      print(e.toString());
+    }
+  }
+
+  static Future<void> startSearchPrinterActivity() async {
+    try {
+      await _helperChannel.invokeMethod('startSearchPrinterActivity');
+    } on PlatformException catch (e) {
+      print(e.toString());
+    }
+  }
+
+  static Future<bool> isPrinterConnected() async {
+    try {
+      final bool success = await _helperChannel.invokeMethod('isPrinterConnected');
       return Future.value(success);
     } on PlatformException catch (e) {
       print(e.toString());

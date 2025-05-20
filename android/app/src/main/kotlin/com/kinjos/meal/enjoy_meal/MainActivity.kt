@@ -1,14 +1,19 @@
 package com.kinjos.meal.enjoy_meal
 
 import android.content.ComponentName
-import android.content.Context
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.core.content.FileProvider
+import com.gainscha.sdk.demo.ui.PrinterConnectActivity
 import com.gainscha.sdk.demo.ui.PrinterMainActivity
+import com.gainscha.sdk.demo.util.Constants
+import com.gainscha.sdk2.ConnectionListener
+import com.gainscha.sdk2.Printer
 import com.kinjos.meal.enjoy_meal.utils.ApkTools
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
@@ -20,12 +25,12 @@ import java.io.IOException
 import java.io.InputStreamReader
 
 
-class MainActivity: FlutterActivity() {
+class MainActivity: FlutterActivity(), ConnectionListener{
     companion object{
         private const val TAG : String = "EnjoyMeal"
         private const val helperChannel:String = "com.kinjos.meal.enjoy_meal/helper"
-
     }
+
     private var methodChannel: MethodChannel? = null
 
     private fun init(flutterEngine: FlutterEngine) {
@@ -48,7 +53,10 @@ class MainActivity: FlutterActivity() {
                 checkAndInstallHelper(result)
             } else if(call.method == "startPrinterMainActivity"){
                 startActivity(Intent(this, PrinterMainActivity::class.java))
-                result.success(true)
+            } else if(call.method == "startSearchPrinterActivity"){
+                startSearchPrinterActivity()
+            } else if (call.method == "isPrinterConnected") {
+                result.success(isPrinterConnected())
             }
         }
     }
@@ -56,6 +64,11 @@ class MainActivity: FlutterActivity() {
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         init(flutterEngine)
+        //Add printer connection listener
+        Printer.addConnectionListener(this)
+        if (Printer.getConnectedPrinters().isNotEmpty()) {
+            printer = Printer.getConnectedPrinters()[0]
+        }
     }
 
     private fun installApk(filePath: String){
@@ -65,10 +78,15 @@ class MainActivity: FlutterActivity() {
         }
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        //Remove printer connected listener
+        Printer.removeConnectionListener(this)
     }
 
     private fun execRuntimeCommand(command: String): Boolean {
@@ -164,6 +182,33 @@ class MainActivity: FlutterActivity() {
         os.close()
         `is`.close()
         return true;
+    }
+
+    //====Printer======
+    private var printer: Printer? = null
+
+    override fun onPrinterConnected(printer: Printer?) {
+        Log.i(TAG, "onPrinterConnected()")
+        this.printer = printer
+    }
+
+    override fun onPrinterConnectFail(printer: Printer?) {
+        Log.i(TAG, "onPrinterConnectFail()")
+    }
+
+    override fun onPrinterDisconnect(printer: Printer?) {
+        Log.i(TAG, "onPrinterDisconnect()")
+        this.printer = null
+    }
+
+    private fun startSearchPrinterActivity() {
+        val intent = Intent(this, PrinterConnectActivity::class.java)
+        intent.putExtra("type", Constants.SearchTypeAll)
+        startActivity(intent)
+    }
+
+    private fun isPrinterConnected(): Boolean {
+        return printer != null && printer!!.isConnected
     }
 
 }

@@ -59,12 +59,13 @@ class LifecycleService extends GetxService with WidgetsBindingObserver {
       final messageDataContent = message.data["data"];
       if (messageDataContent  is String) {
         Map<String, dynamic> jsonMap = json.decode(messageDataContent);
-        if ("REFRESH_DATA" == jsonMap["action"]) {
+        final msgAction = jsonMap["action"];
+        if ("REFRESH_DATA" == msgAction) {
           globalController.reqRestaurantInfo();
-        } else if ("DISH_STOCK_CHANGED" == jsonMap["action"]) {
+        } else if ("DISH_STOCK_CHANGED" == msgAction) {
           globalController.updateRestaurantInfoDishStock(jsonMap["data"]);
           eventBus.fire(PushMsgEvent(jsonMap));
-        } else if ("ORDER_COMPLETE" == jsonMap["action"]) {
+        } else if ("ORDER_COMPLETE" == msgAction) {
           if (jsonMap["data"] != null) {
             final tableId = jsonMap["data"]["tableId"];
             if (tableId is int) {
@@ -74,12 +75,14 @@ class LifecycleService extends GetxService with WidgetsBindingObserver {
           if (globalController.userType != RestaurantConf.userTypeUser) {
             eventBus.fire(PushMsgEvent(jsonMap));
           }
-        } else if ("USER_LOGIN_EXPIRED" == jsonMap["action"]) {
+        } else if ("USER_LOGIN_EXPIRED" == msgAction) {
           BaseConf.token = "";
           Get.offAllNamed(Routes.loginPage);
         } else {
           eventBus.fire(PushMsgEvent(jsonMap));
         }
+
+        //globalController.showToast("收到推送类型:$msgAction");
       }
 
       ///todo for check push

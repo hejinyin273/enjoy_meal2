@@ -74,7 +74,7 @@ abstract class CustomBaseView<BaseController extends CustomBaseController> exten
 
           _buildMenuToolItem(75.h, "TOP", controller.onTopMenuClicked),
 
-          _buildMenuToolItem(124.h, CustomLocalizations.text("pack"), controller.onPackMenuClicked),
+          //_buildMenuToolItem(124.h, CustomLocalizations.text("pack"), controller.onPackMenuClicked),
 
           _buildMenuToolItem(210.h, CustomLocalizations.text("order_history_accounting"), controller.onOrderListMenuClicked,
               isSelected: controller.isOrderListMenuSelected),

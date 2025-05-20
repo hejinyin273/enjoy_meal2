@@ -169,7 +169,7 @@ class GlobalController extends BaseController{
         if (shoppingItem is DishOrderModel) {
           if (shoppingItem.dishInfo.id == item.dishInfo.id) {
             if (shoppingItem.dishAttributeInfoList.isEmpty && item.dishAttributeInfoList.isEmpty) {/// is same
-              shoppingItem.quantity += 1;
+              shoppingItem.quantity += item.quantity;
               updateShoppingCartOrderInfo();
               return;
             } else {
@@ -189,7 +189,7 @@ class GlobalController extends BaseController{
                   }
                 }
                 if (isAllSame) {
-                  shoppingItem.quantity += 1;
+                  shoppingItem.quantity += item.quantity;
                   updateShoppingCartOrderInfo();
                   return;
                 }
@@ -204,7 +204,7 @@ class GlobalController extends BaseController{
         if (shoppingItem is PackageOrderModel) {
           if (shoppingItem.packageInfo.id == item.packageInfo.id) {
             if (item.packageInfo.packageType == 1) {
-              shoppingItem.quantity +=1;
+              shoppingItem.quantity += item.quantity;
               updateShoppingCartOrderInfo();
               return;
             } else {
@@ -311,6 +311,7 @@ class GlobalController extends BaseController{
         if (Get.isDialogOpen != null && Get.isDialogOpen!) {
           Get.back();
         }
+        reqOrderDetail();
       } else {
         isOnReqBuffetAddTime = false;
       }
@@ -332,9 +333,14 @@ class GlobalController extends BaseController{
       logger.i("startBuffetTimer() startDateTime=$startDateTime, endDateTime=$endDateTime, rel=$rel");
       buffetTimeStringObs(formatDate(DateTime.fromMillisecondsSinceEpoch(rel, isUtc: true), [HH, ":", nn]));
 
-      if (rel <= 60 * 1000 * 10 && rel > 60 * 1000 * 9) {
+      final reminderTimeMin = restaurantData.restaurantBaseInfo.buffetLastReminderTime??0;
+
+
+      if (rel <= 60 * 1000 * reminderTimeMin && rel > 60 * 1000 * (reminderTimeMin -1)) {
         logger.i("startBuffetTimer() showBuffetTimeTipDialog() rel=$rel");
         showBuffetTimeTipDialog();
+      } else {
+        logger.i("startBuffetTimer() rel=$rel, start=${60 * 1000 * (reminderTimeMin -1)}, endEqual=${60 * 1000 * reminderTimeMin}");
       }
 
       if (rel < 0) {
@@ -344,6 +350,7 @@ class GlobalController extends BaseController{
         buffetTimer = null;
         buffetTimeStringObs("");
         eventBus.fire(ExitBuffetEvent());
+        reqOrderDetail();
       }
     });
   }

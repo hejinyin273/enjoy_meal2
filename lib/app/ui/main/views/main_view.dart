@@ -167,11 +167,11 @@ class MainView extends CustomBaseView<MainController> {
           child: Obx(()=>_buildCenterPanel()),
         ),
 
-        Positioned(
+        /*Positioned(
             top: 107.h,
             left: 261.w,
             child: Text("ここにお店の名前やキャッチコピーを書く",
-              style: TextStyle(color: Colors.white, fontSize: 48.sp, fontWeight: FontWeightConf.black),)),
+              style: TextStyle(color: Colors.white, fontSize: 48.sp, fontWeight: FontWeightConf.black),)),*/
 
         Positioned(
             top: 0,
@@ -227,7 +227,7 @@ class MainView extends CustomBaseView<MainController> {
         Container(
           width: 665.w,
           height: 80.h,
-          color: const Color(0xFFE5E5E5),
+          //color: const Color(0xFFE5E5E5),
           child: Html(data: controller.globalController.restaurantData.restaurantBaseInfo.getRestaurantWelcomeMsg()),
         ),
 
@@ -249,7 +249,7 @@ class MainView extends CustomBaseView<MainController> {
         Container(
           width: 665.w,
           height: 90.h,
-          color: const Color(0xFFE5E5E5),
+          //color: const Color(0xFFE5E5E5),
           child: Html(data: controller.globalController.restaurantData.restaurantBaseInfo.getRestaurantBusinessTime()),
         ),
 
