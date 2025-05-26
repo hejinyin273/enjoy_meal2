@@ -1,13 +1,13 @@
 class OperateCompleteReq {
   String tableNumber;
   int batchNumber;
-  int dishId;
+  int orderDetailId;
 
-  OperateCompleteReq(this.tableNumber, this.batchNumber, this.dishId);
+  OperateCompleteReq(this.tableNumber, this.batchNumber, this.orderDetailId);
 
   Map<String, dynamic> toMap() => {
     "tableNumber": tableNumber,
     "batchNumber": batchNumber,
-    "dishId": dishId
+    "orderDetailId": orderDetailId
   };
 }

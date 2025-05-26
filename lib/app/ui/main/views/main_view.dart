@@ -71,11 +71,11 @@ class MainView extends CustomBaseView<MainController> {
       children: [
         GifView.asset(
           'images/gif_loading.gif',
-          height: 80.w,
-          width: 80.w,
+          height: 120.w,
+          width: 160.w,
           frameRate: 30, // default is 15 FPS
         ),
-        SizedBox(height: 18.h,),
+        SizedBox(height: 10.h,),
         Obx(()=>Text(controller.loadingTipObs.value, style: TextStyle(color: const Color(0xFF333333), fontSize: 14.sp, fontWeight: FontWeightConf.medium),))
       ],
     );

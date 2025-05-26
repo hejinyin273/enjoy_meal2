@@ -65,8 +65,8 @@ class ViewUtil{
       children: [
         GifView.asset(
           'images/gif_loading.gif',
-          height: 80.w,
-          width: 80.w,
+          height: 120.w,
+          width: 160.w,
           frameRate: 30, // default is 15 FPS
         ),
         SizedBox(height: 18.h,),
@@ -79,7 +79,7 @@ class ViewUtil{
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        AssetImageView(fileName: "img_net_err.png", width: 170.w, height: 150.h,),
+        AssetImageView(fileName: "img_net_err.png", width: 171.w, height: 128.h,),
         SizedBox(height: 9.h,),
         Text(CustomLocalizations.text("net_err_retry"), style: TextStyle(color: const Color(0xFF999999), fontSize: 14.sp, fontWeight: FontWeightConf.regular),),
         InkWell(

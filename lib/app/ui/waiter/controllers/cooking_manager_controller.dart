@@ -332,9 +332,9 @@ class CookingManagerController extends WaiterBaseController  {
     }
 
     if (DishMakeInfoConf.statusWaitToMake == model.status && !isOnServedMode.value) {
-      reqFoodMade(OperateCompleteReq(item.tableNumber, item.batchNumber, model.id), model);
+      reqFoodMade(OperateCompleteReq(item.tableNumber, item.batchNumber, model.orderDetailId), model);
     } else if (DishMakeInfoConf.statusWaitToServe == model.status && isOnServedMode.value) {
-      reqFoodServed(OperateCompleteReq(item.tableNumber, item.batchNumber, model.id), model);
+      reqFoodServed(OperateCompleteReq(item.tableNumber, item.batchNumber, model.orderDetailId), model);
     }
 
   }
