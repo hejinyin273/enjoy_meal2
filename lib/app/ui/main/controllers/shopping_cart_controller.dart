@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../base/data/protocol/response/base_resp.dart';
-import '../../../data/model/event_bus.dart';
+import '../../../base/data/event_bus.dart';
 import '../../../data/model/goods_model.dart';
 import '../../../data/protocol/request/submit_order_req.dart';
 import '../../../routes/app_pages.dart';

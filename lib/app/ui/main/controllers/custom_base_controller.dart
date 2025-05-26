@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 import '../../../base/data/protocol/response/base_resp.dart';
 import '../../../base/ui/base_controller.dart';
 import '../../../data/local/preference/preference_manager.dart';
-import '../../../data/model/event_bus.dart';
+import '../../../base/data/event_bus.dart';
 import '../../../data/protocol/response/order_detail_resp.dart';
 import '../../../data/repository/data_repository.dart';
 import '../../../routes/app_pages.dart';

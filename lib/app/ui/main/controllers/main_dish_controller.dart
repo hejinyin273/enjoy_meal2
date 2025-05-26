@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 
 import '../../../base/data/protocol/response/base_resp.dart';
 import '../../../base/utils/default_cache_manager.dart';
-import '../../../data/model/event_bus.dart';
+import '../../../base/data/event_bus.dart';
 import '../../../routes/app_pages.dart';
 import 'custom_base_controller.dart';
 

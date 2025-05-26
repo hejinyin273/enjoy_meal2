@@ -1,4 +1,5 @@
 
+import 'dart:async';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -9,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart' as pkg;
 import 'package:path_provider/path_provider.dart';
 import '../../../base/config/base_conf.dart';
+import '../../../base/data/event_bus.dart';
 import '../../../base/data/protocol/response/base_resp.dart';
 import '../../../base/utils/default_cache_manager.dart';
 import '../../../base/utils/md5_util.dart';
@@ -54,6 +56,8 @@ class MainController extends CustomBaseController  {
 
   OrderDetailResp? orderDetailResp;
 
+  StreamSubscription? _helperInstallSubscription;
+
   @override
   Future<void> onInit() async {
     super.onInit();
@@ -69,6 +73,14 @@ class MainController extends CustomBaseController  {
       onPaused: _onPaused,
       onUpdate: _onUpdate, );
 
+    _helperInstallSubscription = eventBus.on<InstallHelperStatus>().listen((InstallHelperStatus event) {
+      logger.i("InstallHelperStatus() status=${event.status}");
+      if (event.status == 0) {
+        AndroidHelper.handleHostInstall("/sdcard/Android/data/com.kinjos.ros/cache/app-release.apk");
+      }
+
+    });
+
     reqUpgradeVersionInfo();
   }
 
@@ -76,6 +88,9 @@ class MainController extends CustomBaseController  {
   void onClose() {
     _languageObs.close();
     _loadInitStateObs.close();
+
+    _helperInstallSubscription?.cancel();
+    _helperInstallSubscription = null;
     super.onClose();
   }
 

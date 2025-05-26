@@ -23,3 +23,8 @@ class RefreshDataEvent{
 class ExitBuffetEvent{
 
 }
+
+class InstallHelperStatus{
+  int status = 0;
+  InstallHelperStatus({this.status = 0});
+}

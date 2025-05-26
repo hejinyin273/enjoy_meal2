@@ -1,13 +1,16 @@
 package com.kinjos.meal.enjoy_meal
 
+import android.app.PendingIntent
+import android.content.BroadcastReceiver
 import android.content.ComponentName
+import android.content.Context
 import android.content.Intent
-import android.content.pm.ActivityInfo
+import android.content.IntentFilter
+import android.content.pm.PackageInstaller
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.core.content.FileProvider
 import com.gainscha.sdk.demo.ui.PrinterConnectActivity
 import com.gainscha.sdk.demo.ui.PrinterMainActivity
@@ -17,6 +20,7 @@ import com.gainscha.sdk2.Printer
 import com.kinjos.meal.enjoy_meal.utils.ApkTools
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel
 import java.io.BufferedReader
 import java.io.File
@@ -28,13 +32,17 @@ import java.io.InputStreamReader
 class MainActivity: FlutterActivity(), ConnectionListener{
     companion object{
         private const val TAG : String = "EnjoyMeal"
-        private const val helperChannel:String = "com.kinjos.meal.enjoy_meal/helper"
+        private const val HELPER_CHANNEL:String = "com.kinjos.meal.enjoy_meal/helper"
+        private const val EVENT_MSG_CHANNEL : String = "com.kinjos.meal.enjoy_meal/eventMsg"
+        private const val PACKAGE_INSTALLED_ACTION: String = "install.SESSION_API_PACKAGE_INSTALLED"
+
+        private var sink : EventChannel.EventSink? = null
     }
 
     private var methodChannel: MethodChannel? = null
 
     private fun init(flutterEngine: FlutterEngine) {
-        methodChannel = MethodChannel(flutterEngine.dartExecutor, helperChannel)
+        methodChannel = MethodChannel(flutterEngine.dartExecutor, HELPER_CHANNEL)
         methodChannel!!.setMethodCallHandler {
                 call, result ->
             if(call.method == "installApk"){
@@ -50,7 +58,7 @@ class MainActivity: FlutterActivity(), ConnectionListener{
                 val filePath = call.arguments as String
                 result.success(handleAppInstall(filePath))
             } else if(call.method == "checkAndInstallHelper"){
-                checkAndInstallHelper(result)
+                checkAndInstallHelper()
             } else if(call.method == "startPrinterMainActivity"){
                 startActivity(Intent(this, PrinterMainActivity::class.java))
             } else if(call.method == "startSearchPrinterActivity"){
@@ -58,6 +66,18 @@ class MainActivity: FlutterActivity(), ConnectionListener{
             } else if (call.method == "isPrinterConnected") {
                 result.success(isPrinterConnected())
             }
+        }
+
+        EventChannel(flutterEngine.dartExecutor.binaryMessenger, EVENT_MSG_CHANNEL).setStreamHandler(stateHandler)
+    }
+
+    private val stateHandler: EventChannel.StreamHandler = object : EventChannel.StreamHandler{
+        override fun onListen(arguments: Any?, events: EventChannel.EventSink?) {
+            sink = events
+        }
+
+        override fun onCancel(arguments: Any?) {
+            sink = null
         }
     }
 
@@ -81,10 +101,12 @@ class MainActivity: FlutterActivity(), ConnectionListener{
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        registerBroadCast()
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        unregisterBroadCast()
         //Remove printer connected listener
         Printer.removeConnectionListener(this)
     }
@@ -122,8 +144,9 @@ class MainActivity: FlutterActivity(), ConnectionListener{
             "com.kinjos.meal.helper.MainActivity"
         )
         intent.setComponent(componentName)
+        Log.i(TAG, "handleAppInstall() apkPath=$apkPath");
         if (!ApkTools.isIntentExisting(this, intent)) {
-            Log.e(TAG, "Something wrong? manager app not exist!");
+            Log.e(TAG, "Something wrong? helper app not exist!");
             return false
         } else {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -131,6 +154,7 @@ class MainActivity: FlutterActivity(), ConnectionListener{
             val uri: Uri
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 uri = FileProvider.getUriForFile(context, context.packageName + ".fileProvider", File(apkPath))
+                Log.i(TAG, "uri path=${uri.path}");
                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             } else {
                 uri = Uri.fromFile(File(apkPath))
@@ -141,12 +165,13 @@ class MainActivity: FlutterActivity(), ConnectionListener{
             intent.putExtra("PluginName", "fileId")
             intent.putExtra("DoneToPackageName", packageName)
             intent.putExtra("DoneToClassName", "com.kinjos.meal.enjoy_meal.MainActivity")
+            Log.i(TAG, "handleAppInstall() start helper.MainActivity");
             startActivity(intent)
             return true
         }
     }
 
-    private fun checkAndInstallHelper(result: MethodChannel.Result){
+    private fun checkAndInstallHelper(){
         try {
             Log.i(TAG, "checkAndInstallHelper()")
             val helperVersion = ApkTools.getAppVersionName(this, "com.kinjos.meal.helper")
@@ -156,13 +181,13 @@ class MainActivity: FlutterActivity(), ConnectionListener{
                 val filePathName = context.externalCacheDir!!.absolutePath + File.separator + assetFileName;
                 Log.i(TAG, "checkAndInstallHelper() assetFileName=$assetFileName, filePathName=$filePathName")
                 copyAssetFileTo(assetFileName, filePathName)
-                result.success(execRuntimeCommand("pm install $filePathName"));
+                handleHelperApkInstall(filePathName)
             } else {
-                result.success(true)
+                sink?.success("HelperInstalled")
             }
         }catch (e: IOException) {
             Log.e(TAG, "checkAndInstallHelper() err=$e")
-            result.success(false)
+            sink?.success("HelperInstallFailed")
         }
     }
 
@@ -182,6 +207,49 @@ class MainActivity: FlutterActivity(), ConnectionListener{
         os.close()
         `is`.close()
         return true;
+    }
+
+    private var careBroadcastReceiver: CareBroadcastReceiver? = null
+
+    private fun registerBroadCast() {
+        val intentFilter = IntentFilter()
+        intentFilter.addAction(PACKAGE_INSTALLED_ACTION)
+        careBroadcastReceiver = CareBroadcastReceiver()
+        registerReceiver(careBroadcastReceiver, intentFilter)
+    }
+
+    private fun unregisterBroadCast() {
+        if (careBroadcastReceiver != null) {
+            unregisterReceiver(careBroadcastReceiver)
+        }
+    }
+
+    private fun handleHelperApkInstall(filePathName: String) {
+        val intent = Intent()
+        intent.setAction(PACKAGE_INSTALLED_ACTION)
+        intent.setPackage(packageName)
+        Log.i(TAG, "handleHelperApkInstall() prepare install filePathName = $filePathName")
+        val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_MUTABLE)
+        val success: Boolean = ApkTools.installApkSession(this, filePathName, pendingIntent.intentSender)
+        if (!success) {
+            sink?.success("HelperInstallFailed")
+        }
+    }
+
+
+    inner class CareBroadcastReceiver : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            if (PACKAGE_INSTALLED_ACTION == intent.action) {
+                val extras = intent.extras
+                val status = extras!!.getInt(PackageInstaller.EXTRA_STATUS)
+                Log.i(TAG, "onReceive install action, install status=$status")
+                if (PackageInstaller.STATUS_SUCCESS == status) {
+                    sink?.success("HelperInstalled")
+                } else {
+                    sink?.success("HelperInstallFailed")
+                }
+            }
+        }
     }
 
     //====Printer======

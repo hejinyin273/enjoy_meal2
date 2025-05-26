@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../base/data/protocol/response/base_resp.dart';
-import '../data/model/event_bus.dart';
+import '../base/data/event_bus.dart';
 import '../data/model/load_state.dart';
 import '../data/model/restaurant_data.dart';
 import '../data/protocol/response/order_detail_resp.dart';

@@ -2,14 +2,31 @@
 
 import 'package:flutter/services.dart';
 
+import '../data/event_bus.dart';
+
 class AndroidHelper {
   static const MethodChannel _helperChannel = MethodChannel("com.kinjos.meal.enjoy_meal/helper");
+  static const EventChannel _eventChannel = EventChannel("com.kinjos.meal.enjoy_meal/eventMsg");
 
   static void initAndroid(){
     _helperChannel.setMethodCallHandler((call) {
       return Future.value();
     });
+
+    _eventChannel.receiveBroadcastStream().listen((event) async {
+      print("receiveBroadcastStream() $event");
+      handleReceiveStream(event.toString());
+    });
   }
+
+  static void handleReceiveStream(String event) {
+    if (event == "HelperInstalled") {
+      eventBus.fire(InstallHelperStatus(status: 0));
+    } else if (event == "HelperInstallFailed") {
+      eventBus.fire(InstallHelperStatus(status: 1));
+    }
+  }
+  
 
   static Future<bool> installApk(String filePath) async {
     try {

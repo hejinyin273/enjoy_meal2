@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import '../../../base/data/protocol/response/base_resp.dart';
 import '../../../base/ui/base_controller.dart';
 import '../../../data/local/preference/preference_manager.dart';
-import '../../../data/model/event_bus.dart';
+import '../../../base/data/event_bus.dart';
 import '../../../data/model/load_state.dart';
 import '../../../data/model/restaurant_data.dart';
 import '../../../data/protocol/request/update_shelf_req.dart';

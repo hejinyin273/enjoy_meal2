@@ -8,7 +8,7 @@ import 'package:enjoy_meal/app/ui/main/model/page_dish_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import '../../../data/model/event_bus.dart';
+import '../../../base/data/event_bus.dart';
 import '../../../data/model/goods_model.dart';
 import '../../../data/model/restaurant_data.dart';
 import '../../../local/custom_localizations.dart';

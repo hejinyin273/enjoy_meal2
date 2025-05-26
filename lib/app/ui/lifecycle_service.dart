@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import '../../main.dart';
 import '../base/config/base_conf.dart';
 import '../config/constants.dart';
-import '../data/model/event_bus.dart';
+import '../base/data/event_bus.dart';
 import '../data/model/restaurant_data.dart';
 import '../routes/app_pages.dart';
 import 'global_controller.dart';
