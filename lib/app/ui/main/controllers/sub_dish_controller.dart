@@ -599,7 +599,7 @@ class SubDishController extends CustomBaseController  {
     _overlayEntry ??= OverlayEntry(builder: (_) {
       return FlyToPosWidget(
         startPosition: Offset((1280.w-64.w)/2, (800.h - 64.w)/2 - 40.h),
-        endPosition: Offset(1200.w, 620.h),
+        endPosition: Offset(1200.w, 460.h),
         imgUrl: imgUrl,
       );
     });

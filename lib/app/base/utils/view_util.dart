@@ -65,8 +65,8 @@ class ViewUtil{
       children: [
         GifView.asset(
           'images/gif_loading.gif',
-          height: 120.w,
-          width: 160.w,
+          height: 60.w,
+          width: 60.w,
           frameRate: 30, // default is 15 FPS
         ),
         SizedBox(height: 18.h,),

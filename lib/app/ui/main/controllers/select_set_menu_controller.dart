@@ -188,7 +188,7 @@ class SelectSetMenuController extends CustomBaseController {
     _overlayEntry ??= OverlayEntry(builder: (_) {
       return FlyToPosWidget(
         startPosition: Offset(80.w, (800.h - 64.w)/2 ),
-        endPosition: Offset(1200.w, 620.h),
+        endPosition: Offset(1200.w, 460.h),
         imgUrl: imgUrl,
       );
     });

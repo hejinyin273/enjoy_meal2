@@ -215,7 +215,12 @@ class MainActivity: FlutterActivity(), ConnectionListener{
         val intentFilter = IntentFilter()
         intentFilter.addAction(PACKAGE_INSTALLED_ACTION)
         careBroadcastReceiver = CareBroadcastReceiver()
-        registerReceiver(careBroadcastReceiver, intentFilter)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(careBroadcastReceiver, intentFilter, RECEIVER_NOT_EXPORTED)
+        } else {
+            registerReceiver(careBroadcastReceiver, intentFilter)
+        }
+
     }
 
     private fun unregisterBroadCast() {
