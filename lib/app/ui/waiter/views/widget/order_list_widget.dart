@@ -565,7 +565,9 @@ class OrderListWidget extends StatelessWidget{
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SizedBox(width: 39.w, height: 41.w),
+        TapDownZoomOutView(child: AssetImageView(fileName: "ic_subtract.png", width: 39.w, height: 41.h,), onClicked: (){
+          //controller.onSubtractClicked(model, index);
+        },),
 
         SizedBox(width: 11.5.w,),
 
@@ -577,7 +579,9 @@ class OrderListWidget extends StatelessWidget{
 
         SizedBox(width: 11.5.w,),
 
-        SizedBox(width: 39.w, height: 41.w),
+        TapDownZoomOutView(child: AssetImageView(fileName: "ic_add.png", width: 39.w, height: 41.h,), onClicked: (){
+          //controller.onAddBtnClicked(model, index);
+        },),
       ],
     );
   }
