@@ -67,14 +67,17 @@ class SubDishView extends CustomBaseView<SubDishController> {
           alignment: Alignment.topCenter,
           margin: EdgeInsets.only(top: 83.h),
           child: Obx((){
-            final mainCategoryDesc = controller.getMainCategoryDesc(controller.selectedMainCategoryId);
-            if (mainCategoryDesc == null || mainCategoryDesc.isEmpty) {
+            String? categoryDesc = controller.getSubCategoryDesc(controller.selectedSubCategoryId);
+            if (categoryDesc == null || categoryDesc.isEmpty) {
+              categoryDesc = controller.getMainCategoryDesc(controller.selectedMainCategoryId);
+            }
+            if (categoryDesc == null || categoryDesc.isEmpty) {
               return const SizedBox();
             }
             return SizedBox(
               width: 833.w,
               height: 300.h,
-              child: Html(data: mainCategoryDesc,),
+              child: Html(data: categoryDesc,),
             );
           }),
         ),

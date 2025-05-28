@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 
 import '../../main.dart';
 import '../base/config/base_conf.dart';
+import '../base/utils/audio_player_util.dart';
 import '../config/constants.dart';
 import '../base/data/event_bus.dart';
 import '../data/model/restaurant_data.dart';
@@ -57,7 +58,7 @@ class LifecycleService extends GetxService with WidgetsBindingObserver {
       print('onMessage() title=${notification?.title}, body=${notification?.body}, data=${message.data}');
       ///message.data {data: {"data":"","topics":["6_KITCHEN","6_WAITER"],"messageId":"3a89f9e0cfd48427218c2b5e869c333d","action":"DISH_MAKE_LIST_MODIFY","timestamp":1744161996617}}
       final messageDataContent = message.data["data"];
-      if (messageDataContent  is String) {
+      if (messageDataContent is String && messageDataContent.isNotEmpty) {
         Map<String, dynamic> jsonMap = json.decode(messageDataContent);
         final msgAction = jsonMap["action"];
         if ("REFRESH_DATA" == msgAction) {
@@ -78,8 +79,13 @@ class LifecycleService extends GetxService with WidgetsBindingObserver {
         } else if ("USER_LOGIN_EXPIRED" == msgAction) {
           BaseConf.token = "";
           Get.offAllNamed(Routes.loginPage);
+        } else if ("NEW_VERSION" == msgAction) {
+          globalController.handleNewVersionMsg();
         } else {
           eventBus.fire(PushMsgEvent(jsonMap));
+          if ("CALL_STAFF" == msgAction) {
+            AudioPlayerUtil.play('sounds/yx.mp3');
+          }
         }
 
         //globalController.showToast("收到推送类型:$msgAction");

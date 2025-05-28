@@ -59,6 +59,8 @@ class MainController extends CustomBaseController  {
   StreamSubscription? _helperInstallSubscription;
   int? _helperInstallStatus;
 
+  StreamSubscription? _appUpgradeSubscription;
+
   @override
   Future<void> onInit() async {
     super.onInit();
@@ -74,25 +76,39 @@ class MainController extends CustomBaseController  {
       onPaused: _onPaused,
       onUpdate: _onUpdate, );
 
-    _helperInstallSubscription = eventBus.on<InstallHelperStatus>().listen((InstallHelperStatus event) {
+    _helperInstallStatus = null;
+    _helperInstallSubscription = eventBus.on<InstallHelperStatus>().listen((InstallHelperStatus event) async{
       logger.i("InstallHelperStatus() status=${event.status}");
       _helperInstallStatus = event.status;
-      /*if (event.status == 0) {
-        AndroidHelper.handleHostInstall("/sdcard/Android/data/com.kinjos.ros/cache/app-release.apk");
-      } else {
-        AndroidHelper.handleHostInstall("/sdcard/Android/data/com.kinjos.ros/cache/app-release.apk");
-      }*/
       reqUpgradeVersionInfo();
+      _helperInstallSubscription?.cancel();
+      _helperInstallSubscription = null;
+    });
+
+    _appUpgradeSubscription = eventBus.on<MainInitEvent>().listen((MainInitEvent event) async{
+      logger.i("--MainInitEvent---${Get.currentRoute}");
+      if (Get.currentRoute.startsWith(Routes.mainPage)) {
+        loadingTipObs(CustomLocalizations.text("loading_please_wait"));
+        btnTipMessageObs(CustomLocalizations.text("check_update"));
+        updateProgress(0);
+        reqUpgradeVersionInfo();
+      }
     });
   }
 
   @override
   void onClose() {
     _languageObs.close();
+    loadingTipObs.close();
+    isOnAppUpgradeMode.close();
     _loadInitStateObs.close();
+    btnTipMessageObs.close();
+    _progressController.close();
 
     _helperInstallSubscription?.cancel();
     _helperInstallSubscription = null;
+    _appUpgradeSubscription?.cancel();
+    _appUpgradeSubscription = null;
     super.onClose();
   }
 

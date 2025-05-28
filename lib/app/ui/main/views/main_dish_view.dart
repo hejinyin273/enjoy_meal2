@@ -177,7 +177,7 @@ class MainDishView extends CustomBaseView<MainDishController> {
     String categoryName = item.getCategoryName();
     if (item.isBuffetButton == 1) {
       if (item.getCategoryName().isEmpty) {
-        categoryName = controller.globalController.buffetCategoryDesc;
+        categoryName = CustomLocalizations.text("buffet");
       }
     }
     return Container(
@@ -229,7 +229,7 @@ class MainDishView extends CustomBaseView<MainDishController> {
     String categoryName = item.getCategoryName();
     if (item.isBuffetButton == 1) {
       if (item.getCategoryName().isEmpty) {
-        categoryName = controller.globalController.buffetCategoryDesc;
+        categoryName = CustomLocalizations.text("buffet");
       }
     }
     return Container(

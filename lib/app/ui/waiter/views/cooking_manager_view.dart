@@ -560,7 +560,7 @@ class CookingManagerView extends WaiterBaseView<CookingManagerController> {
         return Colors.white;
       } else {
         if (status == DishMakeInfoConf.statusWaitToServe) {
-          return const Color(0xFFEBE9E9);
+          return const Color(0xFFAAAAAA);
         } else if (status == DishMakeInfoConf.statusServed) {
           return Colors.white;
         }

@@ -19,6 +19,7 @@ import '../data/repository/data_repository.dart';
 import '../local/custom_localizations.dart';
 import '../routes/app_pages.dart';
 import 'dialog/buffet_time_tip_dialog.dart';
+import 'dialog/tip_confirm_dialog.dart';
 
 class GlobalController extends BaseController{
   late DataRepository dataRepository;
@@ -55,12 +56,12 @@ class GlobalController extends BaseController{
 
   final isOnCallingStaffObs = false.obs;
 
-  String get buffetCategoryDesc {
+  String? get buffetCategoryDesc {
     final buffetCategoryDesc = restaurantData.restaurantBaseInfo.getBuffetCategoryDesc();
     if (buffetCategoryDesc.isNotEmpty) {
       return buffetCategoryDesc;
     }
-    return CustomLocalizations.text("buffet");
+    return null;
   }
 
   OrderDetailResp? orderDetailResp;
@@ -476,6 +477,15 @@ class GlobalController extends BaseController{
         Get.until((route) => Get.currentRoute.startsWith(Routes.mainPage));
       }
     }
+  }
+
+  void handleNewVersionMsg() {
+    Get.dialog(TipConfirmDialog(tipContent: "New version upgrade!",
+      onConfirm: () async{
+        Get.until((route) => Get.currentRoute.startsWith(Routes.mainPage));
+        await Future.delayed(const Duration(milliseconds: 500));
+        eventBus.fire(MainInitEvent());
+      },), barrierColor: Colors.transparent, useSafeArea: false, barrierDismissible: false);
   }
 
   List<int> refreshDataEventList = [];

@@ -331,7 +331,7 @@ class CookingManagerController extends WaiterBaseController  {
       return;
     }
 
-    if (DishMakeInfoConf.statusWaitToMake == model.status && !isOnServedMode.value) {
+    if (!isOnServedMode.value) {
       reqFoodMade(OperateCompleteReq(item.tableNumber, item.batchNumber, model.orderDetailId), model);
     } else if (DishMakeInfoConf.statusWaitToServe == model.status && isOnServedMode.value) {
       reqFoodServed(OperateCompleteReq(item.tableNumber, item.batchNumber, model.orderDetailId), model);
@@ -400,7 +400,11 @@ class CookingManagerController extends WaiterBaseController  {
   void reqFoodMade(OperateCompleteReq req, DishMakeInfo model) {
     dataRepository.reqFoodMade(req).then((BaseResp baseResp) async{
       if(baseResp.isSuccess()) {
-        model.status = DishMakeInfoConf.statusWaitToServe;
+        if (DishMakeInfoConf.statusWaitToMake == model.status) {
+          model.status = DishMakeInfoConf.statusWaitToServe;
+        } else if (DishMakeInfoConf.statusWaitToServe == model.status) {
+          model.status = DishMakeInfoConf.statusWaitToMake;
+        }
         updatePageData();
       } else {
         showApiErrToast(baseResp.status, baseResp.message);

@@ -43,9 +43,21 @@ class SubDishController extends CustomBaseController  {
   }
 
   String? getMainCategoryDesc(int id) {
+    if (id == RestaurantConf.categoryBuffetId) {
+      return globalController.buffetCategoryDesc;
+    }
     for (int i=0; i<mainCategoryInfoList.length; i++) {
       if (mainCategoryInfoList[i].id == id) {
         return mainCategoryInfoList[i].getCategoryDesc();
+      }
+    }
+    return null;
+  }
+
+  String? getSubCategoryDesc(int id) {
+    for (int i=0; i<subCategoryInfoList.length; i++) {
+      if (subCategoryInfoList[i].id == id) {
+        return subCategoryInfoList[i].getCategoryDesc();
       }
     }
     return null;

@@ -74,14 +74,6 @@ class SelectType1Dialog extends StatelessWidget{
   }
 
   _buildSelectTypePanel() {
-
-    double? samePrice;
-    if (selectedDishAttributeCategoryInfo.isRequired == RestaurantConf.requireTypeOptional) {
-      if (selectedDishAttributeCategoryInfo.isSamePrice()) {
-        samePrice = selectedDishAttributeCategoryInfo.dishAttributeInfos.first.priceAdjustment;
-      }
-    }
-
     return Container(
       width: 647.w,
       height: 348.w,
@@ -91,7 +83,7 @@ class SelectType1Dialog extends StatelessWidget{
 
           const SizedBox(height: 8,),
 
-          _buildTypePanelTitle(samePrice, selectedDishAttributeCategoryInfo.getAttributeCategoryName()),
+          _buildTypePanelTitle(selectedDishAttributeCategoryInfo.getAttributeCategoryName()),
 
           SizedBox(
             width: 594.w,
@@ -99,7 +91,7 @@ class SelectType1Dialog extends StatelessWidget{
             child: Obx((){
               final isUpdate = controller.selectedAttributeUpdateObs.value;
               return _buildGridPanel(selectedDishAttributeCategoryInfo.dishAttributeInfos,
-                  (selectedDishAttributeCategoryInfo.isRequired == RestaurantConf.requireTypeOptional && samePrice == null));
+                  (selectedDishAttributeCategoryInfo.isRequired == RestaurantConf.requireTypeOptional));
             }),
           ),
         ],
@@ -107,8 +99,8 @@ class SelectType1Dialog extends StatelessWidget{
     );
   }
 
-  _buildTypePanelTitle(double? price, String title) {
-    if (price != null) {
+  _buildTypePanelTitle(String title) {
+    /*if (price != null) {
       return RichText(
         textAlign: TextAlign.end,
         text: TextSpan(
@@ -122,7 +114,7 @@ class SelectType1Dialog extends StatelessWidget{
           ],
         ),
       );
-    }
+    }*/
     return Text(title, style: TextStyle(color: const Color(0xFF000000), fontSize: 35.sp, fontWeight: FontWeightConf.bold),);
   }
 
