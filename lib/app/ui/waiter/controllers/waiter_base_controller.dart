@@ -10,6 +10,7 @@ import '../../../data/local/preference/preference_manager.dart';
 import '../../../base/data/event_bus.dart';
 import '../../../data/model/load_state.dart';
 import '../../../data/model/restaurant_data.dart';
+import '../../../data/protocol/request/modify_order_req.dart';
 import '../../../data/protocol/request/update_shelf_req.dart';
 import '../../../data/protocol/response/call_record_resp.dart';
 import '../../../data/protocol/response/marker_count _resp.dart';
@@ -133,6 +134,54 @@ abstract class WaiterBaseController extends BaseController{
   }
 
   ///坐席番号-订单列表
+  void onSubtractClicked(dynamic model) {
+    handleOrderModify(model, -1);
+  }
+
+  void onAddBtnClicked(dynamic model) {
+    handleOrderModify(model, 1);
+  }
+
+  void handleOrderModify(dynamic model, int updateCount) {
+    if (selectedTableInfoResp == null) return;
+    final modifyOrderReq = ModifyOrderReq(selectedTableInfoResp!.tableId);
+    if (model is OrderDetailDish) {
+      List<DishOrderReq> dataList = [];
+      dataList.add(DishOrderReq(model.orderDishId, model.dishQuantity + updateCount));
+      modifyOrderReq.dishOrderReqs = dataList;
+    } else if (model is OrderDetailPackage) {
+      List<PackageOrderReq> dataList = [];
+      dataList.add(PackageOrderReq(model.orderPackageId, model.packageQuantity + updateCount));
+      modifyOrderReq.packageOrderReqs = dataList;
+    }
+    showLoadingDialog(null);
+    dataRepository.reqModifyOrder(modifyOrderReq).then((BaseResp baseResp) async{
+      if(baseResp.isSuccess()) {
+        dataRepository.reqOrderDetail(selectedTableInfoResp!.tableId.toString()).then((BaseResp baseResp) async{
+          hideLoadingDialog();
+          if(baseResp.isSuccess()) {
+            if (baseResp.data != null) {
+              orderDetailResp = OrderDetailResp.fromJson(baseResp.data);
+            }
+            _loadOrderDetailStateObs(LoadState.loading);
+            _loadOrderDetailStateObs(LoadState.success);
+          } else {
+            showApiErrToast(baseResp.status, baseResp.message);
+          }
+        }, onError:(err) {
+          handleException(err);
+          hideLoadingDialog();
+        } );
+      } else {
+        hideLoadingDialog();
+        showApiErrToast(baseResp.status, baseResp.message);
+      }
+    }, onError: (err) {
+      hideLoadingDialog();
+      handleException(err);
+    });
+  }
+
   ///追加料理
   void onAddMoreDishItemClicked() {
     if (LoadState.success == loadOrderDetailState) {

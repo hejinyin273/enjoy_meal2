@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import '../../base/data/model/download_listener.dart';
 import '../../base/data/protocol/response/base_resp.dart';
 import '../protocol/request/login_req.dart';
+import '../protocol/request/modify_order_req.dart';
 import '../protocol/request/operate_complete_req.dart';
 import '../protocol/request/prepare_order_req.dart';
 import '../protocol/request/submit_order_req.dart';
@@ -76,7 +77,7 @@ abstract class DataRepository {
   Future<BaseResp> reqCornerMarkersCount();
 
   ///服务员修改订单
-  Future<BaseResp> reqModifyOrder();
+  Future<BaseResp> reqModifyOrder(ModifyOrderReq modifyOrderReq);
 
   ///统计
   Future<BaseResp> reqStatistics();

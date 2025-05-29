@@ -411,7 +411,7 @@ class OrderListWidget extends StatelessWidget{
               width: 175.5.w,
               height: totalHeight,
               color: const Color(0xFFEBE9E9),
-              child: _buildNumberView(orderDetailDish.dishQuantity),
+              child: _buildNumberView(orderDetailDish, orderDetailDish.dishQuantity),
             )
           ],
         ),
@@ -525,7 +525,7 @@ class OrderListWidget extends StatelessWidget{
               height: totalHeight,
               color: const Color(0xFFEBE9E9),
               alignment: Alignment.center,
-              child: _buildNumberView(orderDetailPackage.packageQuantity),
+              child: _buildNumberView(orderDetailPackage, orderDetailPackage.packageQuantity),
             )
           ],
         ),
@@ -561,12 +561,12 @@ class OrderListWidget extends StatelessWidget{
     );
   }
 
-  _buildNumberView(int quantity) {
+  _buildNumberView(dynamic model, int quantity) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         TapDownZoomOutView(child: AssetImageView(fileName: "ic_subtract.png", width: 39.w, height: 41.h,), onClicked: (){
-          //controller.onSubtractClicked(model, index);
+          controller.onSubtractClicked(model);
         },),
 
         SizedBox(width: 11.5.w,),
@@ -580,7 +580,7 @@ class OrderListWidget extends StatelessWidget{
         SizedBox(width: 11.5.w,),
 
         TapDownZoomOutView(child: AssetImageView(fileName: "ic_add.png", width: 39.w, height: 41.h,), onClicked: (){
-          //controller.onAddBtnClicked(model, index);
+          controller.onAddBtnClicked(model);
         },),
       ],
     );

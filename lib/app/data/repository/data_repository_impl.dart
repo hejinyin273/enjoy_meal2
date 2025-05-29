@@ -10,6 +10,7 @@ import 'package:enjoy_meal/app/data/protocol/request/submit_order_req.dart';
 import 'package:enjoy_meal/app/data/protocol/request/update_shelf_req.dart';
 
 import '../../base/data/net/net_client.dart';
+import '../protocol/request/modify_order_req.dart';
 import 'data_repository.dart';
 
 class DataRepositoryImpl implements DataRepository {
@@ -120,8 +121,8 @@ class DataRepositoryImpl implements DataRepository {
   }
 
   @override
-  Future<BaseResp> reqModifyOrder() {
-    return NetClient().requestBase(Method.post, "/api/v1/waiter/modifyOrder");
+  Future<BaseResp> reqModifyOrder(ModifyOrderReq modifyOrderReq) {
+    return NetClient().requestBase(Method.post, "/api/v1/waiter/modifyOrder", data: modifyOrderReq.toMap());
   }
 
   @override
