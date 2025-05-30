@@ -340,11 +340,13 @@ class GlobalController extends BaseController{
       if (rel <= 60 * 1000 * reminderTimeMin && rel > 60 * 1000 * (reminderTimeMin -1)) {
         logger.i("startBuffetTimer() showBuffetTimeTipDialog() rel=$rel");
         showBuffetTimeTipDialog();
+      } else if ((rel <= 60 * 1000 * 5 && rel > 60 * 1000 * 4) || (rel <= 60 * 1000 * 2 && rel > 60 * 1000 * 1)) {
+        reqOrderDetail();
       } else {
         logger.i("startBuffetTimer() rel=$rel, start=${60 * 1000 * (reminderTimeMin -1)}, endEqual=${60 * 1000 * reminderTimeMin}");
       }
 
-      if (rel < 0) {
+      if (rel < 0) {///todo----------------<<<<
         isOnBuffetMode = false;
         buffetCategoryInfo = null;
         buffetTimer?.cancel();
@@ -435,7 +437,9 @@ class GlobalController extends BaseController{
       buffetTimer?.cancel();
       buffetTimer = null;
       buffetTimeStringObs("");
-      eventBus.fire(ExitBuffetEvent());
+      if (orderDetailResp == null) {
+        Get.until((route) => Get.currentRoute.startsWith(Routes.mainPage));
+      }
     } else {
       isOnBuffetMode = false;
       buffetCategoryInfo = null;
