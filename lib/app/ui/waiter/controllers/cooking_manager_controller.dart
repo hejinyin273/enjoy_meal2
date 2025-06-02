@@ -483,8 +483,13 @@ class CookingManagerController extends WaiterBaseController  {
 
   void onTableModeClicked() {
     if (!isOnTableMode.value) {
+      isOnOrderListMode(false);
       isOnTableMode(true);
       reqTableInfoList();
+    } else {
+      if (isOnOrderListMode.value) {
+        isOnOrderListMode(false);
+      }
     }
   }
 

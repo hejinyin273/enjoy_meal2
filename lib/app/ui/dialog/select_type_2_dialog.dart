@@ -112,11 +112,11 @@ class SelectType2Dialog extends StatelessWidget{
         textAlign: TextAlign.center,
         text: TextSpan(
           style: TextStyle(color: const Color(0xFF000000),
-              fontSize: 30.sp, fontWeight: FontWeightConf.bold), // 默认文本样式
+              fontSize: 26.sp, fontWeight: FontWeightConf.bold), // 默认文本样式
           children: <TextSpan>[
             const TextSpan(text: '＋'),
             TextSpan(text: '${item.priceAdjustment.toInt()}', style: TextStyle(color: const Color(0xFFFF0303),
-                fontSize: 30.sp, fontWeight: FontWeightConf.bold)),
+                fontSize: 26.sp, fontWeight: FontWeightConf.bold)),
             TextSpan(text: CustomLocalizations.text("money_unit")),
             TextSpan(text: '\n${item.getAttributeName()}'),
           ],

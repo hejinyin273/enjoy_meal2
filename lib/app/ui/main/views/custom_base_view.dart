@@ -129,7 +129,7 @@ abstract class CustomBaseView<BaseController extends CustomBaseController> exten
                     color: const Color(0xFFFF0303),
                     alignment: Alignment.center,
                     child: Center(
-                      child: Text("${controller.globalController.shoppingCartOrderNumObs.value}", style: TextStyle(color: Colors.white, fontSize: 20.sp, fontWeight: FontWeightConf.bold), textAlign: TextAlign.center,),
+                      child: Text("${controller.globalController.shoppingCartOrderNumObs.value}", style: TextStyle(color: Colors.white, fontSize: 18.sp, fontWeight: FontWeightConf.bold), textAlign: TextAlign.center,),
                     ),
                   ),
                 ),

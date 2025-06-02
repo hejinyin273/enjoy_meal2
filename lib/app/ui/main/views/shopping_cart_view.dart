@@ -185,27 +185,33 @@ class ShoppingCartView extends CustomBaseView<ShoppingCartController> {
       child: Row(
         children: [
           Container(
-            width: 236.w,
+            width: 312.w,
             alignment: Alignment.center,
-            child: Text(CustomLocalizations.text("goods"), style: TextStyle(color: Colors.white, fontSize: 24.sp, fontWeight: FontWeightConf.bold)),
+            child: Text(CustomLocalizations.text("goods"), style: TextStyle(color: Colors.white, fontSize: 18.sp, fontWeight: FontWeightConf.bold)),
           ),
 
           Container(
-            width: 392.w,
+            width: 229.w,
             alignment: Alignment.center,
-            child: Text(CustomLocalizations.text("comment"), style: TextStyle(color: Colors.white, fontSize: 24.sp, fontWeight: FontWeightConf.bold)),
+            child: Text(CustomLocalizations.text("comment"), style: TextStyle(color: Colors.white, fontSize: 18.sp, fontWeight: FontWeightConf.bold)),
           ),
 
           Container(
-            width: 139.w,
+            width: 102.w,
             alignment: Alignment.center,
-            child: Text(CustomLocalizations.text("grid_tax"),style: TextStyle(color: Colors.white, fontSize: 24.sp, fontWeight: FontWeightConf.bold)),
+            child: Text(CustomLocalizations.text("grid_tax"),style: TextStyle(color: Colors.white, fontSize: 18.sp, fontWeight: FontWeightConf.bold)),
           ),
 
           Container(
-            width: 175.5.w,
+            width: 176.w,
             alignment: Alignment.center,
-            child: Text(CustomLocalizations.text("quantity_unit"),style: TextStyle(color: Colors.white, fontSize: 24.sp, fontWeight: FontWeightConf.bold)),
+            child: Text(CustomLocalizations.text("quantity_unit"),style: TextStyle(color: Colors.white, fontSize: 18.sp, fontWeight: FontWeightConf.bold)),
+          ),
+
+          Container(
+            width: 124.w,
+            alignment: Alignment.center,
+            child: AutoSizeText(CustomLocalizations.text("amount_tax"),style: TextStyle(color: Colors.white, fontSize: 18.sp, fontWeight: FontWeightConf.bold)),
           ),
         ],
       ),
@@ -257,7 +263,7 @@ class ShoppingCartView extends CustomBaseView<ShoppingCartController> {
             color: Colors.white,
             border: Border.all(
                 color: const Color(0xFF969292),
-                width: 1.h
+                width: 1.w
             )
         ),
         child: Stack(
@@ -266,17 +272,18 @@ class ShoppingCartView extends CustomBaseView<ShoppingCartController> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Container(
-                    width: 236.w,
+                    width: 312.w,
                     height: totalHeight,
                     color: const Color(0xFFEBE9E9),
-                    alignment: Alignment.center,
-                    child: AutoSizeText(dishOrderModel.dishInfo.getDishName(), maxLines: 2,
+                    padding: EdgeInsets.symmetric(horizontal: 16.w),
+                    alignment: Alignment.centerLeft,
+                    child: AutoSizeText(dishOrderModel.dishInfo.getDishName(), maxLines: 2, textAlign: TextAlign.start,
                       style: TextStyle(color: Colors.black, fontSize: 20.sp, fontWeight: FontWeightConf.bold),)
                 ),
 
                 Container(
-                    width: 392.w,
-                    margin: EdgeInsets.symmetric(horizontal: 1.5.w),
+                    width: 229.w,
+                    margin: EdgeInsets.symmetric(horizontal: 1.w),
                     color: const Color(0xFFEBE9E9),
                     alignment: Alignment.center,
                     child: ListView.builder(
@@ -300,26 +307,45 @@ class ShoppingCartView extends CustomBaseView<ShoppingCartController> {
                 ),
 
                 Container(
-                  width: 139.w,
+                  width: 102.w,
                   height: totalHeight,
-                  margin: EdgeInsets.only(right: 1.5.w),
+                  margin: EdgeInsets.only(right: 1.w),
                   color: const Color(0xFFEBE9E9),
                   alignment: Alignment.center,
 
-                  child: Text("$textTaxIncluded${controller.globalController.isOnBuffetMode ? 0 : dishOrderModel.getTotalPrice().toInt()}$textMoneyUnit",
-                    style: TextStyle(color: Colors.black, fontSize: 18.sp, fontWeight: FontWeightConf.bold),),
+                  child: Text("${controller.globalController.isOnBuffetMode ? 0 : dishOrderModel.dishInfo.price.toInt()}$textMoneyUnit",
+                    style: TextStyle(color: Colors.black, fontSize: 18.sp, fontWeight: FontWeightConf.medium),),
                 ),
 
                 Container(
-                  width: 175.5.w,
+                  width: 176.w,
                   height: totalHeight,
+                  margin: EdgeInsets.only(right: 1.w),
                   color: const Color(0xFFEBE9E9),
                   alignment: Alignment.center,
                   child: dishOrderModel.dishInfo.available
                       ? _buildAddSubView(dishOrderModel, dishOrderModel.quantity, 0)
                       : AutoSizeText(soldOut, maxLines: 1,
                     style: TextStyle(color: Colors.black, fontSize: 20.sp, fontWeight: FontWeightConf.bold),),
-                )
+                ),
+
+                Container(
+                  width: 124.w,
+                  height: totalHeight,
+                  color: const Color(0xFFEBE9E9),
+                  alignment: Alignment.center,
+                  child: RichText(
+                    text: TextSpan(
+                      style: TextStyle(color: Colors.black, fontSize: 10.sp, fontWeight: FontWeightConf.medium), // 默认文本样式
+                      children: <TextSpan>[
+                        TextSpan(text: textTaxIncluded),
+                        TextSpan(text: "${controller.globalController.isOnBuffetMode ? 0 : dishOrderModel.getTotalPrice().toInt()}", style: TextStyle(color: Colors.black,
+                            fontSize: 20.sp, fontWeight: FontWeightConf.bold)),
+                        TextSpan(text: textMoneyUnit),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
             IgnorePointer(
@@ -337,16 +363,16 @@ class ShoppingCartView extends CustomBaseView<ShoppingCartController> {
   _buildDishAnnotationListItem(DishAttributeInfo? dishAttributeInfo, double height, {double? fontSize}) {
     return Container(
       height: height,
-      padding: EdgeInsets.only(left: 13.w),
-      color: dishAttributeInfo == null ? const Color(0xFFEBE9E9) : const Color(0xFFF6E7BD),
+      padding: EdgeInsets.only(left: 13.w, right: 13.w),
+      color: const Color(0xFFEBE9E9),
       alignment: Alignment.centerLeft,
       child: dishAttributeInfo == null ? const SizedBox() : Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(dishAttributeInfo.getAttributeName(),
             style: TextStyle(color: Colors.black, fontSize: fontSize??12.sp, fontWeight: FontWeightConf.medium),),
-          SizedBox(width: 10.w,),
-          Text("+${dishAttributeInfo.priceAdjustment.toInt()}",
-            style: TextStyle(color: const Color(0xFFFF0303), fontSize: fontSize??12.sp, fontWeight: FontWeightConf.medium),),
+          Text(dishAttributeInfo.priceAdjustment.toInt() == 0 ? "" : "+${dishAttributeInfo.priceAdjustment.toInt()}",
+            style: TextStyle(color: Colors.black, fontSize: fontSize??12.sp, fontWeight: FontWeightConf.medium),),
         ],
       ),
     );
@@ -381,25 +407,25 @@ class ShoppingCartView extends CustomBaseView<ShoppingCartController> {
             color: Colors.white,
             border: Border.all(
                 color: const Color(0xFF969292),
-                width: 1.h
+                width: 1.w
             )
         ),
         child: Row(
           children: [
             Container(
-              width: 236.w,
+              width: 312.w,
               height: totalHeight,
-              padding: EdgeInsets.symmetric(horizontal: 2.w),
               color: const Color(0xFFEBE9E9),
-              alignment: Alignment.center,
-              child: AutoSizeText(packageOrderModel.packageInfo.getPackageName(), textAlign: TextAlign.center,
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              alignment: Alignment.centerLeft,
+              child: AutoSizeText(packageOrderModel.packageInfo.getPackageName(), textAlign: TextAlign.start,
                 style: TextStyle(color: Colors.black, fontSize: 20.sp, fontWeight: FontWeightConf.bold),
                 maxLines: 2, overflow: TextOverflow.ellipsis,),
             ),
 
             Container(
-              width: 392.w,
-              margin: EdgeInsets.symmetric(horizontal: 1.5.w),
+              width: 229.w,
+              margin: EdgeInsets.symmetric(horizontal: 1.w),
               color: const Color(0xFFEBE9E9),
               alignment: Alignment.center,
               child: ListView.builder(
@@ -415,25 +441,44 @@ class ShoppingCartView extends CustomBaseView<ShoppingCartController> {
             ),
 
             Container(
-              width: 139.w,
+              width: 102.w,
               height: totalHeight,
-              margin: EdgeInsets.only(right: 1.5.w),
-              color: const Color(0xFFFFF7E7),
+              margin: EdgeInsets.only(right: 1.w),
+              color: const Color(0xFFEBE9E9),
               alignment: Alignment.center,
-              child: Text("$textTaxIncluded${controller.globalController.isOnBuffetMode ? 0 : packageOrderModel.getTotalPrice().toInt()}$textMoneyUnit",
+              child: Text("${controller.globalController.isOnBuffetMode ? 0 : packageOrderModel.packageInfo.price.toInt()}$textMoneyUnit",
                 style: TextStyle(color: Colors.black, fontSize: 18.sp, fontWeight: FontWeightConf.medium),)
             ),
 
             Container(
-              width: 175.5.w,
+              width: 176.w,
               height: totalHeight,
+              margin: EdgeInsets.only(right: 1.w),
               color: const Color(0xFFEBE9E9),
               alignment: Alignment.center,
               child: packageOrderModel.packageInfo.available
                   ? _buildAddSubView(packageOrderModel, packageOrderModel.quantity, 0)
                   : AutoSizeText(soldOut, maxLines: 1,
                 style: TextStyle(color: Colors.black, fontSize: 20.sp, fontWeight: FontWeightConf.bold),)
-            )
+            ),
+
+            Container(
+                width: 124.w,
+                height: totalHeight,
+                color: const Color(0xFFEBE9E9),
+                alignment: Alignment.center,
+                child: RichText(
+                  text: TextSpan(
+                    style: TextStyle(color: Colors.black, fontSize: 10.sp, fontWeight: FontWeightConf.medium), // 默认文本样式
+                    children: <TextSpan>[
+                      TextSpan(text: textTaxIncluded),
+                      TextSpan(text: "${controller.globalController.isOnBuffetMode ? 0 : packageOrderModel.getTotalPrice().toInt()}$textMoneyUnit", style: TextStyle(color: Colors.black,
+                          fontSize: 20.sp, fontWeight: FontWeightConf.bold)),
+                      TextSpan(text: textMoneyUnit),
+                    ],
+                  ),
+                ),
+            ),
           ],
         ),
       ),
@@ -445,7 +490,7 @@ class ShoppingCartView extends CustomBaseView<ShoppingCartController> {
       return Container(
         height: 48.w,
         padding: EdgeInsets.only(left: 13.w),
-        color: const Color(0xFFFFF7E7),
+        color: const Color(0xFFEBE9E9),
         alignment: Alignment.centerLeft,
         child: Text(annotation.getPackageName(), style: TextStyle(color: Colors.black, fontSize: 12.sp, fontWeight: FontWeightConf.medium),),
       );
@@ -461,16 +506,17 @@ class ShoppingCartView extends CustomBaseView<ShoppingCartController> {
     final dishAttributeInfo = annotation as DishAttributeInfo;
     return Container(
       height: 25.w,
-      padding: EdgeInsets.only(left: 13.w),
-      color: const Color(0xFFF6E7BD),
+      padding: EdgeInsets.only(left: 13.w, right: 13.w),
+      color: const Color(0xFFEBE9E9),
       alignment: Alignment.centerLeft,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(dishAttributeInfo.getAttributeName(), style: TextStyle(color: Colors.black, fontSize: 12.sp, fontWeight: FontWeightConf.medium),),
-          SizedBox(width: 10.w,),
-          Text("+${dishAttributeInfo.priceAdjustment.toInt()}",
-            style: TextStyle(color: const Color(0xFFFF0303), fontSize: 12.sp, fontWeight: FontWeightConf.medium),),
+
+          Text(dishAttributeInfo.priceAdjustment.toInt() == 0 ? "" : "+${dishAttributeInfo.priceAdjustment.toInt()}",
+            style: TextStyle(color:  Colors.black, fontSize: 12.sp, fontWeight: FontWeightConf.medium),),
         ],
       ),
     );

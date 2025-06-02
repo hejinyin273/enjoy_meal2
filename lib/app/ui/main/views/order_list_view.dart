@@ -173,27 +173,37 @@ class OrderListView extends CustomBaseView<OrderListController> {
       child: Row(
         children: [
           Container(
-            width: 236.w,
+            width: 312.w,
             alignment: Alignment.center,
-            child: Text(CustomLocalizations.text("goods"), style: TextStyle(color: Colors.white, fontSize: 24.sp, fontWeight: FontWeightConf.bold)),
+            child: Text(CustomLocalizations.text("goods"), style: TextStyle(color: Colors.white, fontSize: 18.sp, fontWeight: FontWeightConf.bold)),
           ),
 
           Container(
-            width: 392.w,
+            width: 229.w,
             alignment: Alignment.center,
-            child: Text(CustomLocalizations.text("comment"), style: TextStyle(color: Colors.white, fontSize: 24.sp, fontWeight: FontWeightConf.bold)),
+            child: Text(CustomLocalizations.text("comment"), style: TextStyle(color: Colors.white, fontSize: 18.sp, fontWeight: FontWeightConf.bold)),
           ),
 
           Container(
-            width: 139.w,
-            alignment: Alignment.center,
-            child: Text(CustomLocalizations.text("grid_tax"), style: TextStyle(color: Colors.white, fontSize: 24.sp, fontWeight: FontWeightConf.bold)),
+            width: 88.w,
           ),
 
           Container(
-            width: 175.5.w,
+            width: 102.w,
             alignment: Alignment.center,
-            child: Text(CustomLocalizations.text("quantity_unit"), style: TextStyle(color: Colors.white, fontSize: 24.sp, fontWeight: FontWeightConf.bold)),
+            child: Text(CustomLocalizations.text("grid_tax"), style: TextStyle(color: Colors.white, fontSize: 18.sp, fontWeight: FontWeightConf.bold)),
+          ),
+
+          Container(
+            width: 82.w,
+            alignment: Alignment.center,
+            child: Text(CustomLocalizations.text("quantity_unit"), style: TextStyle(color: Colors.white, fontSize: 18.sp, fontWeight: FontWeightConf.bold)),
+          ),
+
+          Container(
+            width: 131.w,
+            alignment: Alignment.center,
+            child: Text(CustomLocalizations.text("amount_tax"), style: TextStyle(color: Colors.white, fontSize: 18.sp, fontWeight: FontWeightConf.bold)),
           ),
         ],
       ),
@@ -236,7 +246,14 @@ class OrderListView extends CustomBaseView<OrderListController> {
   }
 
   _buildBuffetItemViews(OrderDetailBuffet orderDetailBuffet, int index) {
-    List<OrderBuffetPriceDetail> dataList = orderDetailBuffet.orderBuffetPriceDetails;
+    List<dynamic> dataList = [];
+    List<OrderBuffetPriceDetail> orderBuffetDataList = orderDetailBuffet.orderBuffetPriceDetails;
+    for (int i=0; i<orderBuffetDataList.length; i++) {
+      dataList.add(orderBuffetDataList[i]);
+      if (orderBuffetDataList[i].extraTimeCount > 0) {
+        dataList.add(i);
+      }
+    }
     double totalHeight = 48.w;
     if (dataList.length > 1) {
       totalHeight = (25.w + 1.w) * dataList.length;
@@ -250,18 +267,18 @@ class OrderListView extends CustomBaseView<OrderListController> {
             border: Border(
                 bottom: BorderSide(
                     color: const Color(0xFF969292),
-                    width: 1.h
+                    width: 1.w
                 ),
                 top: BorderSide(
                     color: const Color(0xFF969292),
-                    width: 1.h
+                    width: 1.w
                 )
             )
         ),
         child: Row(
           children: [
             Container(
-                width: 236.w,
+                width: 312.w,
                 height: totalHeight,
                 color: const Color(0xFFEBE9E9),
                 alignment: Alignment.center,
@@ -270,8 +287,8 @@ class OrderListView extends CustomBaseView<OrderListController> {
             ),
 
             Container(
-                width: 392.w,
-                margin: EdgeInsets.symmetric(horizontal: 1.5.w),
+                width: 318.w,
+                margin: EdgeInsets.symmetric(horizontal: 1.w),
                 color: const Color(0xFFEBE9E9),
                 alignment: Alignment.center,
                 child: ListView.builder(
@@ -285,35 +302,96 @@ class OrderListView extends CustomBaseView<OrderListController> {
                         if (index.isOdd) {///奇数
                           return _buildLineDividerView();
                         }
-                        return _buildBuffetAnnotationListItem(dataList[index~/2], 25.w);
+                        final item = dataList[index~/2];
+                        if (item is OrderBuffetPriceDetail) {
+                          return _buildBuffetAnnotationListItem(item, 25.w);
+                        } else {
+                          return _buildBuffetOvertimeListItem(orderBuffetDataList[item as int], 25.w);
+                        }
                       }
                     })
             ),
 
             Container(
-              width: 139.w,
+              width: 102.w,
               height: totalHeight,
-              margin: EdgeInsets.only(right: 1.5.w),
+              margin: EdgeInsets.only(right: 1.w),
               color: const Color(0xFFEBE9E9),
               alignment: Alignment.center,
-              child: Text("$textTaxIncluded${orderDetailBuffet.getItemTotalPrice().toInt()}$textMoneyUnit",
-                style: TextStyle(color: Colors.black, fontSize: 15.sp, fontWeight: FontWeightConf.medium),),
+              child: ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: dataList.length * 2 - 1,
+                  itemBuilder: (context, index){
+                    if (dataList.length == 1) {
+                      return _buildBuffetPriceListItem(dataList[index], 48.w);
+                    } else {
+                      if (index.isOdd) {///奇数
+                        return _buildLineDividerView();
+                      }
+                      final item = dataList[index~/2];
+                      if (item is OrderBuffetPriceDetail) {
+                        return _buildBuffetPriceListItem(item, 25.w);
+                      } else {
+                        return _buildBuffetOvertimePriceListItem(orderBuffetDataList[item as int], 25.w);
+                      }
+                    }
+                  }),
             ),
 
             Container(
-              width: 175.5.w,
+              width: 82.w,
               height: totalHeight,
+              margin: EdgeInsets.only(right: 1.w),
               color: const Color(0xFFEBE9E9),
               alignment: Alignment.center,
               child: Text("${orderDetailBuffet.getTotalDinerCount()}", style: TextStyle(color: Colors.black, fontSize: 24.sp, fontWeight: FontWeightConf.medium),),
-            )
+            ),
+
+            Container(
+              width: 131.w,
+              height: totalHeight,
+              color: const Color(0xFFEBE9E9),
+              alignment: Alignment.center,
+              child: RichText(
+                text: TextSpan(
+                  style: TextStyle(color: Colors.black, fontSize: 10.sp, fontWeight: FontWeightConf.medium), // 默认文本样式
+                  children: <TextSpan>[
+                    TextSpan(text: textTaxIncluded),
+                    TextSpan(text: "${orderDetailBuffet.getItemTotalPrice().toInt()}", style: TextStyle(color: Colors.black,
+                        fontSize: 20.sp, fontWeight: FontWeightConf.bold)),
+                    TextSpan(text: textMoneyUnit),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 
-  _buildBuffetAnnotationListItem(OrderBuffetPriceDetail orderBuffetPriceDetail, double height) {
+  _buildBuffetPriceListItem(OrderBuffetPriceDetail orderBuffetPriceDetail, double height) {
+    return Container(
+      height: height,
+      color: const Color(0xFFEBE9E9),
+      alignment: Alignment.center,
+      child: Text("${orderBuffetPriceDetail.unitPrice.toInt()}$textMoneyUnit",
+        style: TextStyle(color: Colors.black, fontSize: 15.sp, fontWeight: FontWeightConf.medium),),
+    );
+  }
+
+  _buildBuffetOvertimePriceListItem(OrderBuffetPriceDetail orderBuffetPriceDetail, double height) {
+    return Container(
+      height: height,
+      color: const Color(0xFFEBE9E9),
+      alignment: Alignment.center,
+      child: Text("${orderBuffetPriceDetail.overtimeExtraFee.toInt()}$textMoneyUnit",
+        style: TextStyle(color: Colors.black, fontSize: 15.sp, fontWeight: FontWeightConf.medium),),
+    );
+  }
+
+  _buildBuffetAnnotationListItem(OrderBuffetPriceDetail model, double height) {
     return Container(
       height: height,
       padding: EdgeInsets.only(left: 15.w, right: 45.w),
@@ -322,8 +400,24 @@ class OrderListView extends CustomBaseView<OrderListController> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(orderBuffetPriceDetail.getDinerTypeName(), style: TextStyle(color: Colors.black, fontSize: 12.sp, fontWeight: FontWeightConf.medium),),
-          Text("${orderBuffetPriceDetail.totalDinerCount}${CustomLocalizations.text("people")}", style: TextStyle(color: Colors.black, fontSize: 12.sp, fontWeight: FontWeightConf.medium),),
+          Text(model.getDinerTypeName(), style: TextStyle(color: Colors.black, fontSize: 12.sp, fontWeight: FontWeightConf.medium),),
+          Text("${model.totalDinerCount}${CustomLocalizations.text("people")}", style: TextStyle(color: Colors.black, fontSize: 12.sp, fontWeight: FontWeightConf.medium),),
+        ],
+      ),
+    );
+  }
+
+  _buildBuffetOvertimeListItem(OrderBuffetPriceDetail model, double height) {
+    return Container(
+      height: height,
+      padding: EdgeInsets.only(left: 15.w, right: 45.w),
+      color: const Color(0xFFEBE9E9),
+      alignment: Alignment.centerLeft,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text("加时", style: TextStyle(color: Colors.black, fontSize: 12.sp, fontWeight: FontWeightConf.medium),),
+          Text("${model.extraTimeCount}小时", style: TextStyle(color: Colors.black, fontSize: 12.sp, fontWeight: FontWeightConf.medium),),
         ],
       ),
     );
@@ -348,28 +442,29 @@ class OrderListView extends CustomBaseView<OrderListController> {
             border: Border(
                 bottom: BorderSide(
                     color: const Color(0xFF969292),
-                    width: 1.h
+                    width: 1.w
                 ),
                 top: BorderSide(
                     color: const Color(0xFF969292),
-                    width: 1.h
+                    width: 1.w
                 )
             )
         ),
         child: Row(
           children: [
             Container(
-              width: 236.w,
+              width: 312.w,
               height: totalHeight,
               color: const Color(0xFFEBE9E9),
-              alignment: Alignment.center,
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              alignment: Alignment.centerLeft,
                 child: AutoSizeText(orderDetailDish.getDishName(), maxLines: 2,
                   style: TextStyle(color: Colors.black, fontSize: 20.sp, fontWeight: FontWeightConf.bold),)
             ),
 
             Container(
-              width: 324.w,
-              margin: EdgeInsets.only(left: 1.5.w),
+              width: 229.w,
+              margin: EdgeInsets.symmetric(horizontal: 1.w),
               color: const Color(0xFFEBE9E9),
               alignment: Alignment.center,
                 child: ListView.builder(
@@ -393,39 +488,59 @@ class OrderListView extends CustomBaseView<OrderListController> {
             ),
 
             Container(
-              width: 68.w,
+              width: 88.w,
               height: totalHeight,
-              margin: EdgeInsets.only(right: 1.5.w),
-              decoration: BoxDecoration(
-                  color: const Color(0xFFEBE9E9),
-                  border: Border(
+              margin: EdgeInsets.only(right: 1.w),
+              decoration: const BoxDecoration(
+                  color: Color(0xFFEBE9E9),
+                  /*border: Border(
                     left: BorderSide(
                       color: Colors.white,
                       width: 1.w,
                     ),
-                  )
+                  )*/
               ),
               alignment: Alignment.center,
               child: Text(orderDetailDish.getStatusDesc(), style: TextStyle(color: Colors.black, fontSize: 16.sp, fontWeight: FontWeightConf.medium),),
             ),
 
             Container(
-              width: 139.w,
+              width: 102.w,
               height: totalHeight,
-              margin: EdgeInsets.only(right: 1.5.w),
+              margin: EdgeInsets.only(right: 1.w),
               color: const Color(0xFFEBE9E9),
               alignment: Alignment.center,
 
-              child: Text("$textTaxIncluded${orderDetailDish.unitPrice.toInt()}$textMoneyUnit",
+              child: Text("${orderDetailDish.unitPrice.toInt()}$textMoneyUnit",
                 style: TextStyle(color: Colors.black, fontSize: 18.sp, fontWeight: FontWeightConf.bold),),
             ),
 
             Container(
-              width: 175.5.w,
+              width: 82.w,
               height: totalHeight,
+              margin: EdgeInsets.only(right: 1.w),
               color: const Color(0xFFEBE9E9),
               child: _buildNumberView(orderDetailDish.dishQuantity),
-            )
+            ),
+
+            Container(
+              width: 131.w,
+              height: totalHeight,
+              color: const Color(0xFFEBE9E9),
+              alignment: Alignment.center,
+              child: RichText(
+                text: TextSpan(
+                  style: TextStyle(color: Colors.black, fontSize: 10.sp, fontWeight: FontWeightConf.medium), // 默认文本样式
+                  children: <TextSpan>[
+                    TextSpan(text: textTaxIncluded),
+                    TextSpan(text: "${orderDetailDish.getTotalPrice().toInt()}", style: TextStyle(color: Colors.black,
+                        fontSize: 20.sp, fontWeight: FontWeightConf.bold)),
+                    TextSpan(text: textMoneyUnit),
+                  ],
+                ),
+              ),
+            ),
+
           ],
         ),
       ),
@@ -435,10 +550,18 @@ class OrderListView extends CustomBaseView<OrderListController> {
   _buildDishAnnotationListItem(DishAttr? dishAttr, double height, {double? fontSize}) {
     return Container(
       height: height,
-      padding: EdgeInsets.only(left: 13.w),
-      color: dishAttr == null ? const Color(0xFFEBE9E9) : const Color(0xFFF6E7BD),
+      padding: EdgeInsets.only(left: 13.w, right: 13.w),
+      color: const Color(0xFFEBE9E9),
       alignment: Alignment.centerLeft,
-      child: Text(dishAttr == null ? "" : dishAttr.getAttributeName(), style: TextStyle(color: Colors.black, fontSize: fontSize??12.sp, fontWeight: FontWeightConf.medium),),
+      child: dishAttr == null ? const SizedBox() : Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(dishAttr.getAttributeName(),
+            style: TextStyle(color: Colors.black, fontSize: fontSize??12.sp, fontWeight: FontWeightConf.medium),),
+          Text(dishAttr.attributeUnitPrice.toInt() == 0 ? "" : "+${dishAttr.attributeUnitPrice.toInt()}",
+            style: TextStyle(color: Colors.black, fontSize: fontSize??12.sp, fontWeight: FontWeightConf.medium),),
+        ],
+      ),
     );
   }
 
@@ -450,7 +573,7 @@ class OrderListView extends CustomBaseView<OrderListController> {
             child: Text(item.getDishName(), style: TextStyle(color: Colors.black, fontSize: 16.sp, fontWeight: FontWeightConf.medium),)),
 
         Container(
-          width: 68.w,
+          width: 89.w,
           alignment: Alignment.center,
           decoration: BoxDecoration(
               border: Border(
@@ -486,29 +609,30 @@ class OrderListView extends CustomBaseView<OrderListController> {
             border: Border(
                 bottom: BorderSide(
                     color: const Color(0xFF969292),
-                    width: 1.h
+                    width: 1.w
                 ),
                 top: BorderSide(
                     color: const Color(0xFF969292),
-                    width: 1.h
+                    width: 1.w
                 )
             )
         ),
         child: Row(
           children: [
             Container(
-              width: 236.w,
+              width: 312.w,
               height: totalHeight,
               color: const Color(0xFFEBE9E9),
-              alignment: Alignment.center,
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              alignment: Alignment.centerLeft,
               child: AutoSizeText(orderDetailPackage.getPackageName(), textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.black, fontSize: 20.sp, fontWeight: FontWeightConf.bold),
                 maxLines: 2, overflow: TextOverflow.ellipsis,),
             ),
 
             Container(
-              width: 392.w,
-              margin: EdgeInsets.symmetric(horizontal: 1.5.w),
+              width: 318.w,
+              margin: EdgeInsets.symmetric(horizontal: 1.w),
               color: const Color(0xFFEBE9E9),
               alignment: Alignment.center,
               child: ListView.builder(
@@ -524,22 +648,41 @@ class OrderListView extends CustomBaseView<OrderListController> {
             ),
 
             Container(
-              width: 139.w,
+              width: 102.w,
               height: totalHeight,
-              margin: EdgeInsets.only(right: 1.5.w),
+              margin: EdgeInsets.only(right: 1.w),
               color: const Color(0xFFEBE9E9),
               alignment: Alignment.center,
-              child: Text("$textTaxIncluded${orderDetailPackage.unitPrice.toInt()}$textMoneyUnit",
+              child: Text("${orderDetailPackage.unitPrice.toInt()}$textMoneyUnit",
                 style: TextStyle(color: Colors.black, fontSize: 18.sp, fontWeight: FontWeightConf.bold),),
             ),
 
             Container(
-              width: 175.5.w,
+              width: 82.w,
               height: totalHeight,
               color: const Color(0xFFEBE9E9),
               alignment: Alignment.center,
               child: _buildNumberView(orderDetailPackage.packageQuantity),
-            )
+            ),
+
+            Container(
+              width: 131.w,
+              height: totalHeight,
+              margin: EdgeInsets.only(right: 1.w),
+              color: const Color(0xFFEBE9E9),
+              alignment: Alignment.center,
+              child: RichText(
+                text: TextSpan(
+                  style: TextStyle(color: Colors.black, fontSize: 10.sp, fontWeight: FontWeightConf.medium), // 默认文本样式
+                  children: <TextSpan>[
+                    TextSpan(text: textTaxIncluded),
+                    TextSpan(text: "${orderDetailPackage.getTotalPrice().toInt()}", style: TextStyle(color: Colors.black,
+                        fontSize: 20.sp, fontWeight: FontWeightConf.bold)),
+                    TextSpan(text: textMoneyUnit),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -551,7 +694,7 @@ class OrderListView extends CustomBaseView<OrderListController> {
       return Container(
         height: 48.w,
         padding: EdgeInsets.only(left: 13.w),
-        color: const Color(0xFFFFF7E7),
+        color: const Color(0xFFEBE9E9),
         alignment: Alignment.centerLeft,
         child: Text(annotation.getPackageName(), style: TextStyle(color: Colors.black, fontSize: 12.sp, fontWeight: FontWeightConf.medium),),
       );
@@ -568,9 +711,25 @@ class OrderListView extends CustomBaseView<OrderListController> {
     return Container(
       height: 25.w,
       padding: EdgeInsets.only(left: 13.w),
-      color: const Color(0xFFF6E7BD),
+      color: const Color(0xFFEBE9E9),
       alignment: Alignment.centerLeft,
-      child: Text(dishAttributeInfo.getAttributeName(), style: TextStyle(color: Colors.black, fontSize: 12.sp, fontWeight: FontWeightConf.medium),),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(dishAttributeInfo.getAttributeName(), style: TextStyle(color: Colors.black, fontSize: 12.sp, fontWeight: FontWeightConf.medium),),
+
+          const Expanded(flex: 1, child: SizedBox()),
+
+          Text(dishAttributeInfo.attributeUnitPrice.toInt() == 0 ? "" : "+${dishAttributeInfo.attributeUnitPrice.toInt()}",
+            style: TextStyle(color:  Colors.black, fontSize: 12.sp, fontWeight: FontWeightConf.medium),),
+
+          Container(
+            width: 89.w,
+            margin: EdgeInsets.only(left: 13.w,),
+            color: Colors.white,
+          ),
+        ],
+      ),
     );
   }
 
@@ -578,26 +737,11 @@ class OrderListView extends CustomBaseView<OrderListController> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SizedBox(width: 39.w, height: 41.w),
-
-        SizedBox(width: 11.5.w,),
-
         Container(
           width: 67.w,
-          height: 41.h,
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage("images/edit_gradient_border_bg.png"),
-              fit: BoxFit.fill,
-            ),
-          ),
           alignment: Alignment.center,
           child: Text("$quantity", style: TextStyle(color: Colors.black, fontSize: 28.sp, fontWeight: FontWeightConf.medium),),
         ),
-
-        SizedBox(width: 11.5.w,),
-
-        SizedBox(width: 39.w, height: 41.w),
       ],
     );
   }

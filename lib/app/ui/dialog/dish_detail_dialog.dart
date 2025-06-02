@@ -1,4 +1,5 @@
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:enjoy_meal/app/base/config/font_weight_conf.dart';
 import 'package:enjoy_meal/app/data/model/restaurant_data.dart';
 import 'package:enjoy_meal/app/local/custom_localizations.dart';
@@ -175,7 +176,9 @@ class DishDetailDialog extends StatelessWidget{
                     fontSize: 20.sp, fontWeight: FontWeightConf.bold), // 默认文本样式
                 children: <TextSpan>[
                   const TextSpan(text: '+'),
-                  TextSpan(text: '${dishAttributeInfo.priceAdjustment.toInt()}', style: TextStyle(color: const Color(0xFFFF0303),
+                  TextSpan(text: controller.globalController.isOnBuffetMode
+                      ? '0'
+                      : '${dishAttributeInfo.priceAdjustment.toInt()}', style: TextStyle(color: const Color(0xFFFF0303),
                       fontSize: 25.sp, fontWeight: FontWeightConf.bold)),
                   TextSpan(text: CustomLocalizations.text("money_unit")),
                 ],
@@ -197,14 +200,19 @@ class DishDetailDialog extends StatelessWidget{
       ),
       child: Row(
         children: [
-          Expanded(flex: 1, child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+          Expanded(flex: 1, child: Stack(
             children: [
-              Text(dishInfo.getDishName(),
-                style: TextStyle(color: const Color(0xFF000000),
-                    fontSize: 25.sp, fontWeight: FontWeightConf.bold), textAlign: TextAlign.start,),
+              SizedBox(
+                height: 75.w,
+                child: AutoSizeText(dishInfo.getDishName(),
+                  style: TextStyle(color: const Color(0xFF000000),
+                      fontSize: 25.sp, fontWeight: FontWeightConf.bold), textAlign: TextAlign.start,),
+              ),
 
-              Offstage(
+              Positioned(
+                right: 0,
+                  bottom: 3.h,
+                  child: Offstage(
                 offstage: (!isShowNumSelect || controller.globalController.isOnBuffetMode),
                 child: RichText(
                   textAlign: TextAlign.end,
@@ -219,7 +227,7 @@ class DishDetailDialog extends StatelessWidget{
                     ],
                   ),
                 ),
-              ),
+              )),
             ],
           )),
 

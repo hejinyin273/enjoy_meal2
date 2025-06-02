@@ -640,13 +640,14 @@ class CookingManagerView extends WaiterBaseView<CookingManagerController> {
           child: Stack(
             children: [
               Container(
+                margin: EdgeInsets.only(top: 6.h),
                 alignment: Alignment.center,
-                child: Text(title, style: TextStyle(color: Colors.black, fontSize: 26.sp, fontWeight: FontWeightConf.medium), textAlign: TextAlign.center,),
+                child: Text(title, style: TextStyle(color: Colors.black, fontSize: 20.sp, fontWeight: FontWeightConf.medium), textAlign: TextAlign.center,),
               ),
 
               Positioned(
                 top: 0,
-                  right: 3.w,
+                  right: 6.w,
                   child: Text(markerCount, style: TextStyle(color: const Color(0xFFDD0606), fontSize: 15.sp, fontWeight: FontWeightConf.medium),),
               ),
             ],

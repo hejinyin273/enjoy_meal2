@@ -131,6 +131,23 @@ class OrderDetailPackage{///套餐订单详情
       return packageNameEn;
     }
   }
+
+  double getTotalPrice() {
+    double totalPrice = 0;
+
+    totalPrice += (unitPrice * packageQuantity);
+
+    for(int k=0; k<orderDetailDishes.length; k++) {
+      final dishInfo = orderDetailDishes[k];
+      for (int j=0; j<dishInfo.dishAttrs.length; j++) {
+        final attrInfo = dishInfo.dishAttrs[j];
+        totalPrice += ((attrInfo.attributeUnitPrice) * packageQuantity);
+      }
+    }
+
+    return totalPrice;
+  }
+
 }
 
 class OrderDetailBuffet{///自助餐订单详情
@@ -159,6 +176,10 @@ class OrderDetailBuffet{///自助餐订单详情
     double unitPrice = 0;
     for (var item in orderBuffetPriceDetails) {
       unitPrice += item.totalDinerCount * item.unitPrice;
+
+      if (item.extraTimeCount > 0) {
+        unitPrice += item.totalDinerCount * item.extraTimeCount * item.overtimeExtraFee;
+      }
     }
     return unitPrice;
   }
@@ -268,6 +289,18 @@ class OrderDetailDish{
     } else {
       return "已出餐";
     }
+  }
+
+  double getTotalPrice() {
+    double totalPrice = 0;
+
+    totalPrice += (unitPrice * dishQuantity);
+    for (int j = 0; j < dishAttrs.length; j++) {
+      final attrInfo = dishAttrs[j];
+      totalPrice += ((attrInfo.attributeUnitPrice) * dishQuantity);
+    }
+
+    return totalPrice;
   }
 }
 

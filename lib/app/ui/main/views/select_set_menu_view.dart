@@ -1,5 +1,6 @@
 
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:enjoy_meal/app/base/config/font_weight_conf.dart';
 import 'package:enjoy_meal/app/base/widget/asset_image_view.dart';
 import 'package:enjoy_meal/app/data/model/restaurant_data.dart';
@@ -80,7 +81,7 @@ class SelectSetMenuView extends CustomBaseView<SelectSetMenuController> {
                           ],
                         ),
                         alignment: Alignment.center,
-                        child: Text(CustomLocalizations.text("cancel"), style: TextStyle(color: Colors.black, fontSize: 25.sp, fontWeight: FontWeightConf.black),),
+                        child: AutoSizeText(CustomLocalizations.text("cancel"), style: TextStyle(color: Colors.black, fontSize: 25.sp, fontWeight: FontWeightConf.black),),
                       )),
                 ],
               ),
@@ -157,10 +158,11 @@ class SelectSetMenuView extends CustomBaseView<SelectSetMenuController> {
             ),
           ),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               AssetImageView(fileName: "ic_menu_pre_arrow.png", width: 42.w, height: 41.h,),
               SizedBox(height: 30.h,),
-              Text(CustomLocalizations.text("previous_page"), style: TextStyle(color: Colors.black, fontSize: 22.sp, fontWeight: FontWeightConf.bold)),
+              Text(CustomLocalizations.text("previous_page"), style: TextStyle(color: Colors.black, fontSize: 22.sp, fontWeight: FontWeightConf.bold), textAlign: TextAlign.center,),
             ],
           ),
         ), onClicked: (){
@@ -184,10 +186,11 @@ class SelectSetMenuView extends CustomBaseView<SelectSetMenuController> {
             ),
           ),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               AssetImageView(fileName: "ic_menu_next_arrow.png", width: 42.w, height: 41.h,),
               SizedBox(height: 30.h,),
-              Text(CustomLocalizations.text("next_page"), style: TextStyle(color: Colors.black, fontSize: 22.sp, fontWeight: FontWeightConf.bold)),
+              Text(CustomLocalizations.text("next_page"), style: TextStyle(color: Colors.black, fontSize: 22.sp, fontWeight: FontWeightConf.bold), textAlign: TextAlign.center,),
             ],
           ),
         ), onClicked: (){
@@ -280,7 +283,7 @@ class SelectSetMenuView extends CustomBaseView<SelectSetMenuController> {
         ),
       ),
       alignment: Alignment.center,
-      child: Text(item.getDishName(), style: TextStyle(color: Colors.black, fontSize: 20.sp, fontWeight: FontWeightConf.bold),),
+      child: AutoSizeText(item.getDishName(), style: TextStyle(color: Colors.black, fontSize: 20.sp, fontWeight: FontWeightConf.bold),),
 
     );
   }

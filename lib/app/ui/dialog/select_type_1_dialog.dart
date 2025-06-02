@@ -134,7 +134,7 @@ class SelectType1Dialog extends StatelessWidget{
         itemBuilder: (context, index){
           if (index <= dishAttributeInfos.length -1) {
             final model = dishAttributeInfos[index];
-            return TapDownZoomOutView(child: _buildGridItem(model, shouldShowPrice, itemCount == 4 ? 28.sp : 26.sp), onClicked: (){
+            return TapDownZoomOutView(child: _buildGridItem(model, shouldShowPrice, itemCount == 4 ? 24.sp : 22.sp), onClicked: (){
               controller.onDishAttributeItemClicked(selectedDishAttributeCategoryInfo, model);
             });
           } else {
@@ -159,20 +159,21 @@ class SelectType1Dialog extends StatelessWidget{
                 textAlign: TextAlign.center,
                 text: TextSpan(
                   style: TextStyle(color: const Color(0xFF000000),
-                      fontSize: fontSize??26.sp, fontWeight: FontWeightConf.bold), // 默认文本样式
+                      fontSize: fontSize??24.sp, fontWeight: FontWeightConf.bold), // 默认文本样式
                   children: <TextSpan>[
                     const TextSpan(text: '＋'),
                     TextSpan(text: '${item.priceAdjustment.toInt()}', style: TextStyle(color: const Color(0xFFFF0303),
-                        fontSize: fontSize??26.sp, fontWeight: FontWeightConf.bold)),
+                        fontSize: fontSize??24.sp, fontWeight: FontWeightConf.bold)),
                     TextSpan(text: CustomLocalizations.text("money_unit")),
                   ],
                 ),
               ),
-              SizedBox(
+              Container(
                 width: 304.w,
-                height: 60.w,
+                height: 50.w,
+                alignment: Alignment.center,
                 child: AutoSizeText(item.getAttributeName(), textAlign: TextAlign.center,
-                  style: TextStyle(color: const Color(0xFF000000), fontSize: fontSize??26.sp,
+                  style: TextStyle(color: const Color(0xFF000000), fontSize: fontSize??24.sp,
                       fontWeight: FontWeightConf.medium),),
               )
             ],

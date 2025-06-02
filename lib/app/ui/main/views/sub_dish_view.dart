@@ -53,12 +53,14 @@ class SubDishView extends CustomBaseView<SubDishController> {
         Obx((){
           int mId = controller.selectedMainCategoryId;
           int subId = controller.selectedSubCategoryId;
-          final bgUrl = controller.pageDishDataList[controller.currentPageIndex].bgUrl;
-          if (bgUrl != null) {
-            return Positioned.fill(child: ViewUtil.cachedImage(
-              bgUrl,
-              fit: BoxFit.fill,
-            ));
+          if (controller.currentPageIndex <= controller.pageDishDataList.length -1) {
+            final bgUrl = controller.pageDishDataList[controller.currentPageIndex].bgUrl;
+            if (bgUrl != null) {
+              return Positioned.fill(child: ViewUtil.cachedImage(
+                bgUrl,
+                fit: BoxFit.fill,
+              ));
+            }
           }
           return const SizedBox();
         }),

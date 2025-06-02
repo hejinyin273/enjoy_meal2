@@ -1,6 +1,7 @@
 
 
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:enjoy_meal/app/data/model/restaurant_data.dart';
 import 'package:enjoy_meal/app/local/custom_localizations.dart';
 import 'package:flutter/material.dart';
@@ -156,7 +157,7 @@ class StoreOperationWidget extends StatelessWidget{
                 )
             ),
             alignment: Alignment.centerLeft,
-            child: Text(model.getDishName(),
+            child: AutoSizeText(model.getDishName(),
               style: TextStyle(color: Colors.black, fontSize: 20.sp, fontWeight: FontWeightConf.bold),),
           ),
 
