@@ -1,5 +1,6 @@
 
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:enjoy_meal/app/base/config/font_weight_conf.dart';
 import 'package:enjoy_meal/app/base/widget/tap_down_zoom_out_view.dart';
 import 'package:flutter/material.dart';
@@ -77,6 +78,7 @@ class CallAssistantView extends BaseView<CallAssistantController>{
     return TapDownZoomOutView(onClicked: onclick, child: Container(
       width: 575.w,
       height: 123.h,
+      padding: EdgeInsets.symmetric(horizontal: 8.w),
       decoration: const BoxDecoration(
         image: DecorationImage(
           image: AssetImage('images/img_call_btn_bg.png'),
@@ -84,7 +86,7 @@ class CallAssistantView extends BaseView<CallAssistantController>{
         ),
       ),
       alignment: Alignment.center,
-      child: Text(title, style: TextStyle(color: Colors.black, fontSize: 40.sp, fontWeight: FontWeightConf.black),),
+      child: AutoSizeText(title, maxLines:2, style: TextStyle(color: Colors.black, fontSize: 40.sp, fontWeight: FontWeightConf.black),),
     ),);
   }
 

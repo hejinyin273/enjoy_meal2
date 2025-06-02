@@ -62,6 +62,28 @@ class OrderDetailResp{
     }
     return false;
   }
+
+  bool isBuffetOrderExist() {
+    if (orderDetailBuffets.isNotEmpty) {
+      return true;
+    }
+    return false;
+  }
+
+  bool isInBuffetTime() {
+    if (orderDetailBuffets.isNotEmpty) {///是自助订单
+      if (firstOrderTime != null && buffetEndTime != null) {
+        DateTime? startDateTime = DateTime.tryParse("$firstOrderTime:00");
+        DateTime? endDateTime = DateTime.tryParse("$buffetEndTime:00");
+        if (startDateTime != null && endDateTime != null && endDateTime.isAfter(DateTime.now())) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
 }
 
 /*class OrderItem{

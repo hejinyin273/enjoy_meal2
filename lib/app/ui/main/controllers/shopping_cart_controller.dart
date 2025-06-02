@@ -88,6 +88,13 @@ class ShoppingCartController extends CustomBaseController  {
   void onOrderConfirmClicked() {
     if (!isCanLoadingPage()) return;
 
+    if (globalController.orderDetailResp != null && globalController.orderDetailResp!.isBuffetOrderExist()) {
+      if (!globalController.orderDetailResp!.isInBuffetTime()) {
+        showToast("自助餐用餐时间已结束！");
+        return;
+      }
+    }
+
     if (globalController.shoppingCartList.isNotEmpty) {
       reqSubmitOrder();
     }

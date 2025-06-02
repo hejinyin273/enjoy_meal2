@@ -371,7 +371,8 @@ class ShoppingCartView extends CustomBaseView<ShoppingCartController> {
         children: [
           Text(dishAttributeInfo.getAttributeName(),
             style: TextStyle(color: Colors.black, fontSize: fontSize??12.sp, fontWeight: FontWeightConf.medium),),
-          Text(dishAttributeInfo.priceAdjustment.toInt() == 0 ? "" : "+${dishAttributeInfo.priceAdjustment.toInt()}",
+          Text((controller.globalController.isOnBuffetMode || dishAttributeInfo.priceAdjustment.toInt() == 0)
+              ? "" : "+${dishAttributeInfo.priceAdjustment.toInt()}",
             style: TextStyle(color: Colors.black, fontSize: fontSize??12.sp, fontWeight: FontWeightConf.medium),),
         ],
       ),
@@ -515,7 +516,8 @@ class ShoppingCartView extends CustomBaseView<ShoppingCartController> {
         children: [
           Text(dishAttributeInfo.getAttributeName(), style: TextStyle(color: Colors.black, fontSize: 12.sp, fontWeight: FontWeightConf.medium),),
 
-          Text(dishAttributeInfo.priceAdjustment.toInt() == 0 ? "" : "+${dishAttributeInfo.priceAdjustment.toInt()}",
+          Text((controller.globalController.isOnBuffetMode || dishAttributeInfo.priceAdjustment.toInt() == 0)
+              ? "" : "+${dishAttributeInfo.priceAdjustment.toInt()}",
             style: TextStyle(color:  Colors.black, fontSize: 12.sp, fontWeight: FontWeightConf.medium),),
         ],
       ),
