@@ -346,13 +346,17 @@ class GlobalController extends BaseController{
         logger.i("startBuffetTimer() rel=$rel, start=${60 * 1000 * (reminderTimeMin -1)}, endEqual=${60 * 1000 * reminderTimeMin}");
       }
 
-      if (rel < 0) {///todo----------------<<<<
+      if (rel < 0) {
         isOnBuffetMode = false;
         buffetCategoryInfo = null;
         buffetTimer?.cancel();
         buffetTimer = null;
         buffetTimeStringObs("");
         eventBus.fire(ExitBuffetEvent());
+        if (Get.isDialogOpen != null && Get.isDialogOpen!) {///showBuffetTimeTipDialog may be open
+          Get.back();
+        }
+        showBuffetOverTimeDialog();
         reqOrderDetail();
       }
     });
@@ -481,6 +485,13 @@ class GlobalController extends BaseController{
         Get.until((route) => Get.currentRoute.startsWith(Routes.mainPage));
       }
     }
+  }
+
+  void showBuffetOverTimeDialog() {
+    Get.dialog(TipConfirmDialog(tipContent: "注文終了しました",
+      onConfirm: () async{
+        Get.back();
+      },), barrierColor: Colors.transparent, useSafeArea: false, barrierDismissible: false);
   }
 
   void handleNewVersionMsg() {

@@ -24,7 +24,7 @@ import '../../dialog/pay_bill_select_dialog.dart';
 import '../../dialog/store_operation_dialog.dart';
 import '../../global_controller.dart';
 
-abstract class WaiterBaseController extends BaseController{
+abstract class WaiterBaseController extends BaseController with WidgetsBindingObserver{
   final DataRepository dataRepository = Get.find(tag: (DataRepository).toString());
   final PreferenceManager preferenceManager = Get.find(tag: (PreferenceManager).toString());
   final GlobalController globalController = Get.find<GlobalController>();
@@ -66,6 +66,7 @@ abstract class WaiterBaseController extends BaseController{
 
   @override
   void onInit() {
+    WidgetsBinding.instance.addObserver(this);
     dishIdController = TextEditingController();
     dishIdNode = FocusNode();
 
@@ -117,7 +118,17 @@ abstract class WaiterBaseController extends BaseController{
   void onMakeListUpdateEvent() {}
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      Future.delayed(const Duration(milliseconds: 100), (){
+        onMakeListUpdateEvent();
+      });
+    }
+  }
+
+  @override
   void onClose() {
+    WidgetsBinding.instance.removeObserver(this);
     dishIdController.dispose();
     dishIdNode.dispose();
     storeDataUpdateObs.close();
