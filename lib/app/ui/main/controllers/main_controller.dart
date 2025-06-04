@@ -97,6 +97,12 @@ class MainController extends CustomBaseController  {
   }
 
   @override
+  void onRestaurantDataUpdate(RefreshDataEvent event) {
+    _loadInitStateObs(LoadState.loading);
+    _loadInitStateObs(LoadState.success);
+  }
+
+  @override
   void onClose() {
     _languageObs.close();
     loadingTipObs.close();

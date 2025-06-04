@@ -83,9 +83,13 @@ class DishDetailDialog extends StatelessWidget{
                         height: 269.w,
                         width: 389.w,
                         margin: EdgeInsets.only(top:8.w, bottom: 4.w),
-                        child:  ViewUtil.cachedImage(
+                        child:  dishInfo.detailImageUrl != null ? ViewUtil.cachedImage(
                           dishInfo.detailImageUrl!,
                           fit: BoxFit.cover,
+                        ) : Container(
+                          color: Colors.grey,
+                          alignment: Alignment.center,
+                          child: Text(CustomLocalizations.text("no_picture"), style: TextStyle(color: const Color(0xFF555555), fontSize: 22.sp, fontWeight: FontWeightConf.medium),),
                         ),
                       ),
                     ],
