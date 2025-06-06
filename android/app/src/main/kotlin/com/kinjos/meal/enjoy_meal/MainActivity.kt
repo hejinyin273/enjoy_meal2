@@ -280,13 +280,13 @@ class MainActivity: FlutterActivity(), SearchPrinterResultListener,ConnectionLis
                 if (printer.printerDevice is BluetoothPrinterDevice) {
                     val bluetoothPrinter = printer.printerDevice as BluetoothPrinterDevice
                     Log.i(TAG, "onPrinterConnected() bluetoothPrinter=${bluetoothPrinter.bluetoothDevice.address}")
-                    sink?.success("PrinterConnected:${printer.connectType}:${bluetoothPrinter.bluetoothDevice.address}")
+                    sink?.success("PrinterConnected_${printer.connectType}_${bluetoothPrinter.bluetoothDevice.address}")
                 }
             } else if (printer.connectType == ConnectType.WIFI) {
                 if (printer.printerDevice is WifiPrinterDevice) {
                     val wifiPrinterDevice = printer.printerDevice as WifiPrinterDevice
                     Log.i(TAG, "onPrinterConnected() wifiPrinterDevice=${wifiPrinterDevice.mac}, ip=${wifiPrinterDevice.ip}")
-                    sink?.success("PrinterConnected:${printer.connectType}:${wifiPrinterDevice.mac}")
+                    sink?.success("PrinterConnected_${printer.connectType}_${wifiPrinterDevice.mac}")
                 }
             }
         }

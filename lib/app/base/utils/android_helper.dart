@@ -24,6 +24,8 @@ class AndroidHelper {
       eventBus.fire(InstallHelperStatus(status: 0));
     } else if (event == "HelperInstallFailed") {
       eventBus.fire(InstallHelperStatus(status: 1));
+    } else if (event.startsWith("PrinterConnected")) {
+      eventBus.fire(event);
     }
   }
   
