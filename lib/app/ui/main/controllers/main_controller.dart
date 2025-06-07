@@ -59,6 +59,8 @@ class MainController extends CustomBaseController  {
   StreamSubscription? _helperInstallSubscription;
   int? _helperInstallStatus;
 
+  StreamSubscription? _printerEventSubscription;
+
   StreamSubscription? _appUpgradeSubscription;
 
   @override
@@ -75,6 +77,16 @@ class MainController extends CustomBaseController  {
       onFailed: _onFailed,
       onPaused: _onPaused,
       onUpdate: _onUpdate, );
+
+    _printerEventSubscription = eventBus.on<String>().listen((String event) async{
+      logger.i("PrinterEventSub() event=$event");
+      if (event.startsWith("PrinterConnected")) {
+        var events = event.split("_");
+        if (events.length == 3) {
+
+        }
+      }
+    });
 
     _helperInstallStatus = null;
     _helperInstallSubscription = eventBus.on<InstallHelperStatus>().listen((InstallHelperStatus event) async{
@@ -97,6 +109,12 @@ class MainController extends CustomBaseController  {
   }
 
   @override
+  void onRestaurantDataUpdate(RefreshDataEvent event) {
+    _loadInitStateObs(LoadState.loading);
+    _loadInitStateObs(LoadState.success);
+  }
+
+  @override
   void onClose() {
     _languageObs.close();
     loadingTipObs.close();
@@ -104,6 +122,9 @@ class MainController extends CustomBaseController  {
     _loadInitStateObs.close();
     btnTipMessageObs.close();
     _progressController.close();
+
+    _printerEventSubscription?.cancel();
+    _printerEventSubscription = null;
 
     _helperInstallSubscription?.cancel();
     _helperInstallSubscription = null;

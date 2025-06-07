@@ -15,8 +15,16 @@ import androidx.core.content.FileProvider
 import com.gainscha.sdk.demo.ui.PrinterConnectActivity
 import com.gainscha.sdk.demo.ui.PrinterMainActivity
 import com.gainscha.sdk.demo.util.Constants
+import com.gainscha.sdk2.ConnectType
 import com.gainscha.sdk2.ConnectionListener
 import com.gainscha.sdk2.Printer
+import com.gainscha.sdk2.PrinterFinder
+import com.gainscha.sdk2.PrinterFinder.SearchPrinterResultListener
+import com.gainscha.sdk2.model.BluetoothPrinterDevice
+import com.gainscha.sdk2.model.SerialPortPrinterDevice
+import com.gainscha.sdk2.model.UsbAccessoryPrinterDevice
+import com.gainscha.sdk2.model.UsbPrinterDevice
+import com.gainscha.sdk2.model.WifiPrinterDevice
 import com.kinjos.meal.enjoy_meal.utils.ApkTools
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
@@ -29,7 +37,7 @@ import java.io.IOException
 import java.io.InputStreamReader
 
 
-class MainActivity: FlutterActivity(), ConnectionListener{
+class MainActivity: FlutterActivity(), SearchPrinterResultListener,ConnectionListener{
     companion object{
         private const val TAG : String = "EnjoyMeal"
         private const val HELPER_CHANNEL:String = "com.kinjos.meal.enjoy_meal/helper"
@@ -65,6 +73,8 @@ class MainActivity: FlutterActivity(), ConnectionListener{
                 startSearchPrinterActivity()
             } else if (call.method == "isPrinterConnected") {
                 result.success(isPrinterConnected())
+            } else if (call.method == "startSearchPrinters") {
+                startSearchPrinters()
             }
         }
 
@@ -259,10 +269,27 @@ class MainActivity: FlutterActivity(), ConnectionListener{
 
     //====Printer======
     private var printer: Printer? = null
+    private val printerFinder = PrinterFinder()
 
     override fun onPrinterConnected(printer: Printer?) {
         Log.i(TAG, "onPrinterConnected()")
         this.printer = printer
+        if (printer != null) {
+            Log.i(TAG, "onPrinterConnected() printer=${printer.printerDevice.printerName}, connectType=${printer.connectType}")
+            if (printer.connectType == ConnectType.BLUETOOTH) {
+                if (printer.printerDevice is BluetoothPrinterDevice) {
+                    val bluetoothPrinter = printer.printerDevice as BluetoothPrinterDevice
+                    Log.i(TAG, "onPrinterConnected() bluetoothPrinter=${bluetoothPrinter.bluetoothDevice.address}")
+                    sink?.success("PrinterConnected_${printer.connectType}_${bluetoothPrinter.bluetoothDevice.address}")
+                }
+            } else if (printer.connectType == ConnectType.WIFI) {
+                if (printer.printerDevice is WifiPrinterDevice) {
+                    val wifiPrinterDevice = printer.printerDevice as WifiPrinterDevice
+                    Log.i(TAG, "onPrinterConnected() wifiPrinterDevice=${wifiPrinterDevice.mac}, ip=${wifiPrinterDevice.ip}")
+                    sink?.success("PrinterConnected_${printer.connectType}_${wifiPrinterDevice.mac}")
+                }
+            }
+        }
     }
 
     override fun onPrinterConnectFail(printer: Printer?) {
@@ -282,6 +309,34 @@ class MainActivity: FlutterActivity(), ConnectionListener{
 
     private fun isPrinterConnected(): Boolean {
         return printer != null && printer!!.isConnected
+    }
+
+    private fun startSearchPrinters() {
+        printerFinder.searchPrinters(this)
+    }
+
+    override fun onSearchBluetoothPrinter(device: BluetoothPrinterDevice?) {
+        Log.i(TAG, "onSearchBluetoothPrinter() $device")
+    }
+
+    override fun onSearchUsbPrinter(device: UsbPrinterDevice?) {
+
+    }
+
+    override fun onSearchUsbPrinter(device: UsbAccessoryPrinterDevice?) {
+
+    }
+
+    override fun onSearchNetworkPrinter(device: WifiPrinterDevice?) {
+        Log.i(TAG, "onSearchNetworkPrinter() $device")
+    }
+
+    override fun onSearchSerialPortPrinter(device: SerialPortPrinterDevice?) {
+
+    }
+
+    override fun onSearchCompleted() {
+
     }
 
 }
