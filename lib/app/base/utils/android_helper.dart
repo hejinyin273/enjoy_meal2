@@ -105,4 +105,46 @@ class AndroidHelper {
     }
     return Future.value(false);
   }
+
+  static Future<void> startSearchPrinters(String connectType, String uid) async {
+    try {
+      await _helperChannel.invokeMethod('startSearchPrinters', {"connectType": connectType, "uid": uid});
+    } on PlatformException catch (e) {
+      print(e.toString());
+    }
+  }
+
+  static Future<void> stopSearchPrinters() async {
+    try {
+      await _helperChannel.invokeMethod('stopSearchPrinters');
+    } on PlatformException catch (e) {
+      print(e.toString());
+    }
+  }
+
+  static Future<bool> isOnPrinterSearching() async {
+    try {
+      final bool success = await _helperChannel.invokeMethod('isOnPrinterSearching');
+      return Future.value(success);
+    } on PlatformException catch (e) {
+      print(e.toString());
+    }
+    return Future.value(false);
+  }
+
+  static Future<void> printEscDot() async {
+    try {
+      await _helperChannel.invokeMethod('printEscDot');
+    } on PlatformException catch (e) {
+      print(e.toString());
+    }
+  }
+
+  static Future<void> startWifiPrinterConnect(String ip, int port) async {
+    try {
+      await _helperChannel.invokeMethod('startWifiPrinterConnect', {"ip": ip, "port": port});
+    } on PlatformException catch (e) {
+      print(e.toString());
+    }
+  }
 }

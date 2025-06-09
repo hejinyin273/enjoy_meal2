@@ -1,6 +1,7 @@
 abstract class PreferenceManager {
   static const String userToken = "UserToken";
   static const String appFileMd5 = "AppFileMd5";
+  static const String printerConnInfo = "PrinterConnInfo";
 
   Future<String> getString(String key, {String defaultValue = ""});
 

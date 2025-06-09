@@ -58,11 +58,17 @@ class MainDishView extends CustomBaseView<MainDishController> {
         Positioned(
           top: 143.h,
           right: 0,
-          bottom: 0,
+          //bottom: 0,
           child: SizedBox(
             width: 235.w,
+            height: 388.h,
             child: _buildRankingPanel(),
           ),),
+
+        Positioned(
+            top: 531.h,
+            right: 0,
+            child: buildShoppingCartMenuToolPanel()),
 
         Positioned(
             top: 0,
