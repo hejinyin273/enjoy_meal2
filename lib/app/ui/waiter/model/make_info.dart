@@ -74,6 +74,7 @@ class DishMakeInfo {
   late String? tableNumber;
   late int categoryId;
   late int orderDetailId;
+  late String? packageSimpleName;
   List<DishAttribute> dishAttributes = [];
 
   ///custom for package category name
@@ -95,6 +96,7 @@ class DishMakeInfo {
     tableNumber = json["tableNumber"];
     categoryId = json["categoryId"];
     orderDetailId = json["orderDetailId"];
+    packageSimpleName = json["packageSimpleName"];
 
     if (json['dishAttributes'] != null) {
       dishAttributes = [];

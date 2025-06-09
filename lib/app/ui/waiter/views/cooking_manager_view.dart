@@ -57,7 +57,7 @@ class CookingManagerView extends WaiterBaseView<CookingManagerController> {
               Expanded(flex: 1,
                 child: Container(
                 color: (controller.currentNavItemId == NavItemId.allMakeInfo && controller.isOnServedMode.value)
-                    ? const Color(0xFFFFDCED) : Colors.transparent,
+                    ? const Color(0xFFFF98A9) : Colors.transparent,
                 padding: EdgeInsets.only(top: 26.w, bottom: 90.w, left: 34.w),
                 child: _buildMakeDishPanel(),
               )),
@@ -483,7 +483,7 @@ class CookingManagerView extends WaiterBaseView<CookingManagerController> {
           Container(
             padding: EdgeInsets.only(left: 14.w),
             alignment: Alignment.centerLeft,
-            child: Text(model.categoryName??"", style: TextStyle(color: Colors.black, fontSize: 15.sp, fontWeight: FontWeightConf.bold)),
+            child: Text(model.packageSimpleName??"", style: TextStyle(color: Colors.black, fontSize: 15.sp, fontWeight: FontWeightConf.bold)),
           ),
 
           Positioned(
@@ -524,30 +524,53 @@ class CookingManagerView extends WaiterBaseView<CookingManagerController> {
 
               Positioned(
                 right: 1.w,
-                top: 3.w,
-                bottom: 3.w,
-                child: model.dishAttributes.isNotEmpty ? Container(
-                    width: 45.w,
-                    color: const Color(0xFFD9D9D9),
-                    alignment: Alignment.center,
-                    child: Text(model.dishAttributes.first.getAttributeName(), style: TextStyle(color: const Color(0xFFDD0606), fontSize: 16.sp, fontWeight: FontWeightConf.bold))
-                ) : const SizedBox(),
-              ),
-
-              Positioned(
-                right: model.dishAttributes.isNotEmpty ? 46.w : 1.w,
-                top: 3.w,
-                bottom: 3.w,
-                child: model.quantity > 1 ? Container(
-                  width: 45.w,
-                  color: const Color(0xFFD9D9D9),
-                  alignment: Alignment.center,
-                  child: Text("×${model.quantity}", style: TextStyle(color: const Color(0xFFDD0606), fontSize: 16.sp, fontWeight: FontWeightConf.bold)),
-                ) : const SizedBox(),
+                top: 1.5.w,
+                bottom: 1.5.w,
+                child: _buildDishInfoListCommonItemExtra(model),
               ),
             ],
           ),
         ));
+  }
+
+  _buildDishInfoListCommonItemExtra(DishMakeInfo model) {
+    double totalWidth = (model.quantity > 1 ? model.dishAttributes.length + 1 : model.dishAttributes.length) * 46.w;
+    return SizedBox(
+      width: totalWidth,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+          itemCount: model.quantity > 1 ? model.dishAttributes.length + 1 : model.dishAttributes.length,
+          itemBuilder: (context, index){
+            if (model.quantity > 1) {
+              if (index == 0) {
+                return Container(
+                  width: 45.w,
+                  margin: EdgeInsets.symmetric(horizontal: 0.5.w),
+                  color: const Color(0xFFD9D9D9),
+                  alignment: Alignment.center,
+                  child: Text("×${model.quantity}", style: TextStyle(color: const Color(0xFFDD0606), fontSize: 16.sp, fontWeight: FontWeightConf.bold)),
+                );
+              } else {
+                return Container(
+                    width: 45.w,
+                    margin: EdgeInsets.symmetric(horizontal: 0.5.w),
+                    color: const Color(0xFFD9D9D9),
+                    alignment: Alignment.center,
+                    child: Text(model.dishAttributes[index - 1].getAttributeName(), textAlign: TextAlign.center,
+                        style: TextStyle(color: const Color(0xFFDD0606), fontSize: 15.sp, fontWeight: FontWeightConf.bold))
+                );
+              }
+            }
+            return Container(
+                width: 45.w,
+                margin: EdgeInsets.symmetric(horizontal: 0.5.w),
+                color: const Color(0xFFD9D9D9),
+                alignment: Alignment.center,
+                child: Text(model.dishAttributes[index].getAttributeName(), textAlign: TextAlign.center,
+                    style: TextStyle(color: const Color(0xFFDD0606), fontSize: 15.sp, fontWeight: FontWeightConf.bold))
+            );
+          }),
+    );
   }
 
   _buildLineDividerView() {

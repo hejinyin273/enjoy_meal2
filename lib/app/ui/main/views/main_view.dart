@@ -238,7 +238,6 @@ class MainView extends CustomBaseView<MainController> {
           width: 665.w,
           height: 106.h,
           margin: EdgeInsets.only(top: 28.h, bottom: 28.h),
-          color: const Color(0xFFE5E5E5),
           alignment: Alignment.center,
           child: Html(data: controller.globalController.restaurantData.restaurantBaseInfo.getRestaurantTips(),),
           /*child: Text("従業員によるオーダーをご希望の方は、\n店員呼出ボタンを押してください", style: TextStyle(fontSize: 25.sp,

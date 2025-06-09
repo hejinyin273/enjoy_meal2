@@ -18,35 +18,34 @@ import '../model/nav_item_id.dart';
 import 'waiter_base_controller.dart';
 
 class CookingManagerController extends WaiterBaseController  {
-  final _currentNavItemIdObs = NavItemId.allMakeInfo.obs;
-  NavItemId get currentNavItemId => _currentNavItemIdObs.value;
+
   onNavItemSelected(NavItemId navItemId) async {
     if (NavItemId.customerCall == navItemId) {
       reqCallRecord();
-      _currentNavItemIdObs(navItemId);
+      currentNavItemIdObs(navItemId);
     } else if (NavItemId.statistics == navItemId) {
       reqStatistics();
-      _currentNavItemIdObs(navItemId);
+      currentNavItemIdObs(navItemId);
     } else if (NavItemId.allMakeInfo == navItemId) {
       if (isOnTableMode.value) {
         isOnTableMode(false);
-        _currentNavItemIdObs(navItemId);
+        currentNavItemIdObs(navItemId);
         updatePageDataList();
         return;
       }
       if (currentNavItemId == NavItemId.allMakeInfo) {
         isOnServedMode(!isOnServedMode.value);
       }
-      _currentNavItemIdObs(navItemId);
+      currentNavItemIdObs(navItemId);
       updatePageDataList();
     } else if (NavItemId.waiteToMake == navItemId) {
       if (isOnTableMode.value) {
         isOnTableMode(false);
       }
-      _currentNavItemIdObs(navItemId);
+      currentNavItemIdObs(navItemId);
       updatePageDataList();
     } else {
-      _currentNavItemIdObs(navItemId);
+      currentNavItemIdObs(navItemId);
     }
   }
 

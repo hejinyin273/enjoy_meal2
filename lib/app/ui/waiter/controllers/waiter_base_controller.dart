@@ -1,6 +1,7 @@
 
 import 'dart:async';
 
+import 'package:enjoy_meal/app/base/utils/android_helper.dart';
 import 'package:enjoy_meal/app/local/custom_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -23,11 +24,15 @@ import '../../dialog/custom_tip_confirm_dialog.dart';
 import '../../dialog/pay_bill_select_dialog.dart';
 import '../../dialog/store_operation_dialog.dart';
 import '../../global_controller.dart';
+import '../model/nav_item_id.dart';
 
 abstract class WaiterBaseController extends BaseController with WidgetsBindingObserver{
   final DataRepository dataRepository = Get.find(tag: (DataRepository).toString());
   final PreferenceManager preferenceManager = Get.find(tag: (PreferenceManager).toString());
   final GlobalController globalController = Get.find<GlobalController>();
+
+  final currentNavItemIdObs = NavItemId.allMakeInfo.obs;
+  NavItemId get currentNavItemId => currentNavItemIdObs.value;
 
   StreamSubscription? _makeListUpdateSubscription;
   StreamSubscription? _callStaffSubscription;
@@ -75,6 +80,9 @@ abstract class WaiterBaseController extends BaseController with WidgetsBindingOb
         onMakeListUpdateEvent();
       } else if ("CALL_STAFF" == event.action || "CALL_STAFF_CONFIRM" == event.action ) {
         reqCornerMarkersCount(quite: true);
+        if (currentNavItemId == NavItemId.customerCall) {
+          reqCallRecordQuiet();
+        }
       } else if ("DISH_STOCK_CHANGED" == event.action) {
         updateStoreDishAndPackageList();
         storeDataUpdateObs(false);
@@ -303,6 +311,20 @@ abstract class WaiterBaseController extends BaseController with WidgetsBindingOb
       loadCallRecordStateObs(LoadState.failed);
       handleException(err);
     } );
+  }
+
+  void reqCallRecordQuiet() {
+    dataRepository.reqCallRecord().then((BaseResp baseResp) async{
+      if(baseResp.isSuccess()) {
+        List<CallRecordResp> dataList = [];
+        baseResp.data.forEach((v) {
+          dataList.add(CallRecordResp.fromJson(v));
+        });
+        callRecordRespList = dataList;
+        loadCallRecordStateObs(LoadState.loading);
+        loadCallRecordStateObs(LoadState.success);
+      }
+    });
   }
 
   void reqConfirmCall(int id) {

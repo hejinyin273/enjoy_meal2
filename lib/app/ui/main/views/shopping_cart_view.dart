@@ -473,7 +473,7 @@ class ShoppingCartView extends CustomBaseView<ShoppingCartController> {
                     style: TextStyle(color: Colors.black, fontSize: 10.sp, fontWeight: FontWeightConf.medium), // 默认文本样式
                     children: <TextSpan>[
                       TextSpan(text: textTaxIncluded),
-                      TextSpan(text: "${controller.globalController.isOnBuffetMode ? 0 : packageOrderModel.getTotalPrice().toInt()}$textMoneyUnit", style: TextStyle(color: Colors.black,
+                      TextSpan(text: "${controller.globalController.isOnBuffetMode ? 0 : packageOrderModel.getTotalPrice().toInt()}", style: TextStyle(color: Colors.black,
                           fontSize: 20.sp, fontWeight: FontWeightConf.bold)),
                       TextSpan(text: textMoneyUnit),
                     ],
@@ -588,7 +588,7 @@ class ShoppingCartView extends CustomBaseView<ShoppingCartController> {
             children: [
               Obx((){
                 final update = controller.shoppingCartListUpdate;
-                return Text("￥${controller.globalController.isOnBuffetMode ? 0 : controller.getTotalPrice()}(${CustomLocalizations.text("included_tax")}）", style: TextStyle(color: Colors.black, fontSize: 28.sp, fontWeight: FontWeightConf.bold), textAlign: TextAlign.left,);
+                return Text("￥${controller.globalController.isOnBuffetMode ? 0 : controller.getTotalPrice().toInt()}(${CustomLocalizations.text("included_tax")}）", style: TextStyle(color: Colors.black, fontSize: 28.sp, fontWeight: FontWeightConf.bold), textAlign: TextAlign.left,);
               }),
               Text(CustomLocalizations.text("make_order"), style: TextStyle(color: Colors.black, fontSize: 28.sp, fontWeight: FontWeightConf.bold), textAlign: TextAlign.right,),
             ],
