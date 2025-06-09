@@ -87,6 +87,19 @@ abstract class CustomBaseView<BaseController extends CustomBaseController> exten
     );
   }
 
+  Widget buildShoppingCartMenuToolPanel() {
+    return SizedBox(
+      width: 120.w,
+      child: Column(
+        children: [
+
+          _buildShoppingCartItem(210.h, CustomLocalizations.text("shopping_cart"), controller.onShoppingCartMenuClicked,
+              isSelected: controller.isShoppingCartMenuSelected),
+        ],
+      ),
+    );
+  }
+
   _buildMenuToolItem(double height, String title, Function() onClicked, {bool isSelected = false}) {
     return TapDownZoomOutView(
       onClicked: onClicked,

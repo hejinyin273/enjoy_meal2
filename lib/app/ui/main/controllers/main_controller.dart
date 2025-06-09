@@ -82,8 +82,8 @@ class MainController extends CustomBaseController  {
       logger.i("PrinterEventSub() event=$event");
       if (event.startsWith("PrinterConnected")) {
         var events = event.split("_");
-        if (events.length == 3) {
-
+        if (events.length >= 3) {
+          preferenceManager.setString(PreferenceManager.printerConnInfo, event);
         }
       }
     });

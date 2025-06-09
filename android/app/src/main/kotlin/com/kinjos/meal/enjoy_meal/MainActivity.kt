@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageInstaller
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -15,11 +16,14 @@ import androidx.core.content.FileProvider
 import com.gainscha.sdk.demo.ui.PrinterConnectActivity
 import com.gainscha.sdk.demo.ui.PrinterMainActivity
 import com.gainscha.sdk.demo.util.Constants
+import com.gainscha.sdk.demo.util.Util
 import com.gainscha.sdk2.ConnectType
 import com.gainscha.sdk2.ConnectionListener
 import com.gainscha.sdk2.Printer
 import com.gainscha.sdk2.PrinterFinder
 import com.gainscha.sdk2.PrinterFinder.SearchPrinterResultListener
+import com.gainscha.sdk2.command.Esc
+import com.gainscha.sdk2.command.EscForDotPrinter
 import com.gainscha.sdk2.model.BluetoothPrinterDevice
 import com.gainscha.sdk2.model.SerialPortPrinterDevice
 import com.gainscha.sdk2.model.UsbAccessoryPrinterDevice
@@ -74,7 +78,25 @@ class MainActivity: FlutterActivity(), SearchPrinterResultListener,ConnectionLis
             } else if (call.method == "isPrinterConnected") {
                 result.success(isPrinterConnected())
             } else if (call.method == "startSearchPrinters") {
+                val connectType = call.argument<String?>("connectType")
+                val uid = call.argument<String?>("uid")
+                if (connectType != null && uid != null) {
+                    lastPrinterConnType = ConnectType.valueOf(connectType!!)
+                    lastPrinterUid = uid
+                }
                 startSearchPrinters()
+            } else if (call.method == "stopSearchPrinters") {
+                stopSearchPrinters()
+            } else if (call.method == "isOnPrinterSearching") {
+                result.success(isOnPrinterSearching)
+            } else if (call.method == "printEscDot") {
+                printEscDot()
+            } else if (call.method == "startWifiPrinterConnect") {
+                val ip = call.argument<String?>("ip")
+                val port = call.argument<Int?>("port")
+                if (ip != null && port != null) {
+                    startWifiPrinterConnect(ip, port)
+                }
             }
         }
 
@@ -269,6 +291,9 @@ class MainActivity: FlutterActivity(), SearchPrinterResultListener,ConnectionLis
 
     //====Printer======
     private var printer: Printer? = null
+    private var isOnPrinterSearching: Boolean = false
+    private var lastPrinterConnType: ConnectType? = null
+    private var lastPrinterUid: String? = null
     private val printerFinder = PrinterFinder()
 
     override fun onPrinterConnected(printer: Printer?) {
@@ -285,8 +310,8 @@ class MainActivity: FlutterActivity(), SearchPrinterResultListener,ConnectionLis
             } else if (printer.connectType == ConnectType.WIFI) {
                 if (printer.printerDevice is WifiPrinterDevice) {
                     val wifiPrinterDevice = printer.printerDevice as WifiPrinterDevice
-                    Log.i(TAG, "onPrinterConnected() wifiPrinterDevice=${wifiPrinterDevice.mac}, ip=${wifiPrinterDevice.ip}")
-                    sink?.success("PrinterConnected_${printer.connectType}_${wifiPrinterDevice.mac}")
+                    Log.i(TAG, "onPrinterConnected() wifiPrinterDevice=${wifiPrinterDevice.mac}, ip=${wifiPrinterDevice.ip}, port=${wifiPrinterDevice.port}")
+                    sink?.success("PrinterConnected_${printer.connectType}_${wifiPrinterDevice.mac}_${wifiPrinterDevice.ip}_${wifiPrinterDevice.port}")
                 }
             }
         }
@@ -311,12 +336,31 @@ class MainActivity: FlutterActivity(), SearchPrinterResultListener,ConnectionLis
         return printer != null && printer!!.isConnected
     }
 
+    private fun startWifiPrinterConnect(ip: String, port: Int) {
+        val wifiPrinter = WifiPrinterDevice()
+        wifiPrinter.ip = ip
+        wifiPrinter.port = 9100
+        Printer.connect(wifiPrinter)
+    }
+
     private fun startSearchPrinters() {
         printerFinder.searchPrinters(this)
+        isOnPrinterSearching = true
+    }
+
+    private fun stopSearchPrinters() {
+        printerFinder.stopSearchDevice()
+        isOnPrinterSearching = false
     }
 
     override fun onSearchBluetoothPrinter(device: BluetoothPrinterDevice?) {
         Log.i(TAG, "onSearchBluetoothPrinter() $device")
+        if (ConnectType.BLUETOOTH == lastPrinterConnType) {
+            if (device != null && device.bluetoothDevice.address == lastPrinterUid) {
+                // connect printer
+                Printer.connect(device)
+            }
+        }
     }
 
     override fun onSearchUsbPrinter(device: UsbPrinterDevice?) {
@@ -329,6 +373,12 @@ class MainActivity: FlutterActivity(), SearchPrinterResultListener,ConnectionLis
 
     override fun onSearchNetworkPrinter(device: WifiPrinterDevice?) {
         Log.i(TAG, "onSearchNetworkPrinter() $device")
+        if (ConnectType.WIFI == lastPrinterConnType) {
+            if (device != null && device.mac == lastPrinterUid) {
+                // connect printer
+                Printer.connect(device)
+            }
+        }
     }
 
     override fun onSearchSerialPortPrinter(device: SerialPortPrinterDevice?) {
@@ -337,6 +387,30 @@ class MainActivity: FlutterActivity(), SearchPrinterResultListener,ConnectionLis
 
     override fun onSearchCompleted() {
 
+    }
+
+    fun printEscDot() {
+        if (isPrinterConnected()) {
+            try {
+                //loadingDialog.show()
+                val esc = EscForDotPrinter()
+                esc.initPrinter()
+                esc.setTextFont(Esc.TEXT_FONT_KANJI)
+                esc.addText("小票打印\n")
+                esc.addText("放大字体\n")
+                esc.addBarcode(Esc.BARCODE_EAN8, 100, 50, true, 15, "454546546")
+                esc.addQrcode(100, 100, "sdfsdfsdfsdf")
+                var bitmap = BitmapFactory.decodeResource(resources, R.drawable.keai)
+                bitmap = Util.resizeBitmap(bitmap, 400, (bitmap.height * 400f / bitmap.width).toInt())
+                esc.addBitmap(bitmap, true)
+                esc.printAndFeedBackLines(1)
+                printer!!.print(esc.bytes, null)
+            } catch (e: IOException) {
+                e.printStackTrace()
+            } finally {
+                //loadingDialog.dismiss()
+            }
+        }
     }
 
 }

@@ -80,12 +80,12 @@ class MainDishController extends CustomBaseController  {
           final endDateTime = DateTime(currentDateTime.year, currentDateTime.month, currentDateTime.day, mainItem.endHour!, mainItem.endMinute!);
 
           if (currentDateTime.isAfter(startDateTime) && currentDateTime.isBefore(endDateTime)) {
-            onDishInfoItemClicked(item.mainCategoryId!, item, flyToCartAnim: false);
+            onDishInfoItemClicked(item.mainCategoryId!, item, flyToCartAnim: true);
           } else {
             showToast(CustomLocalizations.text("no_dish_on_this_time"));
           }
         } else {
-          onDishInfoItemClicked(item.mainCategoryId!, item, flyToCartAnim: false);
+          onDishInfoItemClicked(item.mainCategoryId!, item, flyToCartAnim: true);
         }
         break;
       }
