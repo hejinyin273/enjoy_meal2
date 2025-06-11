@@ -84,7 +84,7 @@ class SubDishView extends CustomBaseView<SubDishController> {
           }),
         ),
 
-        Obx((){
+        /*Obx((){
           final mainCategoryName = controller.getMainCategoryName(controller.selectedMainCategoryId);
           double marginTop = controller.subCategoryInfoList.isNotEmpty ? 113.h : 83.h;
           return Container(
@@ -94,7 +94,7 @@ class SubDishView extends CustomBaseView<SubDishController> {
             child: Text(mainCategoryName, maxLines: 6, overflow: TextOverflow.ellipsis,
                 style: TextStyle(color: Colors.white, fontSize: 48.sp, fontWeight: FontWeightConf.bold)),
           );
-        }),
+        }),*/
 
         Container(
           color: Colors.transparent,
@@ -704,16 +704,19 @@ class SubDishView extends CustomBaseView<SubDishController> {
             bottom: 32.h,
             child: Column(
               children: [
-                RichText(
-                  textAlign: TextAlign.end,
-                  text: TextSpan(
-                    style: TextStyle(color: const Color(0xFFFFFDFD), fontSize: 30.sp, fontWeight: FontWeightConf.bold), // 默认文本样式
-                    children: <TextSpan>[
-                      TextSpan(text: taxIncluded),
-                      TextSpan(text: '${item.packageInfo!.price.toInt()}', style: TextStyle(color: const Color(0xFFFFFDFD),
-                          fontSize: 40.sp, fontWeight: FontWeightConf.bold)),
-                      TextSpan(text: isNumSelect ? CustomLocalizations.text("per_person") :  moneyUnit),
-                    ],
+                Offstage(
+                  offstage: !isNumSelect,
+                  child: RichText(
+                    textAlign: TextAlign.end,
+                    text: TextSpan(
+                      style: TextStyle(color: const Color(0xFFFFFDFD), fontSize: 30.sp, fontWeight: FontWeightConf.bold), // 默认文本样式
+                      children: <TextSpan>[
+                        TextSpan(text: taxIncluded),
+                        TextSpan(text: '${item.packageInfo!.price.toInt()}', style: TextStyle(color: const Color(0xFFFFFDFD),
+                            fontSize: 40.sp, fontWeight: FontWeightConf.bold)),
+                        TextSpan(text: "$moneyUnit${CustomLocalizations.text("per_person")}"),
+                      ],
+                    ),
                   ),
                 ),
 

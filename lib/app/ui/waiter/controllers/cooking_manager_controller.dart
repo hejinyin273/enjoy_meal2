@@ -246,6 +246,9 @@ class CookingManagerController extends WaiterBaseController  {
     });
 
     dishCategoryList = globalController.restaurantData.categoryInfos;
+    for(var item in dishCategoryList) {
+      selectedCategoryIdMap[item.id] = item.id;
+    }
 
     super.onInit();
 
