@@ -58,7 +58,7 @@ class CookingManagerView extends WaiterBaseView<CookingManagerController> {
                 child: Container(
                 color: (controller.currentNavItemId == NavItemId.allMakeInfo && controller.isOnServedMode.value)
                     ? const Color(0xFFFF98A9) : Colors.transparent,
-                padding: EdgeInsets.only(top: 26.w, bottom: 90.w, left: 34.w),
+                padding: EdgeInsets.only(top: 26.w, bottom: 90.w, left: 14.w),
                 child: _buildMakeDishPanel(),
               )),
             ],
@@ -360,7 +360,7 @@ class CookingManagerView extends WaiterBaseView<CookingManagerController> {
       itemCount: dataList.length,
       itemBuilder: (context, index){
         return Container(
-          width: 233.w,
+          width: 243.w,
           padding: EdgeInsets.symmetric(horizontal: 1.w),
           margin: EdgeInsets.symmetric(horizontal: 3.5.w),
           //color: Colors.black,
@@ -481,9 +481,9 @@ class CookingManagerView extends WaiterBaseView<CookingManagerController> {
       child: Stack(
         children: [
           Container(
-            padding: EdgeInsets.only(left: 14.w),
+            padding: EdgeInsets.only(left: 5.w),
             alignment: Alignment.centerLeft,
-            child: Text(model.packageSimpleName??"", style: TextStyle(color: Colors.black, fontSize: 15.sp, fontWeight: FontWeightConf.bold)),
+            child: AutoSizeText(model.packageSimpleName??"", style: TextStyle(color: Colors.black, fontSize: 20.sp, fontWeight: FontWeightConf.bold)),
           ),
 
           Positioned(
@@ -517,9 +517,9 @@ class CookingManagerView extends WaiterBaseView<CookingManagerController> {
           child: Stack(
             children: [
               Container(
-                padding: EdgeInsets.only(left: 14.w),
+                padding: EdgeInsets.only(left: 5.w),
                 alignment: Alignment.centerLeft,
-                child: Text(model.dishSimpleName, style: TextStyle(color: Colors.black, fontSize: 15.sp, fontWeight: FontWeightConf.bold)),
+                child: AutoSizeText(model.dishSimpleName, style: TextStyle(color: Colors.black, fontSize: 20.sp, fontWeight: FontWeightConf.medium)),
               ),
 
               Positioned(
@@ -534,7 +534,7 @@ class CookingManagerView extends WaiterBaseView<CookingManagerController> {
   }
 
   _buildDishInfoListCommonItemExtra(DishMakeInfo model) {
-    double totalWidth = (model.quantity > 1 ? model.dishAttributes.length + 1 : model.dishAttributes.length) * 46.w;
+    double totalWidth = model.quantity > 1 ? (model.dishAttributes.length * 44.w + 40.w) : model.dishAttributes.length *44.w;
     return SizedBox(
       width: totalWidth,
       child: ListView.builder(
@@ -544,7 +544,7 @@ class CookingManagerView extends WaiterBaseView<CookingManagerController> {
             if (model.quantity > 1) {
               if (index == 0) {
                 return Container(
-                  width: 45.w,
+                  width: 39.w,
                   margin: EdgeInsets.symmetric(horizontal: 0.5.w),
                   color: const Color(0xFFD9D9D9),
                   alignment: Alignment.center,
@@ -552,7 +552,7 @@ class CookingManagerView extends WaiterBaseView<CookingManagerController> {
                 );
               } else {
                 return Container(
-                    width: 45.w,
+                    width: 43.w,
                     margin: EdgeInsets.symmetric(horizontal: 0.5.w),
                     color: const Color(0xFFD9D9D9),
                     alignment: Alignment.center,
