@@ -12,6 +12,8 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.Toast
 import androidx.core.content.FileProvider
 import com.gainscha.sdk.demo.ui.PrinterConnectActivity
 import com.gainscha.sdk.demo.ui.PrinterMainActivity
@@ -25,6 +27,7 @@ import com.gainscha.sdk2.PrinterFinder.SearchPrinterResultListener
 import com.gainscha.sdk2.command.Esc
 import com.gainscha.sdk2.command.EscForDotPrinter
 import com.gainscha.sdk2.model.BluetoothPrinterDevice
+import com.gainscha.sdk2.model.Instruction
 import com.gainscha.sdk2.model.SerialPortPrinterDevice
 import com.gainscha.sdk2.model.UsbAccessoryPrinterDevice
 import com.gainscha.sdk2.model.UsbPrinterDevice
@@ -89,6 +92,8 @@ class MainActivity: FlutterActivity(), SearchPrinterResultListener,ConnectionLis
                 stopSearchPrinters()
             } else if (call.method == "isOnPrinterSearching") {
                 result.success(isOnPrinterSearching)
+            } else if (call.method == "checkPrinterStatus") {
+                checkPrinterStatus()
             } else if (call.method == "printEscDot") {
                 printEscDot()
             } else if (call.method == "startWifiPrinterConnect") {
@@ -389,6 +394,14 @@ class MainActivity: FlutterActivity(), SearchPrinterResultListener,ConnectionLis
 
     }
 
+    fun checkPrinterStatus() {
+        if (isPrinterConnected()) {
+            printer!!.getPrinterStatus(Instruction.ESC) { printerState ->
+                sink?.success("PrinterState_${printerState.status}")
+            }
+        }
+    }
+
     fun printEscDot() {
         if (isPrinterConnected()) {
             try {
@@ -400,9 +413,9 @@ class MainActivity: FlutterActivity(), SearchPrinterResultListener,ConnectionLis
                 esc.addText("放大字体\n")
                 esc.addBarcode(Esc.BARCODE_EAN8, 100, 50, true, 15, "454546546")
                 esc.addQrcode(100, 100, "sdfsdfsdfsdf")
-                var bitmap = BitmapFactory.decodeResource(resources, R.drawable.keai)
+                /*var bitmap = BitmapFactory.decodeResource(resources, R.drawable.keai)
                 bitmap = Util.resizeBitmap(bitmap, 400, (bitmap.height * 400f / bitmap.width).toInt())
-                esc.addBitmap(bitmap, true)
+                esc.addBitmap(bitmap, true)*/
                 esc.printAndFeedBackLines(1)
                 printer!!.print(esc.bytes, null)
             } catch (e: IOException) {
