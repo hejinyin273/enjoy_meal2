@@ -78,16 +78,6 @@ class MainController extends CustomBaseController  {
       onPaused: _onPaused,
       onUpdate: _onUpdate, );
 
-    _printerEventSubscription = eventBus.on<String>().listen((String event) async{
-      logger.i("PrinterEventSub() event=$event");
-      if (event.startsWith("PrinterConnected")) {
-        var events = event.split("_");
-        if (events.length >= 3) {
-          preferenceManager.setString(PreferenceManager.printerConnInfo, event);
-        }
-      }
-    });
-
     _helperInstallStatus = null;
     _helperInstallSubscription = eventBus.on<InstallHelperStatus>().listen((InstallHelperStatus event) async{
       logger.i("InstallHelperStatus() status=${event.status}");
@@ -106,6 +96,22 @@ class MainController extends CustomBaseController  {
         reqUpgradeVersionInfo();
       }
     });
+
+    _printerEventSubscription = eventBus.on<String>().listen((String event) async{
+      logger.i("PrinterEventSub() event=$event");
+      if (event.startsWith("PrinterConnected")) {
+        var events = event.split("_");
+        if (events.length >= 3) {
+          preferenceManager.setString(PreferenceManager.printerConnInfo, event);
+          globalController.printerConnInfo = event;
+        }
+      }
+    });
+
+    preferenceManager.getString(PreferenceManager.printerConnInfo, defaultValue: "").then((value) {
+      globalController.printerConnInfo = value;
+    });
+
   }
 
   @override
@@ -203,6 +209,7 @@ class MainController extends CustomBaseController  {
         } else {
           handleResCache(globalController.restaurantData);
         }
+        globalController.autoConnectPrinter();
       } else {
         showApiErrToast(baseResp.status, baseResp.message);
         _loadInitStateObs(LoadState.failed);

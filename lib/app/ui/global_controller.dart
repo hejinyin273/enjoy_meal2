@@ -12,6 +12,7 @@ import 'package:get/get.dart';
 
 import '../base/data/protocol/response/base_resp.dart';
 import '../base/data/event_bus.dart';
+import '../base/utils/android_helper.dart';
 import '../data/model/load_state.dart';
 import '../data/model/restaurant_data.dart';
 import '../data/protocol/response/order_detail_resp.dart';
@@ -574,5 +575,52 @@ class GlobalController extends BaseController{
       eventBus.fire(RefreshDataEvent(type: 1));
       updateShoppingCartOrderInfo();
     }
+  }
+
+
+
+  ///printer
+  String? printerConnInfo;
+  Timer? printerTimer;
+  Timer? printerConnTimer;
+
+  void autoConnectPrinter() async{
+    if (printerConnInfo == null || printerConnInfo!.isEmpty) return;
+
+    try {
+      printerConnTimer?.cancel();
+      printerConnTimer = null;
+      if (userType != RestaurantConf.userTypeUser) {
+        printerConnTimer = Timer.periodic(const Duration(seconds: 15), (Timer timer) async{
+          if (printerConnInfo == null || printerConnInfo!.isEmpty) {
+            var connInfos = printerConnInfo!.split("_");
+            if (connInfos.length >= 3) {
+              if (connInfos[1] == "BLUETOOTH") {
+                final isPrinterConnected = await AndroidHelper.isPrinterConnected();
+                if (!isPrinterConnected) {
+                  final isOnPrinterSearching = await AndroidHelper.isOnPrinterSearching();
+                  if (isOnPrinterSearching) {
+                    await AndroidHelper.stopSearchPrinters();
+                    await Future.delayed(const Duration(seconds: 2));
+                  }
+                  AndroidHelper.startSearchPrinters(connInfos[1], connInfos[2]);
+                }
+              } else {
+                timer.cancel();
+              }
+            }
+          }
+        });
+      }
+    } catch (e) {}
+  }
+
+  void startPrinterTimer() {
+    printerTimer?.cancel();
+    printerTimer = null;
+
+    printerTimer = Timer.periodic(const Duration(minutes: 1), (Timer timer) {
+
+    });
   }
 }

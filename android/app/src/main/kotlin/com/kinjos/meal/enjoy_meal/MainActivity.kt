@@ -95,7 +95,8 @@ class MainActivity: FlutterActivity(), SearchPrinterResultListener,ConnectionLis
             } else if (call.method == "checkPrinterStatus") {
                 checkPrinterStatus()
             } else if (call.method == "printEscDot") {
-                printEscDot()
+                val printContent = call.arguments as String
+                printEscDot(printContent)
             } else if (call.method == "startWifiPrinterConnect") {
                 val ip = call.argument<String?>("ip")
                 val port = call.argument<Int?>("port")
@@ -394,7 +395,7 @@ class MainActivity: FlutterActivity(), SearchPrinterResultListener,ConnectionLis
 
     }
 
-    fun checkPrinterStatus() {
+    private fun checkPrinterStatus() {
         if (isPrinterConnected()) {
             printer!!.getPrinterStatus(Instruction.ESC) { printerState ->
                 sink?.success("PrinterState_${printerState.status}")
@@ -402,15 +403,15 @@ class MainActivity: FlutterActivity(), SearchPrinterResultListener,ConnectionLis
         }
     }
 
-    fun printEscDot() {
+    private fun printEscDot(printContent: String) {
         if (isPrinterConnected()) {
             try {
                 //loadingDialog.show()
                 val esc = EscForDotPrinter()
                 esc.initPrinter()
                 esc.setTextFont(Esc.TEXT_FONT_KANJI)
-                esc.addText("小票打印\n")
-                esc.addText("放大字体\n")
+                esc.addText(printContent)
+                //esc.addText("放大字体\n")
                 esc.addBarcode(Esc.BARCODE_EAN8, 100, 50, true, 15, "454546546")
                 esc.addQrcode(100, 100, "sdfsdfsdfsdf")
                 /*var bitmap = BitmapFactory.decodeResource(resources, R.drawable.keai)
