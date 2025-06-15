@@ -132,12 +132,24 @@ class AndroidHelper {
     return Future.value(false);
   }
 
-  static Future<void> printEscDot() async {
+  static Future<bool> printEscDot(String printContent) async {
     try {
-      await _helperChannel.invokeMethod('printEscDot');
+      final bool success = await _helperChannel.invokeMethod('printEscDot', printContent);
+      return Future.value(success);
     } on PlatformException catch (e) {
       print(e.toString());
     }
+    return Future.value(false);
+  }
+
+  static Future<int> checkPrinterStatus() async {
+    try {
+      final int status = await _helperChannel.invokeMethod('checkPrinterStatus');
+      return Future.value(status);
+    } on PlatformException catch (e) {
+      print(e.toString());
+    }
+    return Future.value(-1);
   }
 
   static Future<void> startWifiPrinterConnect(String ip, int port) async {

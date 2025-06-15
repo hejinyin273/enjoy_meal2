@@ -7,25 +7,21 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageInstaller
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.widget.Toast
 import androidx.core.content.FileProvider
 import com.gainscha.sdk.demo.ui.PrinterConnectActivity
 import com.gainscha.sdk.demo.ui.PrinterMainActivity
 import com.gainscha.sdk.demo.util.Constants
-import com.gainscha.sdk.demo.util.Util
+import com.gainscha.sdk.demo.util.MenuUtils
 import com.gainscha.sdk2.ConnectType
 import com.gainscha.sdk2.ConnectionListener
 import com.gainscha.sdk2.Printer
 import com.gainscha.sdk2.PrinterFinder
 import com.gainscha.sdk2.PrinterFinder.SearchPrinterResultListener
-import com.gainscha.sdk2.command.Esc
-import com.gainscha.sdk2.command.EscForDotPrinter
+import com.gainscha.sdk2.command.EscCommand
 import com.gainscha.sdk2.model.BluetoothPrinterDevice
 import com.gainscha.sdk2.model.Instruction
 import com.gainscha.sdk2.model.SerialPortPrinterDevice
@@ -37,6 +33,7 @@ import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.MethodChannel
+import io.flutter.plugin.common.MethodChannel.Result
 import java.io.BufferedReader
 import java.io.File
 import java.io.FileOutputStream
@@ -93,10 +90,10 @@ class MainActivity: FlutterActivity(), SearchPrinterResultListener,ConnectionLis
             } else if (call.method == "isOnPrinterSearching") {
                 result.success(isOnPrinterSearching)
             } else if (call.method == "checkPrinterStatus") {
-                checkPrinterStatus()
+                checkPrinterStatus(result)
             } else if (call.method == "printEscDot") {
                 val printContent = call.arguments as String
-                printEscDot(printContent)
+                result.success(printEscDot(printContent))
             } else if (call.method == "startWifiPrinterConnect") {
                 val ip = call.argument<String?>("ip")
                 val port = call.argument<Int?>("port")
@@ -395,36 +392,80 @@ class MainActivity: FlutterActivity(), SearchPrinterResultListener,ConnectionLis
 
     }
 
-    private fun checkPrinterStatus() {
+    private fun checkPrinterStatus(result: Result) {
         if (isPrinterConnected()) {
             printer!!.getPrinterStatus(Instruction.ESC) { printerState ->
-                sink?.success("PrinterState_${printerState.status}")
+                runOnUiThread{
+                    //sink?.success("PrinterState_${printerState.status}")
+                    result.success(printerState.status)
+                }
             }
+        } else {
+            result.success(-1)
         }
     }
 
-    private fun printEscDot(printContent: String) {
+    private fun printEscDot(printContent: String): Boolean {
         if (isPrinterConnected()) {
             try {
-                //loadingDialog.show()
-                val esc = EscForDotPrinter()
-                esc.initPrinter()
-                esc.setTextFont(Esc.TEXT_FONT_KANJI)
+                val esc: EscCommand = EscCommand()
+                esc.addInitializePrinter()
+
+                // 设置为倍高倍宽
+                //字体放大两倍
+                esc.addSetCharcterSize(EscCommand.WIDTH_ZOOM.MUL_2, EscCommand.HEIGHT_ZOOM.MUL_2)
+
+                // 打印文字
+                esc.addText("爱情餐厅\n\n")
+                esc.addSelectJustification(EscCommand.JUSTIFICATION.LEFT)
+                esc.addText("520号桌\n\n")
+
+                //字体正常
+                esc.addSetCharcterSize(EscCommand.WIDTH_ZOOM.MUL_1, EscCommand.HEIGHT_ZOOM.MUL_1)
+                esc.addText("点菜时间 2020-05-20 5:20\n")
+                esc.addText("上菜时间 2020-05-20 13:14\n")
+                esc.addText("人数：2人 点菜员：新疆包工头\n")
+                esc.addText("--------------------------------\n")
                 esc.addText(printContent)
-                //esc.addText("放大字体\n")
-                esc.addBarcode(Esc.BARCODE_EAN8, 100, 50, true, 15, "454546546")
-                esc.addQrcode(100, 100, "sdfsdfsdfsdf")
-                /*var bitmap = BitmapFactory.decodeResource(resources, R.drawable.keai)
-                bitmap = Util.resizeBitmap(bitmap, 400, (bitmap.height * 400f / bitmap.width).toInt())
-                esc.addBitmap(bitmap, true)*/
-                esc.printAndFeedBackLines(1)
-                printer!!.print(esc.bytes, null)
+                esc.addText("--------------------------------\n")
+                //开启加粗
+                esc.addTurnEmphasizedModeOnOrOff(EscCommand.ENABLE.ON)
+                esc.addText(Menu80Utils.printFourData("菜名", "单价", "数量", "金额"))
+                esc.addTurnEmphasizedModeOnOrOff(EscCommand.ENABLE.OFF)
+                esc.addText(MenuUtils.printFourData("飞龙汤", "66.66", "1", "66.66"))
+                esc.addText(MenuUtils.printFourData("无为熏鸭", "88.88", "1", "88.88"))
+
+                esc.addPrintAndLineFeed()
+                esc.addPrintAndLineFeed()
+
+                esc.addSelectJustification(EscCommand.JUSTIFICATION.CENTER)
+
+                // 设置纠错等级
+                esc.addSelectErrorCorrectionLevelForQRCode(0x31.toByte())
+
+                // 设置qrcode模块大小
+                esc.addSelectSizeOfModuleForQRCode(4.toByte())
+
+                // 设置qrcode内容
+                esc.addStoreQRCodeData("https://www.baidu.com")
+
+                // 打印QRCode
+                esc.addPrintQRCode()
+                esc.addText("\n(扫二维码送手机)\n")
+                esc.addText("\n\n\n\n")
+                esc.addPrintAndLineFeed()
+
+                //切纸（带切刀打印机才可用）
+                esc.addCutPaper()
+                printer!!.print(esc.getBytes(), null)
+                return true;
             } catch (e: IOException) {
                 e.printStackTrace()
-            } finally {
-                //loadingDialog.dismiss()
+                Log.i(TAG, "printEscDot() ${e.printStackTrace()}")
             }
+            return false;
         }
+        return false;
     }
 
 }

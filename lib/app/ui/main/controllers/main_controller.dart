@@ -210,6 +210,7 @@ class MainController extends CustomBaseController  {
           handleResCache(globalController.restaurantData);
         }
         globalController.autoConnectPrinter();
+        globalController.startPrinterEscTimer();
       } else {
         showApiErrToast(baseResp.status, baseResp.message);
         _loadInitStateObs(LoadState.failed);

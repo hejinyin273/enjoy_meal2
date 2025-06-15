@@ -581,8 +581,9 @@ class GlobalController extends BaseController{
 
   ///printer
   String? printerConnInfo;
-  Timer? printerTimer;
+  Timer? printerEscTimer;
   Timer? printerConnTimer;
+  List<String> printContentList = [];
 
   void autoConnectPrinter() async{
     if (printerConnInfo == null || printerConnInfo!.isEmpty) return;
@@ -592,7 +593,7 @@ class GlobalController extends BaseController{
       printerConnTimer = null;
       if (userType != RestaurantConf.userTypeUser) {
         printerConnTimer = Timer.periodic(const Duration(seconds: 15), (Timer timer) async{
-          if (printerConnInfo == null || printerConnInfo!.isEmpty) {
+          if (printerConnInfo != null && printerConnInfo!.isNotEmpty) {
             var connInfos = printerConnInfo!.split("_");
             if (connInfos.length >= 3) {
               if (connInfos[1] == "BLUETOOTH") {
@@ -603,24 +604,48 @@ class GlobalController extends BaseController{
                     await AndroidHelper.stopSearchPrinters();
                     await Future.delayed(const Duration(seconds: 2));
                   }
+                  logger.i("autoConnectPrinter() startSearchPrinters $printerConnInfo");
                   AndroidHelper.startSearchPrinters(connInfos[1], connInfos[2]);
                 }
-              } else {
-                timer.cancel();
               }
             }
           }
         });
       }
-    } catch (e) {}
+    } catch (e) {
+      logger.e("autoConnectPrinter() err=$e");
+    }
   }
 
-  void startPrinterTimer() {
-    printerTimer?.cancel();
-    printerTimer = null;
+  void startPrinterEscTimer() {
+    printerEscTimer?.cancel();
+    printerEscTimer = null;
 
-    printerTimer = Timer.periodic(const Duration(minutes: 1), (Timer timer) {
-
+    printerEscTimer = Timer.periodic(const Duration(seconds: 3), (Timer timer) async{
+      logger.i("PrinterEscTimer() printContentList size=${printContentList.length}");
+      if (printContentList.isNotEmpty) {
+        final isPrinterConnected = await AndroidHelper.isPrinterConnected();
+        if (!isPrinterConnected) {
+          if (printerConnInfo != null && printerConnInfo!.isNotEmpty) {
+            var connInfos = printerConnInfo!.split("_");
+            if (connInfos.length >= 3) {
+              if (connInfos[1] == "WIFI") {
+                AndroidHelper.startWifiPrinterConnect(connInfos[3], int.tryParse(connInfos[4])??9100);
+              }
+            }
+          }
+        } else {
+          final status = await AndroidHelper.checkPrinterStatus();
+          logger.i("checkPrinterStatus() status=$status");
+          if (status == 18) {
+            final success = await AndroidHelper.printEscDot(printContentList.first);
+            logger.i("printEscDot() result=$success");
+            if (success) {
+              printContentList.removeAt(0);
+            }
+          }
+        }
+      }
     });
   }
 }
