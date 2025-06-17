@@ -95,17 +95,7 @@ class MainActivity: FlutterActivity(), SearchPrinterResultListener,ConnectionLis
                 checkPrinterStatus(result)
             } else if (call.method == "printEscDot") {
                 val printContent = call.arguments as String
-                val gson = Gson()
-                val orderDetailResp = gson.fromJson(printContent, OrderDetailResp::class.java)
-                Log.i(TAG, "orderDetailResp=$orderDetailResp")
-                for (list in orderDetailResp.getPrintList()) {
-                    Log.i(TAG, "============>>>>>$list")
-                    for (arrData in list) {
-                        Log.i(TAG, "============>>>>>$arrData")
-                    }
-                }
-                //result.success(printEscDot(printContent))
-                result.success(true)
+                result.success(printEscDot(printContent))
             } else if (call.method == "startWifiPrinterConnect") {
                 val ip = call.argument<String?>("ip")
                 val port = call.argument<Int?>("port")
@@ -420,6 +410,17 @@ class MainActivity: FlutterActivity(), SearchPrinterResultListener,ConnectionLis
     private fun printEscDot(printContent: String): Boolean {
         if (isPrinterConnected()) {
             try {
+
+                val gson = Gson()
+                val orderDetailResp = gson.fromJson(printContent, OrderDetailResp::class.java)
+                Log.i(TAG, "orderDetailResp=$orderDetailResp")
+                for (list in orderDetailResp.getPrintList()) {
+                    Log.i(TAG, "============>>>>>$list")
+                    for (arrData in list) {
+                        Log.i(TAG, "============>>>>>$arrData")
+                    }
+                }
+
                 val esc: EscCommand = EscCommand()
                 esc.addInitializePrinter()
 
@@ -444,8 +445,19 @@ class MainActivity: FlutterActivity(), SearchPrinterResultListener,ConnectionLis
                 esc.addTurnEmphasizedModeOnOrOff(EscCommand.ENABLE.ON)
                 esc.addText(MenuUtils.printFourData("菜名", "单价", "数量", "金额"))
                 esc.addTurnEmphasizedModeOnOrOff(EscCommand.ENABLE.OFF)
-                esc.addText(MenuUtils.printFourData("飞龙汤", "66.66", "1", "66.66"))
-                esc.addText(MenuUtils.printFourData("无为熏鸭", "88.88", "1", "88.88"))
+
+                for (list in orderDetailResp.getPrintList()) {
+                    if (list.size == 4) {
+                        esc.addText(MenuUtils.printFourData(list[0], list[1], list[2], list[3]))
+                    } else if (list.size == 3){
+                        esc.addText(MenuUtils.printThreeData(list[0], list[1], list[2]))
+                    }  else if (list.size == 2){
+                        esc.addText(MenuUtils.printTwoData(list[0], list[1]))
+                    }
+                }
+
+                //esc.addText(MenuUtils.printFourData("飞龙汤", "66.66", "1", "66.66"))
+                //esc.addText(MenuUtils.printFourData("无为熏鸭", "88.88", "1", "88.88"))
 
                 esc.addPrintAndLineFeed()
                 esc.addPrintAndLineFeed()
