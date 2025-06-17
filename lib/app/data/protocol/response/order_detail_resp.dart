@@ -49,6 +49,57 @@ class OrderDetailResp{
     }
   }
 
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> baseJson = {
+      "orderNumber": orderNumber,
+      "totalAmount": totalAmount,
+      "firstOrderTime": firstOrderTime,
+      "buffetEndTime": buffetEndTime
+    };
+
+    if (orderDetailPackages.isNotEmpty) {
+      List<Map<String, dynamic>> dataList = [];
+      for (var item in orderDetailPackages) {
+        dataList.add(item.toJson());
+      }
+      baseJson["orderDetailPackages"] = dataList;
+    } else {
+      baseJson["orderDetailPackages"] = [];
+    }
+
+    if (orderDetailBuffets.isNotEmpty) {
+      List<Map<String, dynamic>> dataList = [];
+      for (var item in orderDetailBuffets) {
+        dataList.add(item.toJson());
+      }
+      baseJson["orderDetailBuffets"] = dataList;
+    } else {
+      baseJson["orderDetailBuffets"] = [];
+    }
+
+    if (orderDetailDishes.isNotEmpty) {
+      List<Map<String, dynamic>> dataList = [];
+      for (var item in orderDetailDishes) {
+        dataList.add(item.toJson());
+      }
+      baseJson["orderDetailDishes"] = dataList;
+    } else {
+      baseJson["orderDetailDishes"] = [];
+    }
+
+    if (buffetOrderDetailDishes.isNotEmpty) {
+      List<Map<String, dynamic>> dataList = [];
+      for (var item in buffetOrderDetailDishes) {
+        dataList.add(item.toJson());
+      }
+      baseJson["buffetOrderDetailDishes"] = dataList;
+    } else {
+      baseJson["buffetOrderDetailDishes"] = [];
+    }
+
+    return baseJson;
+  }
+
   bool isOrderExist() {
     if (orderDetailPackages.isNotEmpty || orderDetailBuffets.isNotEmpty || orderDetailDishes.isNotEmpty) {
       return true;
@@ -86,37 +137,6 @@ class OrderDetailResp{
 
 }
 
-/*class OrderItem{
-  late int primaryCategoryId;
-  late String? categoryNameZh;
-  late String? categoryNameJa;
-  late String? categoryNameEn;
-
-
-
-  OrderItem.fromJson(Map<String, dynamic> json) {
-    primaryCategoryId = json["primaryCategoryId"];
-    categoryNameZh = json["categoryNameZh"];
-    categoryNameJa = json["categoryNameJa"];
-    categoryNameEn = json["categoryNameEn"];
-
-
-  }
-
-  String getCategoryName() {
-    if (orderDetailBuffets.isNotEmpty) {
-      return "食べ放題、飲み放題";
-    }
-    if (Language.zh == Conf.selectedLanguage) {
-      return categoryNameZh??"";
-    } else if (Language.jp == Conf.selectedLanguage) {
-      return categoryNameJa??"";
-    } else {
-      return categoryNameEn??"";
-    }
-  }
-}*/
-
 class OrderDetailPackage{///套餐订单详情
   late int packageId;
   late int orderPackageId;
@@ -142,6 +162,30 @@ class OrderDetailPackage{///套餐订单详情
         orderDetailDishes.add(OrderDetailDish.fromJson(v));
       });
     }
+  }
+
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> baseJson = {
+      "packageId": packageId,
+      "orderPackageId": orderPackageId,
+      "packageNameZh": packageNameZh,
+      "packageNameJa": packageNameJa,
+      "packageNameEn": packageNameEn,
+      "packageQuantity": packageQuantity,
+      "unitPrice": unitPrice
+    };
+
+    if (orderDetailDishes.isNotEmpty) {
+      List<Map<String, dynamic>> dataList = [];
+      for (var item in orderDetailDishes) {
+        dataList.add(item.toJson());
+      }
+      baseJson["orderDetailDishes"] = dataList;
+    } else {
+      baseJson["orderDetailDishes"] = [];
+    }
+
+    return baseJson;
   }
 
   String getPackageName() {
@@ -193,6 +237,13 @@ class OrderDetailBuffet{///自助餐订单详情
       });
     }
   }
+
+  Map<String, dynamic> toJson() => {
+    "buffetCategoryId": buffetCategoryId,
+    "buffetCategoryNameZh": buffetCategoryNameZh,
+    "buffetCategoryNameJa": buffetCategoryNameJa,
+    "buffetCategoryNameEn": buffetCategoryNameEn
+  };
 
   double getItemTotalPrice() {
     double unitPrice = 0;
@@ -293,6 +344,33 @@ class OrderDetailDish{
     }
   }
 
+  Map<String, dynamic> toJson() {
+    Map<String, dynamic> baseJson = {
+      "orderDishId": orderDishId,
+      "id": id,
+      "dishNameZh": dishNameZh,
+      "dishNameJa": dishNameJa,
+      "dishNameEn": dishNameEn,
+      "simpleName": simpleName,
+      "dishQuantity": dishQuantity,
+      "unitPrice": unitPrice,
+      "orderMode": orderMode,
+      "status": status
+    };
+
+    if (dishAttrs.isNotEmpty) {
+      List<Map<String, dynamic>> dataList = [];
+      for (var item in dishAttrs) {
+        dataList.add(item.toJson());
+      }
+      baseJson["dishAttrs"] = dataList;
+    } else {
+      baseJson["dishAttrs"] = [];
+    }
+
+    return baseJson;
+  }
+
   String getDishName() {
     if (Language.zh == Conf.selectedLanguage) {
       return dishNameZh;
@@ -341,6 +419,15 @@ class DishAttr{
         attributeNameEn = json["attributeNameEn"],
         simpleName = json["simpleName"],
         attributeUnitPrice = json["attributeUnitPrice"];
+
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "attributeNameZh": attributeNameZh,
+    "attributeNameJa": attributeNameJa,
+    "attributeNameEn": attributeNameEn,
+    "simpleName": simpleName,
+    "attributeUnitPrice": attributeUnitPrice
+  };
 
   String getAttributeName() {
     if (Language.zh == Conf.selectedLanguage) {

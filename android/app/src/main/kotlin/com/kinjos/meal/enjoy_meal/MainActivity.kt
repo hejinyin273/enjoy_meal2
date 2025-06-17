@@ -28,6 +28,7 @@ import com.gainscha.sdk2.model.SerialPortPrinterDevice
 import com.gainscha.sdk2.model.UsbAccessoryPrinterDevice
 import com.gainscha.sdk2.model.UsbPrinterDevice
 import com.gainscha.sdk2.model.WifiPrinterDevice
+import com.kinjos.meal.enjoy_meal.model.OrderDetailResp
 import com.kinjos.meal.enjoy_meal.utils.ApkTools
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
@@ -39,6 +40,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStreamReader
+import com.google.gson.Gson
 
 
 class MainActivity: FlutterActivity(), SearchPrinterResultListener,ConnectionListener{
@@ -93,7 +95,17 @@ class MainActivity: FlutterActivity(), SearchPrinterResultListener,ConnectionLis
                 checkPrinterStatus(result)
             } else if (call.method == "printEscDot") {
                 val printContent = call.arguments as String
-                result.success(printEscDot(printContent))
+                val gson = Gson()
+                val orderDetailResp = gson.fromJson(printContent, OrderDetailResp::class.java)
+                Log.i(TAG, "orderDetailResp=$orderDetailResp")
+                for (list in orderDetailResp.getPrintList()) {
+                    Log.i(TAG, "============>>>>>$list")
+                    for (arrData in list) {
+                        Log.i(TAG, "============>>>>>$arrData")
+                    }
+                }
+                //result.success(printEscDot(printContent))
+                result.success(true)
             } else if (call.method == "startWifiPrinterConnect") {
                 val ip = call.argument<String?>("ip")
                 val port = call.argument<Int?>("port")
@@ -430,7 +442,7 @@ class MainActivity: FlutterActivity(), SearchPrinterResultListener,ConnectionLis
                 esc.addText("--------------------------------\n")
                 //开启加粗
                 esc.addTurnEmphasizedModeOnOrOff(EscCommand.ENABLE.ON)
-                esc.addText(Menu80Utils.printFourData("菜名", "单价", "数量", "金额"))
+                esc.addText(MenuUtils.printFourData("菜名", "单价", "数量", "金额"))
                 esc.addTurnEmphasizedModeOnOrOff(EscCommand.ENABLE.OFF)
                 esc.addText(MenuUtils.printFourData("飞龙汤", "66.66", "1", "66.66"))
                 esc.addText(MenuUtils.printFourData("无为熏鸭", "88.88", "1", "88.88"))

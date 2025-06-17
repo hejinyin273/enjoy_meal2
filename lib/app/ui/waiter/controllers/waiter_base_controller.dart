@@ -1,5 +1,6 @@
 
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:enjoy_meal/app/base/utils/android_helper.dart';
 import 'package:enjoy_meal/app/local/custom_localizations.dart';
@@ -224,7 +225,9 @@ abstract class WaiterBaseController extends BaseController with WidgetsBindingOb
   void onPayBillItemClicked() {
     if (LoadState.success == loadOrderDetailState) {
       Get.dialog(PayBillSelectDialog(onCancel: (){
-        Get.back();
+        //Get.back();
+        String jsonString = json.encode(orderDetailResp.toJson());
+        AndroidHelper.printEscDot(jsonString);
       }, onConfirm: (int index){
         if (index == 0) {
           Get.back();
