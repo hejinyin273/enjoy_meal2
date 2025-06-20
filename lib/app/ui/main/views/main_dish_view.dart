@@ -281,7 +281,7 @@ class MainDishView extends CustomBaseView<MainDishController> {
               padding: EdgeInsets.only(left: 6.w, right: 5.w),
               color: Colors.white,
               alignment: Alignment.centerLeft,
-              child: AutoSizeText(model.getDishName(), minFontSize: 8,
+              child: AutoSizeText("${(index + 1)}.${model.getDishName()}", minFontSize: 8,
                 style: TextStyle(color: Colors.black, fontSize: 28.sp, fontWeight: FontWeightConf.bold),),
             ));
       },));
