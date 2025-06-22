@@ -221,21 +221,25 @@ abstract class WaiterBaseController extends BaseController with WidgetsBindingOb
     }
   }
 
+  void onPrinterConfigClicked() {
+    AndroidHelper.startSearchPrinterActivity();
+  }
+
   ///结账
   void onPayBillItemClicked() {
     if (LoadState.success == loadOrderDetailState) {
       Get.dialog(PayBillSelectDialog(onCancel: (){
-        //Get.back();
-        String jsonString = json.encode(orderDetailResp.toJson());
-        AndroidHelper.printEscDot(jsonString);
+        Get.back();
       }, onConfirm: (int index){
-        if (index == 0) {
+        if (index == 0) {///只印刷，不结账
           Get.back();
-        } else if (index == 1) {
-          reqOrderComplete(selectedTableInfoResp!);
+          String jsonString = json.encode(orderDetailResp.toJson());
+          globalController.printContentList.add(jsonString);
+        } else if (index == 1) {///结账打印
+          reqOrderComplete(selectedTableInfoResp!, true);
           Get.back();
-        } else {
-          reqOrderComplete(selectedTableInfoResp!);
+        } else {///无打印会计
+          reqOrderComplete(selectedTableInfoResp!, false);
           Get.back();
         }
       },), barrierColor: Colors.transparent, useSafeArea: false);
@@ -263,9 +267,13 @@ abstract class WaiterBaseController extends BaseController with WidgetsBindingOb
     } );
   }
 
-  void reqOrderComplete(TableInfoResp tableInfoResp) {
+  void reqOrderComplete(TableInfoResp tableInfoResp, bool isPrint) {
     dataRepository.reqOrderComplete(tableInfoResp.tableId.toString()).then((BaseResp baseResp) async{
       if(baseResp.isSuccess()) {
+        if (isPrint) {
+          String jsonString = json.encode(orderDetailResp.toJson());
+          globalController.printContentList.add(jsonString);
+        }
         isOnOrderListMode(false);
         reqTableInfoList();
       } else {

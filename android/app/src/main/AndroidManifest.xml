@@ -52,10 +52,12 @@
         <activity
             android:name="com.gainscha.sdk.demo.ui.PrinterConnectActivity"
             android:theme="@style/Theme.Gprintersdkdemo"
+            android:screenOrientation="landscape"
             android:exported="false" />
         <activity
             android:name="com.gainscha.sdk.demo.ui.PrinterMainActivity"
             android:theme="@style/Theme.Gprintersdkdemo"
+            android:screenOrientation="landscape"
             android:exported="false" />
 
         <!-- Don't delete the meta-data below.

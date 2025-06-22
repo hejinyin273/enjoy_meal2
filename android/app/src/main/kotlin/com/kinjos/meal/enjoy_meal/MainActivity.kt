@@ -28,6 +28,7 @@ import com.gainscha.sdk2.model.SerialPortPrinterDevice
 import com.gainscha.sdk2.model.UsbAccessoryPrinterDevice
 import com.gainscha.sdk2.model.UsbPrinterDevice
 import com.gainscha.sdk2.model.WifiPrinterDevice
+import com.google.gson.Gson
 import com.kinjos.meal.enjoy_meal.model.OrderDetailResp
 import com.kinjos.meal.enjoy_meal.utils.ApkTools
 import io.flutter.embedding.android.FlutterActivity
@@ -40,7 +41,6 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStreamReader
-import com.google.gson.Gson
 
 
 class MainActivity: FlutterActivity(), SearchPrinterResultListener,ConnectionListener{
@@ -413,6 +413,7 @@ class MainActivity: FlutterActivity(), SearchPrinterResultListener,ConnectionLis
 
                 val gson = Gson()
                 val orderDetailResp = gson.fromJson(printContent, OrderDetailResp::class.java)
+                Log.i(TAG, "----------->>>>printContent=$printContent")
                 Log.i(TAG, "orderDetailResp=$orderDetailResp")
                 for (list in orderDetailResp.getPrintList()) {
                     Log.i(TAG, "============>>>>>$list")
@@ -454,11 +455,31 @@ class MainActivity: FlutterActivity(), SearchPrinterResultListener,ConnectionLis
                     }
                 }
 
-                esc.addPrintAndLineFeed()
-                esc.addPrintAndLineFeed()
+
                 esc.addText("------------------------------------------------\n")
                 esc.addText(MenuUtils.printTwoData("合計(税込)：", "${orderDetailResp.totalAmount.toInt()}"))
+                esc.addText("------------------------------------------------\n")
 
+                esc.addPrintAndLineFeed()
+                esc.addPrintAndLineFeed()
+
+                /*esc.addSelectJustification(EscCommand.JUSTIFICATION.CENTER)
+
+                // 设置纠错等级
+                esc.addSelectErrorCorrectionLevelForQRCode(0x31.toByte())
+
+                // 设置qrcode模块大小
+                esc.addSelectSizeOfModuleForQRCode(4.toByte())
+
+                // 设置qrcode内容
+                esc.addStoreQRCodeData("www.baidu.com")
+
+                // 打印QRCode
+                esc.addPrintQRCode()
+                esc.addText("\n(扫二维码送手机)\n")*/
+                esc.addText("\n\n\n\n\n")
+
+                esc.addPrintAndLineFeed()
                 //切纸（带切刀打印机才可用）
                 esc.addCutPaper()
                 printer!!.print(esc.getBytes(), null)

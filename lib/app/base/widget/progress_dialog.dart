@@ -20,8 +20,8 @@ class ProgressDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     var progressWidget = progress??GifView.asset(
       'images/gif_loading.gif',
-      height: 80.w,
-      width: 80.w,
+      height: 60.w,
+      width: 60.w,
       frameRate: 30, // default is 15 FPS
     );
     List<Widget> widgetList = [];

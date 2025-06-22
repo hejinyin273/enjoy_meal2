@@ -73,7 +73,7 @@ class OrderListWidget extends StatelessWidget{
             child: Obx(()=>Offstage(
               offstage: LoadState.success != controller.loadOrderDetailState,
               child: _buildScrollControllerPanel(),
-            ))
+            )),
         ),
       ],
     );
@@ -92,7 +92,15 @@ class OrderListWidget extends StatelessWidget{
               );
             },
             child: AssetImageView(fileName: "icon_arrow_up.png", width: 61.w, height: 61.w,)),
-        SizedBox(height: 269.h,),
+        Container(
+          height: 269.h,
+          alignment: Alignment.center,
+          child: TapDownZoomOutView(
+              onClicked: (){
+                controller.onPrinterConfigClicked();
+              },
+              child: AssetImageView(fileName: "ic_printer.svg", width: 61.w, height: 61.w,)),
+        ),
         TapDownZoomOutView(
             onClicked: (){
               controller.listScrollController.animateTo(
