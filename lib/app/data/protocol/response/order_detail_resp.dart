@@ -8,6 +8,13 @@ class OrderDetailResp{
   late dynamic totalAmount;
   String? firstOrderTime;
   String? buffetEndTime;
+  late String tableNumber;
+  late int dinerCount;
+  String? firstDishTime;	///首次上菜时间	string(date-time)
+  late String firstFoodOrderTime;	///第一次点菜的时间
+  late String restaurantNameZh;
+  late String restaurantNameJa;
+  late String restaurantNameEn;
 
   List<OrderDetailPackage> orderDetailPackages = [];
   List<OrderDetailBuffet> orderDetailBuffets = [];
@@ -19,6 +26,13 @@ class OrderDetailResp{
     totalAmount = json["totalAmount"];
     firstOrderTime = json["firstOrderTime"];
     buffetEndTime = json["buffetEndTime"];
+    tableNumber = json["tableNumber"];
+    dinerCount = json["dinerCount"];
+    firstDishTime = json["firstDishTime"]??"";
+    firstFoodOrderTime = json["firstFoodOrderTime"];
+    restaurantNameZh = json["restaurantNameZh"];
+    restaurantNameJa = json["restaurantNameJa"];
+    restaurantNameEn = json["restaurantNameEn"];
 
     if (json['orderDetailPackages'] != null) {
       orderDetailPackages = [];
@@ -54,7 +68,14 @@ class OrderDetailResp{
       "orderNumber": orderNumber,
       "totalAmount": totalAmount,
       "firstOrderTime": firstOrderTime,
-      "buffetEndTime": buffetEndTime
+      "buffetEndTime": buffetEndTime,
+      "tableNumber": tableNumber,
+      "dinerCount": dinerCount,
+      "firstDishTime": firstDishTime,
+      "firstFoodOrderTime": firstFoodOrderTime,
+      "restaurantNameZh": restaurantNameZh,
+      "restaurantNameJa": restaurantNameJa,
+      "restaurantNameEn": restaurantNameEn,
     };
 
     if (orderDetailPackages.isNotEmpty) {

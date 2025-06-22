@@ -483,7 +483,7 @@ class CookingManagerView extends WaiterBaseView<CookingManagerController> {
           Container(
             padding: EdgeInsets.only(left: 5.w),
             alignment: Alignment.centerLeft,
-            child: AutoSizeText(model.packageSimpleName??"", style: TextStyle(color: Colors.black, fontSize: 20.sp, fontWeight: FontWeightConf.bold)),
+            child: AutoSizeText(model.orderMode == 2 ? model.categoryName??"" : model.packageSimpleName??"", style: TextStyle(color: Colors.black, fontSize: 20.sp, fontWeight: FontWeightConf.bold)),
           ),
 
           Positioned(

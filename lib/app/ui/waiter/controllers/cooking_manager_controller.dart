@@ -91,7 +91,7 @@ class CookingManagerController extends WaiterBaseController  {
           } else {
             if (classId == RestaurantConf.categoryBuffetId) {
 
-              dishMakeInfoItem.categoryName = globalController.restaurantData.restaurantBaseInfo.buffetSimpleName ?? "自助";
+              dishMakeInfoItem.categoryName = globalController.restaurantData.restaurantBaseInfo.buffetSimpleName ?? "放题";
             } else {
               dishMakeInfoItem.categoryName = globalController.getMainCategoryNameById(dishMakeInfoItem.categoryId);
             }
@@ -104,7 +104,7 @@ class CookingManagerController extends WaiterBaseController  {
             dishMakeInfoClassMap[classId]!.add(dishMakeInfoItem);
           } else {
             if (classId == RestaurantConf.categoryBuffetId) {
-              dishMakeInfoItem.categoryName = globalController.restaurantData.restaurantBaseInfo.buffetSimpleName ?? "自助";
+              dishMakeInfoItem.categoryName = globalController.restaurantData.restaurantBaseInfo.buffetSimpleName ?? "放题";
             } else {
               dishMakeInfoItem.categoryName = globalController.getMainCategoryNameById(dishMakeInfoItem.categoryId);
             }

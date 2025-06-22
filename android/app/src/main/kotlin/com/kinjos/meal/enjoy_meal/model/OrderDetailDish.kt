@@ -16,7 +16,7 @@ data class OrderDetailDish(
         return "OrderDetailDish(orderDishId=$orderDishId, id=$id, dishNameZh='$dishNameZh', dishNameJa='$dishNameJa', dishNameEn='$dishNameEn', simpleName='$simpleName', dishQuantity=$dishQuantity, unitPrice=$unitPrice, orderMode=$orderMode, status=$status, dishAttr=$dishAttrs)"
     }
 
-    fun getTotalPrice(): Double {
+    private fun getTotalPrice(): Double {
         var totalPrice = 0.0
         totalPrice += (unitPrice * dishQuantity)
         for (i in dishAttrs.indices) {

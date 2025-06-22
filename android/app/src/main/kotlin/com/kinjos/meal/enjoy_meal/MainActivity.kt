@@ -429,18 +429,16 @@ class MainActivity: FlutterActivity(), SearchPrinterResultListener,ConnectionLis
                 esc.addSetCharcterSize(EscCommand.WIDTH_ZOOM.MUL_2, EscCommand.HEIGHT_ZOOM.MUL_2)
 
                 // 打印文字
-                esc.addText("爱情餐厅\n\n")
+                esc.addText("${orderDetailResp.restaurantNameJa}\n\n")
                 esc.addSelectJustification(EscCommand.JUSTIFICATION.LEFT)
-                esc.addText("520号桌\n\n")
+                esc.addText("${orderDetailResp.tableNumber}座席番号\n\n")
 
                 //字体正常
                 esc.addSetCharcterSize(EscCommand.WIDTH_ZOOM.MUL_1, EscCommand.HEIGHT_ZOOM.MUL_1)
-                esc.addText("点菜时间 2020-05-20 5:20\n")
-                esc.addText("上菜时间 2020-05-20 13:14\n")
-                esc.addText("人数：2人 点菜员：新疆包工头\n")
-                esc.addText("--------------------------------\n")
-                esc.addText(printContent)
-                esc.addText("--------------------------------\n")
+                esc.addText("点菜时间 ${orderDetailResp.firstFoodOrderTime}\n")
+                esc.addText("上菜时间 ${orderDetailResp.firstDishTime}\n")
+                esc.addText("人数：${orderDetailResp.dinerCount}人 \n")
+                esc.addText("------------------------------------------------\n")
                 //开启加粗
                 esc.addTurnEmphasizedModeOnOrOff(EscCommand.ENABLE.ON)
                 esc.addText(MenuUtils.printFourData("菜名", "单价", "数量", "金额"))
@@ -456,28 +454,10 @@ class MainActivity: FlutterActivity(), SearchPrinterResultListener,ConnectionLis
                     }
                 }
 
-                //esc.addText(MenuUtils.printFourData("飞龙汤", "66.66", "1", "66.66"))
-                //esc.addText(MenuUtils.printFourData("无为熏鸭", "88.88", "1", "88.88"))
-
                 esc.addPrintAndLineFeed()
                 esc.addPrintAndLineFeed()
-
-                esc.addSelectJustification(EscCommand.JUSTIFICATION.CENTER)
-
-                // 设置纠错等级
-                esc.addSelectErrorCorrectionLevelForQRCode(0x31.toByte())
-
-                // 设置qrcode模块大小
-                esc.addSelectSizeOfModuleForQRCode(4.toByte())
-
-                // 设置qrcode内容
-                esc.addStoreQRCodeData("https://www.baidu.com")
-
-                // 打印QRCode
-                esc.addPrintQRCode()
-                esc.addText("\n(扫二维码送手机)\n")
-                esc.addText("\n\n\n\n")
-                esc.addPrintAndLineFeed()
+                esc.addText("------------------------------------------------\n")
+                esc.addText(MenuUtils.printTwoData("合計(税込)：", "${orderDetailResp.totalAmount.toInt()}"))
 
                 //切纸（带切刀打印机才可用）
                 esc.addCutPaper()

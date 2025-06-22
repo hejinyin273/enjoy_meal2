@@ -13,7 +13,7 @@ data class OrderDetailPackage(val packageId : Int,
         return "OrderDetailPackage(packageId=$packageId, orderPackageId=$orderPackageId, packageNameZh='$packageNameZh', packageNameJa='$packageNameJa', packageNameEn='$packageNameEn', packageQuantity=$packageQuantity, unitPrice=$unitPrice)"
     }
 
-    fun getPackageTotalPrice() : Double {
+    private fun getPackageTotalPrice() : Double {
         var totalPrice = 0.0
         totalPrice += (unitPrice * packageQuantity)
 
@@ -32,7 +32,7 @@ data class OrderDetailPackage(val packageId : Int,
             packageNameJa,
             "${unitPrice.toInt()}",
             "$packageQuantity",
-            "${getPackageTotalPrice()}",
+            "${getPackageTotalPrice().toInt()}",
         )
         return printArray
     }

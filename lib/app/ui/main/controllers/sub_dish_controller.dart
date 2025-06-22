@@ -624,6 +624,10 @@ class SubDishController extends CustomBaseController  {
 
   void onBuffetItemClicked(BuffetCategoryInfo item) {
     if (!isCanLoadingPage()) return;
+    if (globalController.orderDetailResp != null && globalController.orderDetailResp!.isCommonOrder()) {
+      showToast(CustomLocalizations.text("buffet_err"));
+      return;
+    }
     Get.toNamed(Routes.buffetConfirmPage, arguments: item)?.then((value){
       if (value == true) {
         globalController.isOnBuffetMode = true;

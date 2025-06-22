@@ -1,10 +1,18 @@
 package com.kinjos.meal.enjoy_meal.model
 
+
 data class OrderDetailResp(
     val orderNumber:String,
     val totalAmount: Double,
     val firstOrderTime: String?,
     val buffetEndTime: String?,
+    val tableNumber: String,
+    val dinerCount: Int,
+    val firstDishTime: String?,
+    val firstFoodOrderTime: String,
+    val restaurantNameZh: String,
+    val restaurantNameJa: String,
+    val restaurantNameEn: String,
     val orderDetailPackages: List<OrderDetailPackage>,
     val orderDetailBuffets: List<OrderDetailBuffet>,
     val orderDetailDishes: List<OrderDetailDish>
