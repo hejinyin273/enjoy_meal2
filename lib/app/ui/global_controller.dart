@@ -316,9 +316,11 @@ class GlobalController extends BaseController{
         reqOrderDetail();
       } else {
         isOnReqBuffetAddTime = false;
+        showApiErrToast(baseResp.status, baseResp.message);
       }
     }, onError:(err) {
       isOnReqBuffetAddTime = false;
+      handleException(err);
     } );
   }
 
@@ -621,31 +623,33 @@ class GlobalController extends BaseController{
     printerEscTimer?.cancel();
     printerEscTimer = null;
 
-    printerEscTimer = Timer.periodic(const Duration(seconds: 3), (Timer timer) async{
-      logger.i("PrinterEscTimer() printContentList size=${printContentList.length}");
-      if (printContentList.isNotEmpty) {
-        final isPrinterConnected = await AndroidHelper.isPrinterConnected();
-        if (!isPrinterConnected) {
-          if (printerConnInfo != null && printerConnInfo!.isNotEmpty) {
-            var connInfos = printerConnInfo!.split("_");
-            if (connInfos.length >= 3) {
-              if (connInfos[1] == "WIFI") {
-                AndroidHelper.startWifiPrinterConnect(connInfos[3], int.tryParse(connInfos[4])??9100);
+    if (RestaurantConf.userTypeUser != userType) {
+      printerEscTimer = Timer.periodic(const Duration(seconds: 3), (Timer timer) async{
+        logger.i("PrinterEscTimer() printContentList size=${printContentList.length}");
+        if (printContentList.isNotEmpty) {
+          final isPrinterConnected = await AndroidHelper.isPrinterConnected();
+          if (!isPrinterConnected) {
+            if (printerConnInfo != null && printerConnInfo!.isNotEmpty) {
+              var connInfos = printerConnInfo!.split("_");
+              if (connInfos.length >= 3) {
+                if (connInfos[1] == "WIFI") {
+                  AndroidHelper.startWifiPrinterConnect(connInfos[3], int.tryParse(connInfos[4])??9100);
+                }
+              }
+            }
+          } else {
+            final status = await AndroidHelper.checkPrinterStatus();
+            logger.i("checkPrinterStatus() status=$status");
+            if (status == 18) {
+              final success = await AndroidHelper.printEscDot(printContentList.first);
+              logger.i("printEscDot() result=$success");
+              if (success) {
+                printContentList.removeAt(0);
               }
             }
           }
-        } else {
-          final status = await AndroidHelper.checkPrinterStatus();
-          logger.i("checkPrinterStatus() status=$status");
-          if (status == 18) {
-            final success = await AndroidHelper.printEscDot(printContentList.first);
-            logger.i("printEscDot() result=$success");
-            if (success) {
-              printContentList.removeAt(0);
-            }
-          }
         }
-      }
-    });
+      });
+    }
   }
 }

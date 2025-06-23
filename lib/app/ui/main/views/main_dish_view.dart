@@ -68,7 +68,7 @@ class MainDishView extends CustomBaseView<MainDishController> {
         Positioned(
             top: 531.h,
             right: 0,
-            child: buildShoppingCartMenuToolPanel()),
+            child: buildShoppingCartMenuToolPanel(width: 235.w)),
 
         Positioned(
             top: 0,

@@ -87,9 +87,9 @@ abstract class CustomBaseView<BaseController extends CustomBaseController> exten
     );
   }
 
-  Widget buildShoppingCartMenuToolPanel() {
+  Widget buildShoppingCartMenuToolPanel({double? width}) {
     return SizedBox(
-      width: 120.w,
+      width: width??= 120.w,
       child: Column(
         children: [
 

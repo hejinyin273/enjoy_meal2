@@ -29,7 +29,7 @@ class OrderDetailResp{
     tableNumber = json["tableNumber"];
     dinerCount = json["dinerCount"];
     firstDishTime = json["firstDishTime"]??"";
-    firstFoodOrderTime = json["firstFoodOrderTime"];
+    firstFoodOrderTime = json["firstFoodOrderTime"]??"";
     restaurantNameZh = json["restaurantNameZh"];
     restaurantNameJa = json["restaurantNameJa"];
     restaurantNameEn = json["restaurantNameEn"];

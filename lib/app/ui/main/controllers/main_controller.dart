@@ -104,6 +104,12 @@ class MainController extends CustomBaseController  {
         if (events.length >= 3) {
           preferenceManager.setString(PreferenceManager.printerConnInfo, event);
           globalController.printerConnInfo = event;
+
+          AndroidHelper.isOnPrinterSearching().then((value) {
+            if (value) {
+              AndroidHelper.stopSearchPrinters();
+            }
+          });
         }
       }
     });
