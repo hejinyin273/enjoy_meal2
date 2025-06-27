@@ -221,6 +221,32 @@ abstract class WaiterBaseController extends BaseController with WidgetsBindingOb
     }
   }
 
+  ///订单取消
+  void onCancelOrderItemClicked() {
+    if (LoadState.success == loadOrderDetailState) {
+      Get.dialog(CustomTipConfirmDialog(tipContent: "您确定要取消这桌订单吗?", onCancel: (){
+        Get.back();
+      }, onConfirm: (){
+        Get.back();
+        showLoadingDialog(null);
+        dataRepository.reqCancelOrder(selectedTableInfoResp!.tableId.toString()).then((BaseResp baseResp) async{
+          hideLoadingDialog();
+          if(baseResp.isSuccess()) {
+            isOnOrderListMode(false);
+            reqTableInfoList();
+          } else {
+            showApiErrToast(baseResp.status, baseResp.message);
+            reqTableInfoList();
+          }
+        }, onError:(err) {
+          handleException(err);
+          hideLoadingDialog();
+        } );
+
+      },), barrierColor: Colors.transparent, useSafeArea: false);
+    }
+  }
+
   void onPrinterConfigClicked() {
     AndroidHelper.startSearchPrinterActivity();
   }

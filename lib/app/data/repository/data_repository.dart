@@ -79,6 +79,9 @@ abstract class DataRepository {
   ///服务员修改订单
   Future<BaseResp> reqModifyOrder(ModifyOrderReq modifyOrderReq);
 
+  ///取消订单
+  Future<BaseResp> reqCancelOrder(String tableId);
+
   ///统计
   Future<BaseResp> reqStatistics();
 

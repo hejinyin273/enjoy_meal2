@@ -78,7 +78,14 @@ class MainDishView extends CustomBaseView<MainDishController> {
         Positioned(
             bottom: 0,
             left: 0,
-            child: buildTableNumberView()),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                buildTableNumberView(),
+                SizedBox(width: 10.w),
+                Text("v${controller.currentVersion}", style: TextStyle(color: const Color(0xFF333333), fontSize: 20.sp, fontWeight: FontWeightConf.bold),),
+              ],
+            )),
 
         Positioned(
             bottom: 5.h,

@@ -140,6 +140,23 @@ class OrderListWidget extends StatelessWidget{
               )),
 
           TapDownZoomOutView(
+              onClicked: controller.onCancelOrderItemClicked,
+              child: Container(
+                width: 210.w,
+                height: 75.h,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10.r),
+                    border: Border.all(
+                        color: const Color(0xFF008EF3),
+                        width: 2.w
+                    )
+                ),
+                child: Text(CustomLocalizations.text("cancel_order"), style: TextStyle(color: Colors.black, fontSize: 28.sp, fontWeight: FontWeightConf.bold),),
+              )),
+
+          TapDownZoomOutView(
               onClicked: controller.onPayBillItemClicked,
               child: Container(
                 height: 75.h,

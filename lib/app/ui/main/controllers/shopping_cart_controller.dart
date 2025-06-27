@@ -21,6 +21,8 @@ class ShoppingCartController extends CustomBaseController  {
     _shoppingCartListUpdateObs(true);
   }
 
+  final loadingSubmitOrderObs = false.obs;
+
   ScrollController listScrollController = ScrollController();
 
   @override
@@ -90,7 +92,7 @@ class ShoppingCartController extends CustomBaseController  {
 
     if (globalController.orderDetailResp != null && globalController.orderDetailResp!.isBuffetOrderExist()) {
       if (!globalController.orderDetailResp!.isInBuffetTime()) {
-        showToast("自助餐用餐时间已结束！");
+        showToast("注文時間が終了したため、ご注文頂けません！");
         return;
       }
     }
@@ -113,6 +115,10 @@ class ShoppingCartController extends CustomBaseController  {
   }
 
   void reqSubmitOrder() {
+
+    if (loadingSubmitOrderObs.value) return;
+    loadingSubmitOrderObs(true);
+
     final submitOrderReq = SubmitOrderReq(globalController.currentTableId);
 
     List<DishOrderReq> dishOrderReqList = [];
@@ -147,13 +153,16 @@ class ShoppingCartController extends CustomBaseController  {
             Get.until((route) => route.settings.name == Routes.mainDishPage);
           }
         });
+        loadingSubmitOrderObs(false);
       } else {
         if ("buffet.time.overdue" == baseResp.message) {
 
         }
         showApiErrToast(baseResp.status, baseResp.message);
+        loadingSubmitOrderObs(false);
       }
     }, onError:(err) {
+      loadingSubmitOrderObs(false);
       handleException(err);
     } );
   }

@@ -498,7 +498,7 @@ class GlobalController extends BaseController{
   }
 
   void handleNewVersionMsg() {
-    Get.dialog(TipConfirmDialog(tipContent: "New version upgrade!",
+    Get.dialog(TipConfirmDialog(tipContent: "APPバージョンの更新",
       onConfirm: () async{
         Get.until((route) => Get.currentRoute.startsWith(Routes.mainPage));
         await Future.delayed(const Duration(milliseconds: 500));

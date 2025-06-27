@@ -74,6 +74,11 @@ abstract class CustomBaseController extends BaseController{
   }
 
   void onTopMenuClicked() {
+    /*if (!isCanLoadingPage()) return;
+    Get.offAndToNamed(Routes.cookingManagerPage);*/
+
+    //globalController.showBuffetOverTimeDialog();
+
     if (!isCanLoadingPage()) return;
     if (globalController.userType == RestaurantConf.userTypeUser) {
       if (globalController.isOnBuffetMode) return;

@@ -572,27 +572,36 @@ class ShoppingCartView extends CustomBaseView<ShoppingCartController> {
   }
 
   _buildOrderConfirmBtn() {
-    return TapDownZoomOutView(
+    return Obx(()=>TapDownZoomOutView(
         onClicked: controller.onOrderConfirmClicked,
         child: Container(
           width: 408.w,
           height: 100.w,
           padding: EdgeInsets.symmetric(horizontal: 21.w),
           decoration: BoxDecoration(
-              color: const Color(0xFFF39800),
+              color: controller.loadingSubmitOrderObs.value ? const Color(0x7FF39800) : const Color(0xFFF39800),
               borderRadius: BorderRadius.circular(13.r)
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+          child: Stack(
             children: [
-              Obx((){
-                final update = controller.shoppingCartListUpdate;
-                return Text("￥${controller.globalController.isOnBuffetMode ? 0 : controller.getTotalPrice().toInt()}(${CustomLocalizations.text("included_tax")}）", style: TextStyle(color: Colors.black, fontSize: 28.sp, fontWeight: FontWeightConf.bold), textAlign: TextAlign.left,);
-              }),
-              Text(CustomLocalizations.text("make_order"), style: TextStyle(color: Colors.black, fontSize: 28.sp, fontWeight: FontWeightConf.bold), textAlign: TextAlign.right,),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Obx((){
+                    final update = controller.shoppingCartListUpdate;
+                    return Text("￥${controller.globalController.isOnBuffetMode ? 0 : controller.getTotalPrice().toInt()}(${CustomLocalizations.text("included_tax")}）", style: TextStyle(color: Colors.black, fontSize: 28.sp, fontWeight: FontWeightConf.bold), textAlign: TextAlign.left,);
+                  }),
+                  Text(CustomLocalizations.text("make_order"), style: TextStyle(color: Colors.black, fontSize: 28.sp, fontWeight: FontWeightConf.bold), textAlign: TextAlign.right,),
+                ],
+              ),
+
+              Container(
+                alignment: Alignment.center,
+                child: controller.loadingSubmitOrderObs.value ? CircularProgressIndicator(color: const Color(0xFFFFFFFF), strokeWidth: 4.w,) : const SizedBox(),
+              )
             ],
           ),
-        ));
+        )));
   }
 }

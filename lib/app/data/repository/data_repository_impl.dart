@@ -126,6 +126,11 @@ class DataRepositoryImpl implements DataRepository {
   }
 
   @override
+  Future<BaseResp> reqCancelOrder(String tableId) {
+    return NetClient().requestBase(Method.post, "/api/v1/waiter/orderCancel/$tableId");
+  }
+
+  @override
   Future<BaseResp> reqStatistics() {
     return NetClient().requestBase(Method.get, "/api/v1/waiter/statistics");
   }

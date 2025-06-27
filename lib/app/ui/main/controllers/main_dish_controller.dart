@@ -11,6 +11,7 @@ import '../../../base/utils/default_cache_manager.dart';
 import '../../../base/data/event_bus.dart';
 import '../../../routes/app_pages.dart';
 import 'custom_base_controller.dart';
+import 'package:package_info_plus/package_info_plus.dart' as pkg;
 
 class MainDishController extends CustomBaseController  {
 
@@ -20,6 +21,7 @@ class MainDishController extends CustomBaseController  {
 
   late int topLayoutMode;
   late List<RestaurantTopLayoutInfo> topLayoutInfoList;
+  String currentVersion = "";
 
   @override
   void onInit() {
@@ -27,9 +29,12 @@ class MainDishController extends CustomBaseController  {
     super.onInit();
   }
 
-  void initData() {
+  void initData() async{
     topLayoutMode = globalController.restaurantData.restaurantBaseInfo.topLayoutMode;
     topLayoutInfoList = globalController.restaurantData.restaurantTopLayoutInfos;
+
+    pkg.PackageInfo packageInfo = await pkg.PackageInfo.fromPlatform();
+    currentVersion = packageInfo.version;
   }
 
   @override
