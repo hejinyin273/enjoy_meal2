@@ -73,6 +73,7 @@ class GlobalController extends BaseController{
   Timer? buffetTimer;
   final buffetTimeStringObs = "".obs;
   bool isOnReqBuffetAddTime = false;
+  final isShowDisableCoverObs = false.obs;
 
   final shoppingCartOrderNumObs = 0.obs;
   final shoppingCartOrderTotalPriceObs = 0.0.obs;
@@ -360,6 +361,9 @@ class GlobalController extends BaseController{
           Get.back();
         }
         showBuffetOverTimeDialog();
+        if (userType == RestaurantConf.userTypeUser) {
+          isShowDisableCoverObs(true);
+        }
         reqOrderDetail();
       }
     });
@@ -424,16 +428,22 @@ class GlobalController extends BaseController{
       if (orderDetailResp.firstOrderTime != null && orderDetailResp.buffetEndTime != null) {
         DateTime? startDateTime = DateTime.tryParse("${orderDetailResp.firstOrderTime}:00");
         DateTime? endDateTime = DateTime.tryParse("${orderDetailResp.buffetEndTime}:00");
-        if (startDateTime != null && endDateTime != null && endDateTime.isAfter(DateTime.now())) {
-          isOnBuffetMode = true;
-          for(var item in restaurantData.buffetInfo!.buffetCategoryInfos) {///查找所选的自助套餐
-            if (item.id == orderDetailResp.orderDetailBuffets.first.buffetCategoryId) {
-              buffetCategoryInfo = item;
-              break;
+        if (startDateTime != null && endDateTime != null) {
+          if (endDateTime.isAfter(DateTime.now())) {
+            isOnBuffetMode = true;
+            for(var item in restaurantData.buffetInfo!.buffetCategoryInfos) {///查找所选的自助套餐
+              if (item.id == orderDetailResp.orderDetailBuffets.first.buffetCategoryId) {
+                buffetCategoryInfo = item;
+                break;
+              }
+            }
+            startBuffetTimer(startDateTime, endDateTime);
+            return;
+          } else {
+            if (userType == RestaurantConf.userTypeUser) {
+              isShowDisableCoverObs(true);
             }
           }
-          startBuffetTimer(startDateTime, endDateTime);
-          return;
         }
       }
     }
@@ -447,12 +457,18 @@ class GlobalController extends BaseController{
       if (orderDetailResp == null) {
         Get.until((route) => Get.currentRoute.startsWith(Routes.mainPage));
       }
+      if (userType == RestaurantConf.userTypeUser) {
+        isShowDisableCoverObs(false);
+      }
     } else {
       isOnBuffetMode = false;
       buffetCategoryInfo = null;
       buffetTimer?.cancel();
       buffetTimer = null;
       buffetTimeStringObs("");
+      if (userType == RestaurantConf.userTypeUser) {
+        isShowDisableCoverObs(false);
+      }
     }
   }
 

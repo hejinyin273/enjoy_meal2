@@ -27,6 +27,7 @@ class SelectDinersController extends CustomBaseController  {
     restaurantName = globalController.restaurantData.restaurantBaseInfo.getRestaurantName();
     bgImgUrl = globalController.restaurantData.restaurantBaseInfo.selectionBgImage;
 
+    globalController.isShowDisableCoverObs(false);
     super.onInit();
   }
 

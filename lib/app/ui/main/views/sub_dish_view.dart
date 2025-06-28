@@ -128,6 +128,15 @@ class SubDishView extends CustomBaseView<SubDishController> {
           ),
         ),
 
+        Offstage(
+          offstage: !controller.globalController.isShowDisableCoverObs.value,
+          child: Container(
+            color: const Color(0x60000000),
+            alignment: Alignment.center,
+            child: _buildDisableCoverPanel(),
+          ),
+        ),
+
         Positioned(
             top: 0,
             right: 0,
@@ -835,5 +844,25 @@ class SubDishView extends CustomBaseView<SubDishController> {
         ],
       ),
       ) : const SizedBox());
+  }
+
+  _buildDisableCoverPanel() {
+    return SizedBox(
+      width: 820.w,
+      height: 375.w,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(13.r),
+          border: Border.all(
+              color: const Color(0xFF008EF3),
+              width: 1.w
+          ),
+        ),
+        padding: EdgeInsets.all(20.w),
+        alignment: Alignment.center,
+        child: Text("注文時間が終了したため、ご注文頂けません！", style: TextStyle(color: Colors.black, fontSize: 36.sp, fontWeight: FontWeightConf.medium),),
+      ),
+    );
   }
 }

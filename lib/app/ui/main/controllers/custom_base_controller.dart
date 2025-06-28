@@ -125,6 +125,11 @@ abstract class CustomBaseController extends BaseController{
   void onShoppingCartMenuClicked() {
     if (!isCanLoadingPage()) return;
 
+    if (globalController.isShowDisableCoverObs.value) {
+      showToast("注文時間が終了したため、ご注文頂けません！");
+      return;
+    }
+
     if (Get.currentRoute.startsWith(Routes.orderListPage)) {
       Get.offAndToNamed(Routes.shoppingCartPage);
     } else {
