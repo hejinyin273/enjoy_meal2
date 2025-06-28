@@ -517,9 +517,9 @@ class CookingManagerView extends WaiterBaseView<CookingManagerController> {
           child: Stack(
             children: [
               Container(
-                padding: EdgeInsets.only(left: 1.w),
+                padding: const EdgeInsets.only(left: 0),
                 alignment: Alignment.centerLeft,
-                child: AutoSizeText(model.dishSimpleName, style: TextStyle(color: Colors.black, fontSize: 20.sp, fontWeight: FontWeightConf.medium)),
+                child: Text(model.dishSimpleName, style: TextStyle(color: Colors.black, fontSize: 25.sp, fontWeight: FontWeightConf.medium)),
               ),
 
               Positioned(

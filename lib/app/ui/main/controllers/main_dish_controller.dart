@@ -21,7 +21,7 @@ class MainDishController extends CustomBaseController  {
 
   late int topLayoutMode;
   late List<RestaurantTopLayoutInfo> topLayoutInfoList;
-  String currentVersion = "";
+  final currentVersionObs = "".obs;
 
   @override
   void onInit() {
@@ -34,7 +34,7 @@ class MainDishController extends CustomBaseController  {
     topLayoutInfoList = globalController.restaurantData.restaurantTopLayoutInfos;
 
     pkg.PackageInfo packageInfo = await pkg.PackageInfo.fromPlatform();
-    currentVersion = packageInfo.version;
+    currentVersionObs(packageInfo.version);
   }
 
   @override

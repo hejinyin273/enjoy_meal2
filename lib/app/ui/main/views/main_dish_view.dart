@@ -83,7 +83,8 @@ class MainDishView extends CustomBaseView<MainDishController> {
               children: [
                 buildTableNumberView(),
                 SizedBox(width: 10.w),
-                Text("v${controller.currentVersion}", style: TextStyle(color: const Color(0xFF333333), fontSize: 20.sp, fontWeight: FontWeightConf.bold),),
+                Obx(()=>Text("v${controller.currentVersionObs.value}",
+                  style: TextStyle(color: const Color(0xFF333333), fontSize: 20.sp, fontWeight: FontWeightConf.bold),)),
               ],
             )),
 
@@ -288,8 +289,8 @@ class MainDishView extends CustomBaseView<MainDishController> {
               padding: EdgeInsets.only(left: 6.w, right: 5.w),
               color: Colors.white,
               alignment: Alignment.centerLeft,
-              child: AutoSizeText("${(index + 1)}.${model.getDishName()}", minFontSize: 8,
-                style: TextStyle(color: Colors.black, fontSize: 28.sp, fontWeight: FontWeightConf.bold),),
+              child: Text("${(index + 1)}.${model.getDishName()}",
+                style: TextStyle(color: Colors.black, fontSize: 20.sp, fontWeight: FontWeightConf.bold),),
             ));
       },));
   }

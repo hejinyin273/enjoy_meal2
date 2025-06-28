@@ -41,6 +41,8 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.InputStreamReader
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 
 
 class MainActivity: FlutterActivity(), SearchPrinterResultListener,ConnectionListener{
@@ -424,6 +426,11 @@ class MainActivity: FlutterActivity(), SearchPrinterResultListener,ConnectionLis
 
                 val esc: EscCommand = EscCommand()
                 esc.addInitializePrinter()
+
+                /*val bitmap: Bitmap =
+                    BitmapFactory.decodeStream(getAssets().open("avatar/white.png"))
+                esc.addBitmap(bitmap, bitmap.getWidth(), true)
+                esc.addPrintAndLineFeed()*/
 
                 // 设置为倍高倍宽
                 //字体放大两倍
