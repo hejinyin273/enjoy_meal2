@@ -82,6 +82,12 @@ abstract class CustomBaseController extends BaseController{
     if (!isCanLoadingPage()) return;
     if (globalController.userType == RestaurantConf.userTypeUser) {
       if (globalController.isOnBuffetMode) return;
+
+      if (globalController.isShowDisableCoverObs.value) {
+        showToast("注文時間が終了したため、ご注文頂けません！");
+        return;
+      }
+
       Get.until((route) => route.settings.name == Routes.mainDishPage);
     } else {
       Get.until((route) => route.settings.name == Routes.mainDishPage);

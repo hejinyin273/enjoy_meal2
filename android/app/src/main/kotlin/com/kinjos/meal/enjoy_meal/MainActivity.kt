@@ -436,8 +436,8 @@ class MainActivity: FlutterActivity(), SearchPrinterResultListener,ConnectionLis
 
                 //字体正常
                 esc.addSetCharcterSize(EscCommand.WIDTH_ZOOM.MUL_1, EscCommand.HEIGHT_ZOOM.MUL_1)
-                esc.addText("点菜时间 ${orderDetailResp.firstFoodOrderTime}\n")
-                esc.addText("上菜时间 ${orderDetailResp.firstDishTime}\n")
+                esc.addText("注文時間 ${orderDetailResp.firstFoodOrderTime}\n")
+                esc.addText("配膳時間 ${orderDetailResp.firstDishTime}\n")
                 esc.addText("人数：${orderDetailResp.dinerCount}人 \n")
                 esc.addText("------------------------------------------------\n")
                 //开启加粗

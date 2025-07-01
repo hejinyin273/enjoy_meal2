@@ -360,8 +360,8 @@ class GlobalController extends BaseController{
         if (Get.isDialogOpen != null && Get.isDialogOpen!) {///showBuffetTimeTipDialog may be open
           Get.back();
         }
-        showBuffetOverTimeDialog();
         if (userType == RestaurantConf.userTypeUser) {
+          showBuffetOverTimeDialog();
           isShowDisableCoverObs(true);
         }
         reqOrderDetail();
