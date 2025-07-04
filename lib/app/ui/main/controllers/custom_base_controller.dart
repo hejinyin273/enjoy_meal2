@@ -12,6 +12,7 @@ import '../../../data/local/preference/preference_manager.dart';
 import '../../../base/data/event_bus.dart';
 import '../../../data/protocol/response/order_detail_resp.dart';
 import '../../../data/repository/data_repository.dart';
+import '../../../local/custom_localizations.dart';
 import '../../../routes/app_pages.dart';
 import '../../dialog/dish_detail_dialog.dart';
 import '../../dialog/select_type_2_dialog.dart';
@@ -84,7 +85,7 @@ abstract class CustomBaseController extends BaseController{
       if (globalController.isOnBuffetMode) return;
 
       if (globalController.isShowDisableCoverObs.value) {
-        showToast("注文時間が終了したため、ご注文頂けません！");
+        globalController.showCommonTipDialog(CustomLocalizations.text("buffet_over_time_tip"));
         return;
       }
 
@@ -132,7 +133,7 @@ abstract class CustomBaseController extends BaseController{
     if (!isCanLoadingPage()) return;
 
     if (globalController.isShowDisableCoverObs.value) {
-      showToast("注文時間が終了したため、ご注文頂けません！");
+      globalController.showCommonTipDialog(CustomLocalizations.text("buffet_over_time_tip"));
       return;
     }
 

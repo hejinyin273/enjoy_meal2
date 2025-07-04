@@ -21,6 +21,10 @@ data class OrderDetailResp(
         return "OrderDetailResp(orderNumber='$orderNumber', totalAmount=$totalAmount, firstOrderTime=$firstOrderTime, buffetEndTime=$buffetEndTime, orderDetailPackages=$orderDetailPackages, orderDetailDishes=$orderDetailDishes)"
     }
 
+    fun isBuffet(): Boolean {
+        return orderDetailBuffets.isNotEmpty()
+    }
+
     fun getPrintList(): List<Array<String>> {
         var printList = mutableListOf<Array<String>>()
         for (i in orderDetailPackages.indices) {
@@ -33,6 +37,12 @@ data class OrderDetailResp(
             val dishInfo = orderDetailDishes[i]
             printList.add(dishInfo.getDishPrintArray())
         }
+
+        for (i in orderDetailBuffets.indices) {
+            val orderDetailBuffet = orderDetailBuffets[i]
+            printList.addAll(orderDetailBuffet.getPrintList())
+        }
+
         return printList
     }
 }

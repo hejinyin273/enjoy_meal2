@@ -513,6 +513,13 @@ class GlobalController extends BaseController{
       },), barrierColor: Colors.transparent, useSafeArea: false, barrierDismissible: false);
   }
 
+  void showCommonTipDialog(String tipContent) {
+    Get.dialog(TipConfirmDialog(tipContent: tipContent,
+      onConfirm: () async{
+        Get.back();
+      },), barrierColor: Colors.transparent, useSafeArea: false, barrierDismissible: false);
+  }
+
   void handleNewVersionMsg() {
     Get.dialog(TipConfirmDialog(tipContent: "APPバージョンの更新",
       onConfirm: () async{

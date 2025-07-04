@@ -37,7 +37,7 @@ abstract class DataRepository {
   Future<BaseResp> reqOrderComplete(String tableId);
 
   ///查询订单详情
-  Future<BaseResp> reqOrderDetail(String tableId);
+  Future<BaseResp> reqOrderDetail(String tableId, {int? batchNumber});
 
   ///选人数后下单-预占餐桌,选完人数后调用此接口生成订单
   Future<BaseResp> reqPrepareOrder(PrepareOrderReq prepareOrderReq);

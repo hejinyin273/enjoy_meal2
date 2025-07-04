@@ -62,6 +62,15 @@ class RestaurantData {
     }
   }
 
+  int? getTableId(String tableNumber) {
+    for (var tableInfo in tableInfos) {
+      if (tableInfo.tableNumber == tableNumber) {
+        return tableInfo.id;
+      }
+    }
+    return null;
+  }
+
 }
 
 class RestaurantConf{
