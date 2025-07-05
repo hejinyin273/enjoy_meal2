@@ -36,8 +36,9 @@ data class OrderBuffetPriceDetail(
         printList.add(printArray)
         if (extraTimeCount > 0) {
             val printArray = arrayOf(
-                "延長時間",
-                "$extraTimeCount",
+                "延長",
+                "単価${overtimeExtraFee.toInt()}",
+                "${extraTimeCount}回数",
                 "${(extraTimeCount * overtimeExtraFee).toInt()}",
             )
             printList.add(printArray)

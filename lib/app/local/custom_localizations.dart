@@ -118,6 +118,9 @@ class CustomLocalizations{
       'net_err': 'Network error!',
       'api_err': 'API error!',
       'buffet_err': '申し訳ございません。単品メニューをすでにご注文いただいておりますので、食べ放題プランへの変更はできません。',
+      'just_print': 'Print receipts',
+      'just_not_print': 'Not print receipts',
+      'buffet_over_time_tip': '注文時間が終了したため、ご注文頂けません！',
     },
     'zh': {
       'choice_of_numbers': '人数选择',
@@ -233,6 +236,9 @@ class CustomLocalizations{
       'net_err': '网络错误！',
       'api_err': '接口错误！',
       'buffet_err': '非常抱歉，您已经点了单点菜单，因此无法切换到吃到饱套餐。',
+      'just_print': '打印小票',
+      'just_not_print': '不打印小票',
+      'buffet_over_time_tip': '自助订单时间结束了，不能再下单了！',
     },
     'ja': {
       'choice_of_numbers': '人数の選択',
@@ -348,6 +354,9 @@ class CustomLocalizations{
       'net_err': 'ネットワークエラー！',
       'api_err': 'APIエラー！',
       'buffet_err': '申し訳ございません。単品メニューをすでにご注文いただいておりますので、食べ放題プランへの変更はできません。',
+      'just_print': '印刷する',
+      'just_not_print': '印刷しない',
+      'buffet_over_time_tip': '注文時間が終了したため、ご注文頂けません！',
     },
   };
 

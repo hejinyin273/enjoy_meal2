@@ -36,8 +36,8 @@ abstract class BaseController extends GetxController {
 
   void _showToastImpl(String message) {
     Widget toast = Container(
-      padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 10.h),
-      margin: EdgeInsets.only(bottom: 120.h),
+      padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 16.h),
+      margin: EdgeInsets.only(bottom: 160.h),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20.r),
         color: const Color(0xFFFFFFFF),
@@ -50,7 +50,7 @@ abstract class BaseController extends GetxController {
           ),
         ],
       ),
-      child: Text(message, style: TextStyle(color: const Color(0xFF333333), fontSize: 14.sp, fontWeight: FontWeightConf.medium),),
+      child: Text(message, style: TextStyle(color: const Color(0xFF333333), fontSize: 22.sp, fontWeight: FontWeightConf.medium),),
     );
 
 

@@ -861,7 +861,7 @@ class SubDishView extends CustomBaseView<SubDishController> {
         ),
         padding: EdgeInsets.all(20.w),
         alignment: Alignment.center,
-        child: Text("注文時間が終了したため、ご注文頂けません！", style: TextStyle(color: Colors.black, fontSize: 36.sp, fontWeight: FontWeightConf.medium),),
+        child: Text(CustomLocalizations.text("buffet_over_time_tip"), style: TextStyle(color: Colors.black, fontSize: 36.sp, fontWeight: FontWeightConf.medium),),
       ),
     );
   }

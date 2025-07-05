@@ -360,8 +360,8 @@ class GlobalController extends BaseController{
         if (Get.isDialogOpen != null && Get.isDialogOpen!) {///showBuffetTimeTipDialog may be open
           Get.back();
         }
-        showBuffetOverTimeDialog();
         if (userType == RestaurantConf.userTypeUser) {
+          showBuffetOverTimeDialog();
           isShowDisableCoverObs(true);
         }
         reqOrderDetail();
@@ -508,6 +508,13 @@ class GlobalController extends BaseController{
 
   void showBuffetOverTimeDialog() {
     Get.dialog(TipConfirmDialog(tipContent: "注文終了しました",
+      onConfirm: () async{
+        Get.back();
+      },), barrierColor: Colors.transparent, useSafeArea: false, barrierDismissible: false);
+  }
+
+  void showCommonTipDialog(String tipContent) {
+    Get.dialog(TipConfirmDialog(tipContent: tipContent,
       onConfirm: () async{
         Get.back();
       },), barrierColor: Colors.transparent, useSafeArea: false, barrierDismissible: false);

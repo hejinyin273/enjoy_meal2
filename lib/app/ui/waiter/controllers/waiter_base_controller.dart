@@ -303,7 +303,11 @@ abstract class WaiterBaseController extends BaseController with WidgetsBindingOb
         isOnOrderListMode(false);
         reqTableInfoList();
       } else {
-        showApiErrToast(baseResp.status, baseResp.message);
+        if ("order.cannot.complete" == baseResp.message) {
+          showToast("まだ提供されていない料理があります");
+        } else {
+          showApiErrToast(baseResp.status, baseResp.message);
+        }
       }
     }, onError:(err) {
       handleException(err);

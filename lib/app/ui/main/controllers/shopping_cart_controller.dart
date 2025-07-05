@@ -7,6 +7,7 @@ import '../../../base/data/protocol/response/base_resp.dart';
 import '../../../base/data/event_bus.dart';
 import '../../../data/model/goods_model.dart';
 import '../../../data/protocol/request/submit_order_req.dart';
+import '../../../local/custom_localizations.dart';
 import '../../../routes/app_pages.dart';
 import '../../dialog/clear_shopping_cart_dialog.dart';
 import '../../dialog/order_send_tip_dialog.dart';
@@ -92,7 +93,7 @@ class ShoppingCartController extends CustomBaseController  {
 
     if (globalController.orderDetailResp != null && globalController.orderDetailResp!.isBuffetOrderExist()) {
       if (!globalController.orderDetailResp!.isInBuffetTime()) {
-        showToast("注文時間が終了したため、ご注文頂けません！");
+        globalController.showCommonTipDialog(CustomLocalizations.text("buffet_over_time_tip"));
         return;
       }
     }

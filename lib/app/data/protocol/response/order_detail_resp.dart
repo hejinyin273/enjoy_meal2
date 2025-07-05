@@ -6,10 +6,10 @@ import '../../model/language.dart';
 class OrderDetailResp{
   late String orderNumber;
   late dynamic totalAmount;
-  String? firstOrderTime;
-  String? buffetEndTime;
+  String? firstOrderTime;///自助餐下单时间
+  String? buffetEndTime;///自助餐就餐截至时间
   late String tableNumber;
-  late int dinerCount;
+  late int dinerCount;///用餐人数
   String? firstDishTime;	///首次上菜时间	string(date-time)
   late String firstFoodOrderTime;	///第一次点菜的时间
   late String restaurantNameZh;

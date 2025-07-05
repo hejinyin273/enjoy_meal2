@@ -443,14 +443,17 @@ class MainActivity: FlutterActivity(), SearchPrinterResultListener,ConnectionLis
 
                 //字体正常
                 esc.addSetCharcterSize(EscCommand.WIDTH_ZOOM.MUL_1, EscCommand.HEIGHT_ZOOM.MUL_1)
-                esc.addText("点菜时间 ${orderDetailResp.firstFoodOrderTime}\n")
-                esc.addText("上菜时间 ${orderDetailResp.firstDishTime}\n")
+                esc.addText("注文時間 ${orderDetailResp.firstFoodOrderTime}\n")
+                esc.addText("配膳時間 ${orderDetailResp.firstDishTime}\n")
                 esc.addText("人数：${orderDetailResp.dinerCount}人 \n")
                 esc.addText("------------------------------------------------\n")
-                //开启加粗
-                esc.addTurnEmphasizedModeOnOrOff(EscCommand.ENABLE.ON)
-                esc.addText(MenuUtils.printFourData("菜名", "单价", "数量", "金额"))
-                esc.addTurnEmphasizedModeOnOrOff(EscCommand.ENABLE.OFF)
+
+                if (!orderDetailResp.isBuffet()) {
+                    //开启加粗
+                    esc.addTurnEmphasizedModeOnOrOff(EscCommand.ENABLE.ON)
+                    esc.addText(MenuUtils.printFourData("菜名", "単価", "数量", "金額"))
+                    esc.addTurnEmphasizedModeOnOrOff(EscCommand.ENABLE.OFF)
+                }
 
                 for (list in orderDetailResp.getPrintList()) {
                     if (list.size == 4) {
@@ -462,7 +465,6 @@ class MainActivity: FlutterActivity(), SearchPrinterResultListener,ConnectionLis
                     }
                 }
 
-
                 esc.addText("------------------------------------------------\n")
                 esc.addText(MenuUtils.printTwoData("合計(税込)：", "${orderDetailResp.totalAmount.toInt()}"))
                 esc.addText("------------------------------------------------\n")
@@ -470,20 +472,6 @@ class MainActivity: FlutterActivity(), SearchPrinterResultListener,ConnectionLis
                 esc.addPrintAndLineFeed()
                 esc.addPrintAndLineFeed()
 
-                /*esc.addSelectJustification(EscCommand.JUSTIFICATION.CENTER)
-
-                // 设置纠错等级
-                esc.addSelectErrorCorrectionLevelForQRCode(0x31.toByte())
-
-                // 设置qrcode模块大小
-                esc.addSelectSizeOfModuleForQRCode(4.toByte())
-
-                // 设置qrcode内容
-                esc.addStoreQRCodeData("www.baidu.com")
-
-                // 打印QRCode
-                esc.addPrintQRCode()
-                esc.addText("\n(扫二维码送手机)\n")*/
                 esc.addText("\n\n\n\n\n")
 
                 esc.addPrintAndLineFeed()

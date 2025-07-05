@@ -61,8 +61,8 @@ class DataRepositoryImpl implements DataRepository {
   }
 
   @override
-  Future<BaseResp> reqOrderDetail(String tableId) {
-    return NetClient().requestBase(Method.get, "/api/v1/restaurant/orderDetail/$tableId");
+  Future<BaseResp> reqOrderDetail(String tableId, {int? batchNumber}) {
+    return NetClient().requestBase(Method.get, "/api/v1/restaurant/orderDetail/$tableId?batchNumber=${batchNumber??""}");
   }
 
   @override

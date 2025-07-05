@@ -1,5 +1,6 @@
 
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,7 @@ import '../../../data/protocol/request/operate_complete_req.dart';
 import '../../../data/protocol/response/order_detail_resp.dart';
 import '../../../data/protocol/response/table_info_resp.dart';
 import '../../../routes/app_pages.dart';
+import '../../dialog/controller/batch_print_select_dialog.dart';
 import '../../dialog/custom_tip_confirm_dialog.dart';
 import '../model/make_info.dart';
 import '../model/nav_item_id.dart';
@@ -336,7 +338,7 @@ class CookingManagerController extends WaiterBaseController  {
     if (!isOnServedMode.value) {
       reqFoodMade(OperateCompleteReq(item.tableNumber, item.batchNumber, model.orderDetailId), model);
     } else if (DishMakeInfoConf.statusWaitToServe == model.status && isOnServedMode.value) {
-      reqFoodServed(OperateCompleteReq(item.tableNumber, item.batchNumber, model.orderDetailId), model);
+      reqFoodServed(OperateCompleteReq(item.tableNumber, item.batchNumber, model.orderDetailId), item, model);
     }
 
   }
@@ -383,12 +385,13 @@ class CookingManagerController extends WaiterBaseController  {
   }
 
   ///上菜完成
-  void reqFoodServed(OperateCompleteReq req, DishMakeInfo model) {
+  void reqFoodServed(OperateCompleteReq req, DishMakeDto item, DishMakeInfo model) {
     dataRepository.reqFoodServed(req).then((BaseResp baseResp) async{
       if(baseResp.isSuccess()) {
         model.status = DishMakeInfoConf.statusServed;
         updatePageDataList();
         updatePageData();
+        checkDishMakeDtoForPrintDialog(item);
       } else {
         showApiErrToast(baseResp.status, baseResp.message);
         reqFoodMakeListQuite();
@@ -506,5 +509,52 @@ class CookingManagerController extends WaiterBaseController  {
     return "";
   }
 
+  void checkDishMakeDtoForPrintDialog(DishMakeDto item) {
+    for (var i = 0; i < item.dishMakeInfos.length; i++) {
+      if (item.dishMakeInfos[i].status != 2) {
+        return;
+      }
+    }
+
+    Get.dialog(BatchPrintSelectDialog(onCancel: (){
+      Get.back();
+    }, onConfirm: (int index){
+      if (index == 0) {///打印
+        reqOrderDetailBatch(item);
+      } else {///不打印
+        Get.back();
+      }
+    },), barrierColor: Colors.transparent, useSafeArea: false);
+  }
+
+  void reqOrderDetailBatch(DishMakeDto item) {
+    int? tableId = globalController.restaurantData.getTableId(item.tableNumber);
+    if (tableId == null) {
+      showToast("tableIdが見つかりません");
+      return;
+    }
+
+    showLoadingDialog(null);
+    dataRepository.reqOrderDetail(tableId.toString(), batchNumber: item.batchNumber).then((BaseResp baseResp) async{
+      if(baseResp.isSuccess()) {
+        hideLoadingDialog();
+        if (baseResp.data != null) {
+          orderDetailResp = OrderDetailResp.fromJson(baseResp.data);
+          String jsonString = json.encode(orderDetailResp.toJson());
+          globalController.printContentList.add(jsonString);
+
+          if (Get.isDialogOpen != null && Get.isDialogOpen!) {
+            Get.back();
+          }
+        }
+      } else {
+        hideLoadingDialog();
+        showApiErrToast(baseResp.status, baseResp.message);
+      }
+    }, onError:(err) {
+      hideLoadingDialog();
+      handleException(err);
+    } );
+  }
 }
 
