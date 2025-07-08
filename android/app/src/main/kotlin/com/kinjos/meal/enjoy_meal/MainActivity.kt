@@ -427,10 +427,12 @@ class MainActivity: FlutterActivity(), SearchPrinterResultListener,ConnectionLis
                 val esc: EscCommand = EscCommand()
                 esc.addInitializePrinter()
 
-                /*val bitmap: Bitmap =
-                    BitmapFactory.decodeStream(getAssets().open("avatar/white.png"))
-                esc.addBitmap(bitmap, bitmap.getWidth(), true)
-                esc.addPrintAndLineFeed()*/
+                if (ConnectType.BLUETOOTH == printer?.connectType) {
+                    val bitmap: Bitmap =
+                        BitmapFactory.decodeStream(getAssets().open("avatar/white.png"))
+                    esc.addBitmap(bitmap, bitmap.getWidth(), true)
+                    esc.addPrintAndLineFeed()
+                }
 
                 // 设置为倍高倍宽
                 //字体放大两倍
@@ -439,19 +441,35 @@ class MainActivity: FlutterActivity(), SearchPrinterResultListener,ConnectionLis
                 // 打印文字
                 esc.addText("${orderDetailResp.restaurantNameJa}\n\n")
                 esc.addSelectJustification(EscCommand.JUSTIFICATION.LEFT)
-                esc.addText("${orderDetailResp.tableNumber}座席番号\n\n")
+                esc.addText("${orderDetailResp.tableNumber}号\n\n")
 
                 //字体正常
                 esc.addSetCharcterSize(EscCommand.WIDTH_ZOOM.MUL_1, EscCommand.HEIGHT_ZOOM.MUL_1)
-                esc.addText("注文時間 ${orderDetailResp.firstFoodOrderTime}\n")
-                esc.addText("配膳時間 ${orderDetailResp.firstDishTime}\n")
+                if (orderDetailResp.isBuffet()) {
+                    esc.addText("注文時間 ${orderDetailResp.firstOrderTime}\n")
+                    esc.addText("終了時間 ${orderDetailResp.buffetEndTime}\n")
+                } else {
+                    esc.addText("注文時間 ${orderDetailResp.firstFoodOrderTime}\n")
+                    if (orderDetailResp.firstDishTime != null) {
+                        esc.addText("配膳時間 ${orderDetailResp.firstDishTime}\n")
+                    }
+                }
+
+
                 esc.addText("人数：${orderDetailResp.dinerCount}人 \n")
                 esc.addText("------------------------------------------------\n")
 
-                if (!orderDetailResp.isBuffet()) {
+                if (orderDetailResp.isBuffet()) {
                     //开启加粗
                     esc.addTurnEmphasizedModeOnOrOff(EscCommand.ENABLE.ON)
-                    esc.addText(MenuUtils.printFourData("菜名", "単価", "数量", "金額"))
+                    esc.addText(MenuUtils.printFourData("カテゴリ", "単価", "数量", "金額"))
+                    esc.addTurnEmphasizedModeOnOrOff(EscCommand.ENABLE.OFF)
+                } else {
+                    esc.addTurnEmphasizedModeOnOrOff(EscCommand.ENABLE.ON)
+                    if (orderDetailResp.batchOrderNum > 1) {
+                        esc.addText("追加メニュー\n")
+                    }
+                    esc.addText(MenuUtils.printFourData("メニュー", "単価", "数量", "金額"))
                     esc.addTurnEmphasizedModeOnOrOff(EscCommand.ENABLE.OFF)
                 }
 
@@ -466,6 +484,9 @@ class MainActivity: FlutterActivity(), SearchPrinterResultListener,ConnectionLis
                 }
 
                 esc.addText("------------------------------------------------\n")
+                if (orderDetailResp.totalPrice > 0 && orderDetailResp.totalPrice.toInt() != orderDetailResp.totalAmount.toInt()) {
+                    esc.addText(MenuUtils.printTwoData("金額：", "${orderDetailResp.totalPrice.toInt()}"))
+                }
                 esc.addText(MenuUtils.printTwoData("合計(税込)：", "${orderDetailResp.totalAmount.toInt()}"))
                 esc.addText("------------------------------------------------\n")
 

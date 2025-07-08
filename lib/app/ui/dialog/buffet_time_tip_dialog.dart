@@ -38,7 +38,7 @@ class BuffetTimeTipDialog extends StatelessWidget{
               Text(CustomLocalizations.text("buffet_time_add_tip_1"), style: TextStyle(color: const Color(0xFFCB0A0A ),
                   fontSize: 26.sp, fontWeight: FontWeightConf.medium), textAlign: TextAlign.center,),
               SizedBox(height: 16.h,),
-              Text("${CustomLocalizations.text("buffet_time_add_tip_2")}$overTimeFee${CustomLocalizations.text("money_unit_taxation")}", style: TextStyle(color: const Color(0xFFCB0A0A ),
+              Text("${CustomLocalizations.text("buffet_time_add_tip_2")}${overTimeFee.toInt()}${CustomLocalizations.text("money_unit_taxation")}", style: TextStyle(color: const Color(0xFFCB0A0A ),
                   fontSize: 32.sp, fontWeight: FontWeightConf.medium), textAlign: TextAlign.center,),
               const Expanded(child: SizedBox()),
               Row(

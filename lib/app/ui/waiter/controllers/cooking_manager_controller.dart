@@ -539,7 +539,22 @@ class CookingManagerController extends WaiterBaseController  {
       if(baseResp.isSuccess()) {
         hideLoadingDialog();
         if (baseResp.data != null) {
+
+          int batchOrderNum = item.batchNumber;
+          int batchCount = 0;
+          for (int i=0; i<dishMakeDtoList.length; i++) {
+            final dishMakeDto = dishMakeDtoList[i];
+            if (dishMakeDto.tableNumber == item.tableNumber) {
+              batchCount ++;
+            }
+          }
+
           orderDetailResp = OrderDetailResp.fromJson(baseResp.data);
+
+          orderDetailResp.batchOrderNum = batchOrderNum;
+          orderDetailResp.batchCount = batchCount;
+          orderDetailResp.totalPrice = orderDetailResp.getTotalPrice();
+
           String jsonString = json.encode(orderDetailResp.toJson());
           globalController.printContentList.add(jsonString);
 

@@ -79,17 +79,17 @@ class StatisticsWidget extends StatelessWidget{
 
   _buildSummarizePanel() {
     if (controller.statisticsTabIndexObs.value == 0) {
-      return _buildDinnerSummarizePanel();
-    } else if (controller.statisticsTabIndexObs.value == 1) {
       return _buildBreakfastSummarizePanel();
+    } else if (controller.statisticsTabIndexObs.value == 1) {
+      return _buildDinnerSummarizePanel();
     } else {
       return SizedBox(
         height: 250.h,
         child: Column(
           children: [
-            _buildDinnerSummarizePanel(),
-            SizedBox(height: 12.h),
             _buildBreakfastSummarizePanel(),
+            SizedBox(height: 12.h),
+            _buildDinnerSummarizePanel(),
             SizedBox(height: 12.h),
             _buildTotalSummarizePanel(),
           ],
@@ -110,7 +110,7 @@ class StatisticsWidget extends StatelessWidget{
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _buildSummarizeItem(175.w, lunch),
+        _buildSummarizeItem(175.w, eveningFood),
 
         SizedBox(width: 2.w,),
 
@@ -135,7 +135,7 @@ class StatisticsWidget extends StatelessWidget{
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _buildSummarizeItem(175.w, eveningFood),
+        _buildSummarizeItem(175.w, lunch),
 
         SizedBox(width: 2.w,),
 
@@ -207,8 +207,8 @@ class StatisticsWidget extends StatelessWidget{
       return const SizedBox();
     }
     final dataList = controller.statisticsTabIndexObs.value == 0
-        ? controller.statisticsResp!.dinnerOrders
-        : controller.statisticsResp!.breakfastOrders;
+        ? controller.statisticsResp!.breakfastOrders
+        : controller.statisticsResp!.dinnerOrders;
     return Container(
       padding: EdgeInsets.only(left: 146.w, right: 146.w, top: 13.h),
       child: GridView.builder(gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

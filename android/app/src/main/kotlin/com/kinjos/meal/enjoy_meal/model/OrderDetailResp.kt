@@ -13,12 +13,16 @@ data class OrderDetailResp(
     val restaurantNameZh: String,
     val restaurantNameJa: String,
     val restaurantNameEn: String,
+    val batchOrderNum: Int,
+    val batchCount: Int,
+    val totalPrice: Double,
     val orderDetailPackages: List<OrderDetailPackage>,
     val orderDetailBuffets: List<OrderDetailBuffet>,
     val orderDetailDishes: List<OrderDetailDish>
 ) {
     override fun toString(): String {
-        return "OrderDetailResp(orderNumber='$orderNumber', totalAmount=$totalAmount, firstOrderTime=$firstOrderTime, buffetEndTime=$buffetEndTime, orderDetailPackages=$orderDetailPackages, orderDetailDishes=$orderDetailDishes)"
+        return "OrderDetailResp(orderNumber='$orderNumber', totalPrice=$totalPrice, totalAmount=$totalAmount, batchOrderNum=$batchOrderNum, " +
+                "firstOrderTime=$firstOrderTime, buffetEndTime=$buffetEndTime, orderDetailPackages=$orderDetailPackages, orderDetailDishes=$orderDetailDishes)"
     }
 
     fun isBuffet(): Boolean {

@@ -15,6 +15,9 @@ class OrderDetailResp{
   late String restaurantNameZh;
   late String restaurantNameJa;
   late String restaurantNameEn;
+  int batchOrderNum = 1;
+  int batchCount = 1;
+  double totalPrice = 0.0;
 
   List<OrderDetailPackage> orderDetailPackages = [];
   List<OrderDetailBuffet> orderDetailBuffets = [];
@@ -76,6 +79,9 @@ class OrderDetailResp{
       "restaurantNameZh": restaurantNameZh,
       "restaurantNameJa": restaurantNameJa,
       "restaurantNameEn": restaurantNameEn,
+      "batchOrderNum": batchOrderNum,
+      "batchCount": batchCount,
+      "totalPrice": totalPrice
     };
 
     if (orderDetailPackages.isNotEmpty) {
@@ -119,6 +125,29 @@ class OrderDetailResp{
     }
 
     return baseJson;
+  }
+
+  double getTotalPrice() {
+    double totalPrice = 0;
+    if (orderDetailPackages.isNotEmpty) {
+      for (var item in orderDetailPackages) {
+        totalPrice += item.getTotalPrice();
+      }
+    }
+
+    if (orderDetailBuffets.isNotEmpty) {
+      for (var item in orderDetailBuffets) {
+        totalPrice += item.getItemTotalPrice();
+      }
+    }
+
+    if (orderDetailDishes.isNotEmpty) {
+      for (var item in orderDetailDishes) {
+        totalPrice += item.getTotalPrice();
+      }
+    }
+
+    return totalPrice;
   }
 
   bool isOrderExist() {
@@ -259,12 +288,27 @@ class OrderDetailBuffet{///自助餐订单详情
     }
   }
 
-  Map<String, dynamic> toJson() => {
-    "buffetCategoryId": buffetCategoryId,
-    "buffetCategoryNameZh": buffetCategoryNameZh,
-    "buffetCategoryNameJa": buffetCategoryNameJa,
-    "buffetCategoryNameEn": buffetCategoryNameEn
-  };
+  Map<String, dynamic> toJson() {
+    var baseJson = {
+      "buffetCategoryId": buffetCategoryId,
+      "buffetCategoryNameZh": buffetCategoryNameZh,
+      "buffetCategoryNameJa": buffetCategoryNameJa,
+      "buffetCategoryNameEn": buffetCategoryNameEn
+    };
+
+    if (orderBuffetPriceDetails.isNotEmpty) {
+      List<Map<String, dynamic>> dataList = [];
+      for (var item in orderBuffetPriceDetails) {
+        dataList.add(item.toJson());
+      }
+      baseJson["orderBuffetPriceDetails"] = dataList;
+    } else {
+      baseJson["orderBuffetPriceDetails"] = [];
+    }
+
+    return baseJson;
+
+  }
 
   double getItemTotalPrice() {
     double unitPrice = 0;
@@ -319,6 +363,19 @@ class OrderBuffetPriceDetail{
         totalDinerCount = json["totalDinerCount"],
         extraTimeCount = json["extraTimeCount"],
         overtimeExtraFee = json["overtimeExtraFee"];
+
+
+  Map<String, dynamic> toJson() => {
+    "buffetPriceId": buffetPriceId,
+    "orderBuffetId": orderBuffetId,
+    "dinerTypeNameZh": dinerTypeNameZh,
+    "dinerTypeNameJa": dinerTypeNameJa,
+    "dinerTypeNameEn": dinerTypeNameEn,
+    "unitPrice": unitPrice,
+    "totalDinerCount": totalDinerCount,
+    "extraTimeCount": extraTimeCount,
+    "overtimeExtraFee": overtimeExtraFee,
+  };
 
   String getDinerTypeName() {
     if (Language.zh == Conf.selectedLanguage) {

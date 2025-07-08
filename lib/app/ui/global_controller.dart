@@ -343,7 +343,9 @@ class GlobalController extends BaseController{
 
       if (rel <= 60 * 1000 * reminderTimeMin && rel > 60 * 1000 * (reminderTimeMin -1)) {
         logger.i("startBuffetTimer() showBuffetTimeTipDialog() rel=$rel");
-        showBuffetTimeTipDialog();
+        if (userType == RestaurantConf.userTypeUser) {
+          showBuffetTimeTipDialog();
+        }
       } else if ((rel <= 60 * 1000 * 5 && rel > 60 * 1000 * 4) || (rel <= 60 * 1000 * 2 && rel > 60 * 1000 * 1)) {
         reqOrderDetail();
       } else {

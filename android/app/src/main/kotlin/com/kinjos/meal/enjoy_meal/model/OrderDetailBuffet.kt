@@ -25,10 +25,11 @@ data class OrderDetailBuffet(
         var printList = mutableListOf<Array<String>>()
 
         printList.add(getPrintArray())
-
-        for (i in orderBuffetPriceDetails.indices) {
-            val orderBuffetPriceDetail = orderBuffetPriceDetails[i]
-            printList.addAll(orderBuffetPriceDetail.getPrintList())
+        if (orderBuffetPriceDetails != null) {
+            for (i in orderBuffetPriceDetails.indices) {
+                val orderBuffetPriceDetail = orderBuffetPriceDetails[i]
+                printList.addAll(orderBuffetPriceDetail.getPrintList())
+            }
         }
         return printList
     }
