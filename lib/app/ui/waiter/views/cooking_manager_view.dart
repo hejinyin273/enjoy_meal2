@@ -309,7 +309,7 @@ class CookingManagerView extends WaiterBaseView<CookingManagerController> {
         Positioned(
             top: 2.h,
             left: 8.w,
-            child: Text(item.firstOrderTime != null ? controller.getBuffetRemainingTime(item.firstOrderTime!) : "", style: TextStyle(color: Colors.white, fontSize: 15.sp, fontWeight: FontWeightConf.regular)),),
+            child: Text(item.firstOrderTime != null ? controller.getBuffetRemainingTime(item.firstOrderTime!, item.buffetEndTime) : "", style: TextStyle(color: Colors.white, fontSize: 15.sp, fontWeight: FontWeightConf.regular)),),
 
         Positioned(
           bottom: 0,

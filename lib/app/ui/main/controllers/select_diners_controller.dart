@@ -28,6 +28,7 @@ class SelectDinersController extends CustomBaseController  {
     bgImgUrl = globalController.restaurantData.restaurantBaseInfo.selectionBgImage;
 
     globalController.isShowDisableCoverObs(false);
+    globalController.clearShoppingCart();
     super.onInit();
   }
 

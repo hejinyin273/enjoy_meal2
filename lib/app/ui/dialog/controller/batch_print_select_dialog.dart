@@ -55,11 +55,11 @@ class BatchPrintSelectDialog extends StatelessWidget{
               },
               child: _buildSelectionItem(CustomLocalizations.text("just_not_print"))),
 
-          TapDownZoomOutView(
+          /*TapDownZoomOutView(
               onClicked: (){
                 onCancel();
               },
-              child: _buildSelectionItem(CustomLocalizations.text("back")),),
+              child: _buildSelectionItem(CustomLocalizations.text("back")),),*/
 
         ],
       ),

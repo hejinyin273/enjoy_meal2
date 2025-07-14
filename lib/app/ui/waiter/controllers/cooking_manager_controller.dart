@@ -498,14 +498,14 @@ class CookingManagerController extends WaiterBaseController  {
     }
   }
 
-  String getBuffetRemainingTime(String startOrderTime) {
-    DateTime? startDateTime = DateTime.tryParse("$startOrderTime:00");
-    if (startDateTime != null) {
-      startDateTime = startDateTime.add(Duration(minutes: globalController.restaurantData.restaurantBaseInfo.buffetDiningTime));
-      int rel = (startDateTime.millisecondsSinceEpoch - DateTime.now().millisecondsSinceEpoch);
-      return formatDate(DateTime.fromMillisecondsSinceEpoch(rel, isUtc: true), [HH, ":", nn, ":", ss]);
+  String getBuffetRemainingTime(String startOrderTime, String? buffetEndTime) {
+    if (buffetEndTime != null) {
+      DateTime? endDateTime = DateTime.tryParse("$buffetEndTime:00");
+      if (endDateTime != null) {
+        int rel = (endDateTime.millisecondsSinceEpoch - DateTime.now().millisecondsSinceEpoch);
+        return formatDate(DateTime.fromMillisecondsSinceEpoch(rel, isUtc: true), [HH, ":", nn, ":", ss]);
+      }
     }
-
     return "";
   }
 
