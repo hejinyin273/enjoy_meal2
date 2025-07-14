@@ -195,7 +195,13 @@ class CookingManagerController extends WaiterBaseController  {
         }
       }
 
-      mainItem.dishMakeInfoClassList.addAll(dishMakeInfoClassMap.values.toList());
+      //dishMakeInfoClassMap.entries.toList().sort((a, b) => a.key.compareTo(b.key));
+
+      final sortedEntries = dishMakeInfoClassMap.entries.toList()
+        ..sort((a, b) => a.key.compareTo(b.key));
+      final sortedMap = Map.fromEntries(sortedEntries);
+
+      mainItem.dishMakeInfoClassList.addAll(sortedMap.values.toList());
     }
 
     List<DishMakeDto> dataList = [];
