@@ -41,10 +41,17 @@ class CookingManagerController extends WaiterBaseController  {
       currentNavItemIdObs(navItemId);
       updatePageDataList();
     } else if (NavItemId.waiteToMake == navItemId) {
-      if (isOnTableMode.value) {
+      /*if (isOnTableMode.value) {
         isOnTableMode(false);
       }
       currentNavItemIdObs(navItemId);
+      updatePageDataList();*/
+
+      if (isOnTableMode.value) {
+        isOnTableMode(false);
+      }
+      isOnServedMode(false);
+      currentNavItemIdObs(NavItemId.allMakeInfo);
       updatePageDataList();
     } else {
       currentNavItemIdObs(navItemId);

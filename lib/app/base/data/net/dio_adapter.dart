@@ -265,8 +265,8 @@ class DioFileUtil{
   static BaseOptions _getDefaultOption(){
     BaseOptions options = BaseOptions();
     options.contentType = Headers.jsonContentType;
-    options.connectTimeout = const Duration(seconds: 10);
-    options.receiveTimeout = const Duration(seconds: 10);
+    options.connectTimeout = const Duration(seconds: 15);
+    options.receiveTimeout = const Duration(seconds: 15);
     return options;
   }
 }

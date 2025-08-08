@@ -121,6 +121,7 @@ class CustomLocalizations{
       'just_print': 'Print receipts',
       'just_not_print': 'Not print receipts',
       'buffet_over_time_tip': '注文時間が終了したため、ご注文頂けません！',
+      'order_cancel_tip': 'ご注文をキャンセルしてもよろしいですか？',
     },
     'zh': {
       'choice_of_numbers': '人数选择',
@@ -239,6 +240,7 @@ class CustomLocalizations{
       'just_print': '打印小票',
       'just_not_print': '不打印小票',
       'buffet_over_time_tip': '自助订单时间结束了，不能再下单了！',
+      'order_cancel_tip': '您确定要取消这桌订单吗?',
     },
     'ja': {
       'choice_of_numbers': '人数の選択',
@@ -357,6 +359,7 @@ class CustomLocalizations{
       'just_print': '印刷する',
       'just_not_print': '印刷しない',
       'buffet_over_time_tip': '注文時間が終了したため、ご注文頂けません！',
+      'order_cancel_tip': 'ご注文をキャンセルしてもよろしいですか？',
     },
   };
 

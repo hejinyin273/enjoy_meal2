@@ -224,7 +224,7 @@ abstract class WaiterBaseController extends BaseController with WidgetsBindingOb
   ///订单取消
   void onCancelOrderItemClicked() {
     if (LoadState.success == loadOrderDetailState) {
-      Get.dialog(CustomTipConfirmDialog(tipContent: "您确定要取消这桌订单吗?", onCancel: (){
+      Get.dialog(CustomTipConfirmDialog(tipContent: CustomLocalizations.text('order_cancel_tip'), onCancel: (){
         Get.back();
       }, onConfirm: (){
         Get.back();

@@ -388,13 +388,13 @@ class GlobalController extends BaseController{
 
     if (isOnBuffetMode) {
       if (dishInfo.buffetMaxQuantity != null && getBuffetRemainingQuantity(dishInfo) <= 0) {
-        showToast("已达到上限了，已经选${dishInfo.buffetMaxQuantity}个了");
+        showToast("上限に達しました，${dishInfo.buffetMaxQuantity}つ選んでいます");
         return false;
       }
     } else {
       if (dishInfo.inventoryQuantity != null && dishInfo.inventoryQuantity! > 0) {
         if (dishInfo.inventoryQuantity! - wantCount < 0) {
-          showToast("库存不够了！剩余${dishInfo.inventoryQuantity}份！");
+          showToast("在庫不足！あと${dishInfo.inventoryQuantity}個！");
           return false;
         }
       }
