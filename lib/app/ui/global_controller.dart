@@ -15,12 +15,14 @@ import '../base/data/event_bus.dart';
 import '../base/utils/android_helper.dart';
 import '../data/model/load_state.dart';
 import '../data/model/restaurant_data.dart';
+import '../data/protocol/response/app_version_resp.dart';
 import '../data/protocol/response/order_detail_resp.dart';
 import '../data/repository/data_repository.dart';
 import '../local/custom_localizations.dart';
 import '../routes/app_pages.dart';
 import 'dialog/buffet_time_tip_dialog.dart';
 import 'dialog/tip_confirm_dialog.dart';
+import 'package:package_info_plus/package_info_plus.dart' as pkg;
 
 class GlobalController extends BaseController{
   late DataRepository dataRepository;
@@ -522,7 +524,10 @@ class GlobalController extends BaseController{
       },), barrierColor: Colors.transparent, useSafeArea: false, barrierDismissible: false);
   }
 
+  bool isShowingNewVersionDialog = false;
   void handleNewVersionMsg() {
+    if (isShowingNewVersionDialog) return;
+    isShowingNewVersionDialog = true;
     Get.dialog(TipConfirmDialog(tipContent: "APPバージョンの更新",
       onConfirm: () async{
         logger.i("handleNewVersionMsg() onConfirm Get.currentRoute=${Get.currentRoute}");
@@ -535,7 +540,29 @@ class GlobalController extends BaseController{
         }
         await Future.delayed(const Duration(milliseconds: 500));
         eventBus.fire(MainInitEvent());
-      },), barrierColor: Colors.transparent, useSafeArea: false, barrierDismissible: false);
+      },), barrierColor: Colors.transparent, useSafeArea: false, barrierDismissible: false).then((value){
+      isShowingNewVersionDialog = false;
+    });
+  }
+
+  void reqUpgradeVersionInfo() async {
+    pkg.PackageInfo packageInfo = await pkg.PackageInfo.fromPlatform();
+    String currentVersion = packageInfo.version;
+    dataRepository.reqLatestVersion().then((BaseResp baseResp) async{
+      if (baseResp.isSuccess()) {
+        if (baseResp.data != null && baseResp.data["appVersion"] != null) {
+          var appVersionResp = AppVersionResp.fromJson(baseResp.data);
+          if (currentVersion != appVersionResp.appVersion) {///new version
+            handleNewVersionMsg();
+            return;
+          }
+        }
+      } else {
+        showApiErrToast(baseResp.status, baseResp.message);
+      }
+    }, onError:(err) {
+      handleException(err);
+    } );
   }
 
   List<int> refreshDataEventList = [];

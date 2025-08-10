@@ -110,6 +110,7 @@ class LifecycleService extends GetxService with WidgetsBindingObserver {
       print("======>>>>>App is in foreground");
       if (BaseConf.isInitDone) {
         globalController.reqRestaurantInfo();
+        globalController.reqUpgradeVersionInfo();
         if (globalController.currentTableId > 0) {
           globalController.reqOrderDetail();
         }
