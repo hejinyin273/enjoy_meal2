@@ -525,7 +525,14 @@ class GlobalController extends BaseController{
   void handleNewVersionMsg() {
     Get.dialog(TipConfirmDialog(tipContent: "APPバージョンの更新",
       onConfirm: () async{
-        Get.until((route) => Get.currentRoute.startsWith(Routes.mainPage));
+        logger.i("handleNewVersionMsg() onConfirm Get.currentRoute=${Get.currentRoute}");
+        if (!Get.currentRoute.startsWith(Routes.mainPage)) {
+          Get.until((route) => Get.currentRoute.startsWith(Routes.mainPage));
+        } else {
+          if (Get.isDialogOpen != null && Get.isDialogOpen!) {
+            Get.back();
+          }
+        }
         await Future.delayed(const Duration(milliseconds: 500));
         eventBus.fire(MainInitEvent());
       },), barrierColor: Colors.transparent, useSafeArea: false, barrierDismissible: false);

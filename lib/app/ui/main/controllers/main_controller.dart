@@ -89,7 +89,7 @@ class MainController extends CustomBaseController  {
 
     _appUpgradeSubscription = eventBus.on<MainInitEvent>().listen((MainInitEvent event) async{
       logger.i("--MainInitEvent---${Get.currentRoute}");
-      if (Get.currentRoute.startsWith(Routes.mainPage)) {
+      if (Get.currentRoute.startsWith(Routes.mainPage) && downloadCancelToken == null) {
         loadingTipObs(CustomLocalizations.text("loading_please_wait"));
         btnTipMessageObs(CustomLocalizations.text("check_update"));
         updateProgress(0);
@@ -293,6 +293,7 @@ class MainController extends CustomBaseController  {
   _onSuccess(String fileId, String filePath) async{
     logger.i("onSuccess() fileId=$fileId");
     btnTipMessageObs(CustomLocalizations.text("experience_now"));
+    downloadCancelToken = null;
     final fileMD5 = await Md5Util.getFileMD5(filePath);
     await preferenceManager.setString(PreferenceManager.appFileMd5, fileMD5);
     if (0 == _helperInstallStatus) {
@@ -336,6 +337,8 @@ class MainController extends CustomBaseController  {
   }
 
   void _handleAppVersionUpgrade(AppVersionResp appVersionResp) async{
+    if (isOnAppUpgrade) return;
+    isOnAppUpgrade = true;
     final dir = await getDownloadsDirectory();
 
     final fileUrlMD5 = Md5Util.generateMd5(appVersionResp.downloadUrl);
@@ -347,6 +350,7 @@ class MainController extends CustomBaseController  {
       if (appFileMd5.isNotEmpty) {
         final fileMD5 = await Md5Util.getFileMD5(filePath);
         if (appFileMd5 == fileMD5) {///已存在
+          isOnAppUpgrade = false;
           btnTipMessageObs(CustomLocalizations.text("experience_now"));
           if (0 == _helperInstallStatus) {
             AndroidHelper.handleHostInstall(filePath);
@@ -358,13 +362,27 @@ class MainController extends CustomBaseController  {
       }
     }
 
+    await Future.delayed(const Duration(microseconds: 1000), (){
+      isOnAppUpgrade = false;
+    });
+
+    if (downloadCancelToken != null) {
+      downloadCancelToken!.cancel();
+      await Future.delayed(const Duration(microseconds: 1500));
+      downloadCancelToken = null;
+      await Future.delayed(const Duration(microseconds: 1000));
+    }
+
     downloadCancelToken = CancelToken();
     dataRepository.doDownload(appVersionResp.downloadUrl, filePath, fileId: "fileId",
         cancelToken: downloadCancelToken!, downloadListener: _downloadListener);
 
   }
 
+  bool isOnAppUpgrade = false;
   void reqUpgradeVersionInfo() async {
+    if (isOnAppUpgrade) return;
+    isOnAppUpgrade = true;
     pkg.PackageInfo packageInfo = await pkg.PackageInfo.fromPlatform();
     String currentVersion = packageInfo.version;
     _loadInitStateObs(LoadState.loading);
@@ -376,10 +394,13 @@ class MainController extends CustomBaseController  {
             newAppVersionResp = appVersionResp;
             _loadUpgradeVersionState = LoadState.success;
             isOnAppUpgradeMode(true);
+            isOnAppUpgrade = false;
             _handleAppVersionUpgrade(appVersionResp);
             return;
           }
         }
+
+        isOnAppUpgrade = false;
         ///is already new version
         _loadUpgradeVersionState = LoadState.success;
         reqRestaurantInfo();
@@ -387,10 +408,12 @@ class MainController extends CustomBaseController  {
       } else {
         showApiErrToast(baseResp.status, baseResp.message);
         _loadInitStateObs(LoadState.failed);
+        isOnAppUpgrade = false;
       }
     }, onError:(err) {
       handleException(err);
       _loadInitStateObs(LoadState.failed);
+      isOnAppUpgrade = false;
     } );
   }
 }
