@@ -84,7 +84,7 @@ class LifecycleService extends GetxService with WidgetsBindingObserver {
         } else {
           eventBus.fire(PushMsgEvent(jsonMap));
           if ("CALL_STAFF" == msgAction) {
-            AudioPlayerUtil.play('sounds/yx.mp3');
+            AudioPlayerUtil.play('sounds/wcx.ogg');
           }
         }
 

@@ -10,6 +10,7 @@ import 'package:enjoy_meal/app/ui/waiter/views/widget/store_operation_widget.dar
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import '../../../base/utils/audio_player_util.dart';
 import '../../../base/widget/keep_alive_wrapper.dart';
 import '../../../data/protocol/response/table_info_resp.dart';
 import '../../../local/custom_localizations.dart';
@@ -143,10 +144,15 @@ class CookingManagerView extends WaiterBaseView<CookingManagerController> {
   }
 
   _buildCurrentTimeView() {
-    return Container(
-      width: 120.w,
-      alignment: Alignment.center,
-      child: Obx(()=>Text(controller.timeStringObs.value, style: TextStyle(color: Colors.white, fontSize: 28.sp, fontWeight: FontWeightConf.medium),)),
+    return GestureDetector(
+      onTap: (){
+        AudioPlayerUtil.play('sounds/wcx.ogg');
+      },
+      child: Container(
+        width: 120.w,
+        alignment: Alignment.center,
+        child: Obx(()=>Text(controller.timeStringObs.value, style: TextStyle(color: Colors.white, fontSize: 28.sp, fontWeight: FontWeightConf.medium),)),
+      ),
     );
   }
 

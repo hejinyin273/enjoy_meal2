@@ -43,12 +43,12 @@ class LoginController extends BaseController{
   @override
   void onReady() {
     ///=====todo for test=====
-    accountController.text = "flfwy02";
+    //accountController.text = "flfwy02";
     //accountController.text = "fl02";
-    pwdController.text = "Aa123456";
+    //pwdController.text = "Aa123456";
     //accountController.text = "zhuo1";
     //pwdController.text = "zhuo1";
-    isLoginEnableObs(true);
+    //isLoginEnableObs(true);
     ///=====todo for test=====
     super.onReady();
   }
