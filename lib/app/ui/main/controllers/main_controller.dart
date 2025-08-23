@@ -294,12 +294,21 @@ class MainController extends CustomBaseController  {
     logger.i("onSuccess() fileId=$fileId");
     btnTipMessageObs(CustomLocalizations.text("experience_now"));
     downloadCancelToken = null;
-    final fileMD5 = await Md5Util.getFileMD5(filePath);
-    await preferenceManager.setString(PreferenceManager.appFileMd5, fileMD5);
-    if (0 == _helperInstallStatus) {
-      AndroidHelper.handleHostInstall(filePath);
-    } else {
-      AndroidHelper.installApk(filePath);
+    /*final fileMD5 = await Md5Util.getFileMD5(filePath);
+    await preferenceManager.setString(PreferenceManager.appFileMd5, fileMD5);*/
+    final appFile = File(filePath);
+    if (appFile.existsSync()) {
+      final fileMD5 = await Md5Util.getFileMD5(filePath);
+      if (fileMD5 == newAppVersionResp?.appFileMd5) {///已存在
+        if (0 == _helperInstallStatus) {
+          AndroidHelper.handleHostInstall(filePath);
+        } else {
+          AndroidHelper.installApk(filePath);
+        }
+      } else {
+        appFile.deleteSync();
+        reqUpgradeVersionInfo();
+      }
     }
   }
 
@@ -346,19 +355,16 @@ class MainController extends CustomBaseController  {
 
     final appFile = File(filePath);
     if (appFile.existsSync()) {
-      final appFileMd5 = await preferenceManager.getString(PreferenceManager.appFileMd5, defaultValue: "");
-      if (appFileMd5.isNotEmpty) {
-        final fileMD5 = await Md5Util.getFileMD5(filePath);
-        if (appFileMd5 == fileMD5) {///已存在
-          isOnAppUpgrade = false;
-          btnTipMessageObs(CustomLocalizations.text("experience_now"));
-          if (0 == _helperInstallStatus) {
-            AndroidHelper.handleHostInstall(filePath);
-          } else {
-            AndroidHelper.installApk(filePath);
-          }
-          return;
+      final fileMD5 = await Md5Util.getFileMD5(filePath);
+      if (appVersionResp.appFileMd5 == fileMD5) {///已存在
+        isOnAppUpgrade = false;
+        btnTipMessageObs(CustomLocalizations.text("experience_now"));
+        if (0 == _helperInstallStatus) {
+          AndroidHelper.handleHostInstall(filePath);
+        } else {
+          AndroidHelper.installApk(filePath);
         }
+        return;
       }
     }
 
