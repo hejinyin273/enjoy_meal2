@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../base/data/protocol/response/base_resp.dart';
 import '../../../base/ui/base_controller.dart';
+import '../../../base/utils/audio_player_util.dart';
 import '../../../data/local/preference/preference_manager.dart';
 import '../../../base/data/event_bus.dart';
 import '../../../data/model/load_state.dart';
@@ -79,6 +80,9 @@ abstract class WaiterBaseController extends BaseController with WidgetsBindingOb
     _makeListUpdateSubscription = eventBus.on<PushMsgEvent>().listen((PushMsgEvent event) {
       if ("DISH_MAKE_LIST_MODIFY" == event.action) {
         onMakeListUpdateEvent();
+        if (true == event.data["isOrder"] && globalController.userType == 1) {
+          AudioPlayerUtil.play('sounds/wcx.ogg');
+        }
       } else if ("CALL_STAFF" == event.action || "CALL_STAFF_CONFIRM" == event.action ) {
         reqCornerMarkersCount(quite: true);
         if (currentNavItemId == NavItemId.customerCall) {
